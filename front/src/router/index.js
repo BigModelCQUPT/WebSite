@@ -5,7 +5,7 @@ import telegramMessage from '../views/telegram/telegramMessage'
 import UserAccountLoginView from '../views/user/account/UserAccountLoginView'
 import UserAccountRegisterView from '../views/user/account/UserAccountRegisterView'
 import store from '../store/index'
-
+import twitterUser from '../views/twitter-user/twitterUser'
 
 const routes = [
   {
@@ -20,6 +20,15 @@ const routes = [
     path: "/twitter/",
     name: "twitter",
     component: twitterMessage,
+    meta: {
+      requestAuth: true,
+    }
+
+  },
+  {
+    path: "/twitterUser/",
+    name: "twitterUser",
+    component: twitterUser,
     meta: {
       requestAuth: true,
     }

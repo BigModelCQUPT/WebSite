@@ -13,6 +13,10 @@
                         <router-link class="nav-link" active-class="active"
                             :to="{ name: 'telegram' }">telegram</router-link>
                     </li>
+                  <li class="nav-item">
+                    <router-link class="nav-link" active-class="active"
+                                 :to="{ name: 'twitterUser' }">推特用户</router-link>
+                  </li>
                 </ul>
 
                 <ul class="navbar-nav" v-if="$store.state.user.is_login">

@@ -1,5 +1,6 @@
 package com.bigModel.backend.controller.user.account;
 
+import com.bigModel.backend.advice.ResponseNotIntercept;
 import com.bigModel.backend.service.user.account.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+@ResponseNotIntercept
 @RestController
 public class RegisterController {
     @Autowired
