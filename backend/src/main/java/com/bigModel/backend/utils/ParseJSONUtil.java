@@ -3,25 +3,34 @@ package com.bigModel.backend.utils;
 
 import com.bigModel.backend.pojo.Tweet;
 import twitter4j.JSONArray;
+import twitter4j.JSONException;
 import twitter4j.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParseJSONUtil {
-    public static List<Tweet> parseJSON(String string, String keyword) {
-        // String string = "{\"data\":[{\"id\":\"1\", \"text\":\"1111\"}, {\"id\":\"12\", \"text\":\"1111\"}], \"meta\": \"dasd\"}";
+    public static List<Tweet> parseJSON(String string,String username, String twitterId) {
         JSONObject json = new JSONObject(string);
         String data = json.getString("data");
         JSONArray jsonArray = new JSONArray(data);
         List<Tweet> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i ++)    {
-            String tweetid = jsonArray.getJSONObject(i).getString("id");
-            String text = jsonArray.getJSONObject(i).getString("text");
+        for (int i = 0; i < jsonArray.length(); i ++) {
+            JSONObject item = new JSONObject(jsonArray.getString(i));
+            String type = "tweet";
+            try {
+                JSONArray referenced_tweets = new JSONArray(item.getString("referenced_tweets"));
+                JSONObject referenced_tweet_item = new JSONObject((String) referenced_tweets.getString(0));
+                type = referenced_tweet_item.getString("type");
+            }catch (JSONException exception) {
+            }
             Tweet tweet = new Tweet();
-            tweet.setTweetid(tweetid);
-            tweet.setText(text);
-            tweet.setKeyword(keyword);
+            tweet.setText(item.getString("text"));
+            tweet.setFlag(0);
+            tweet.setType(type);
+            tweet.setTweetid(item.getString("id"));
+            tweet.setUsername(username);
+            tweet.setTwitterId(twitterId);
             list.add(tweet);
         }
         return list;

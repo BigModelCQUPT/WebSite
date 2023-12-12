@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -43,6 +44,12 @@ public class TwitterUserInfoServiceImpl implements TwitterUserInfoService {
         QueryWrapper<TwitterUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("twitter_id", twitterId);
         infoMapper.delete(queryWrapper);
+    }
+
+    @Override
+    public List<TwitterUser> listAll() {
+        QueryWrapper<TwitterUser> queryWrapper = new QueryWrapper<>();
+        return infoMapper.selectList(queryWrapper);
     }
 }
 

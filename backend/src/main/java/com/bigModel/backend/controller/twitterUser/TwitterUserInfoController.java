@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,7 +25,7 @@ public class TwitterUserInfoController {
         return infoService.getTwitterUsers(pageNum);
     }
 
-    @DeleteMapping("deleteUser")
+    @PostMapping("deleteUser")
     public void deleteUser(@RequestParam Map<String, String> data) {
         infoService.deleteTwitterUserByTwitterId(data.get("twitterId"));
     }
@@ -33,5 +34,10 @@ public class TwitterUserInfoController {
     public void addUser(@RequestParam Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
         TwitterUser twitterUser = UsernameToInfoUtil.getInfoByUsername(data.get("username"));
         infoService.addTwitterUser(twitterUser);
+    }
+
+    @GetMapping("listAll")
+    public List<TwitterUser> listAll() {
+        return infoService.listAll();
     }
 }

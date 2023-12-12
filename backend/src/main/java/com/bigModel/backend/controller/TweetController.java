@@ -23,4 +23,11 @@ public class TweetController {
         Integer pageNum = Integer.parseInt(data.get("page"));
         return tweetService.getTweets(pageNum);
     }
+
+    @GetMapping("/tweet/queryTweets")
+    public Map<String, Object> queryTweets(@RequestParam Map<String, String> data){
+        Integer pageNum = Integer.parseInt(data.get("page"));
+        String keyword = data.get("keyword");
+        return tweetService.queryTweets(pageNum, keyword);
+    }
 }

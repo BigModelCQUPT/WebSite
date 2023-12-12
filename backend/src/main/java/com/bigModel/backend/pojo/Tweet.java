@@ -16,5 +16,9 @@ public class Tweet {
     private Integer id;
     private String tweetid;
     private String text;
+    private String username;
+    private Integer flag;
+    private String type;
     private String keyword;
+    private String twitterId;
 }
