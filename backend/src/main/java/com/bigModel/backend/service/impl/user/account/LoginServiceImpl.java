@@ -41,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
         Map<String, String> map = new HashMap<>();
         map.put("error_message","success");
 //        "token" 和前端对应
-        map.put("token",jwt);
+        map.put("jwt_token",jwt);
 
         return map;
     }
