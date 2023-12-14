@@ -24,18 +24,10 @@ public class TwitterUserInfoServiceImpl implements TwitterUserInfoService {
     }
 
     @Override
-    public IPage<TwitterUser> getTwitterUsers(Integer pageNum) {
-        IPage<TwitterUser> page = new Page<>(pageNum, 10);
+    public IPage<TwitterUser> getTwitterUsers(Integer pageNum, Integer size) {
+        IPage<TwitterUser> page = new Page<>(pageNum, size);
         QueryWrapper<TwitterUser> queryWrapper = new QueryWrapper<>();
         IPage<TwitterUser> pageList = infoMapper.selectPage(page, queryWrapper);
-
-        Long count = infoMapper.selectCount(null);
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", pageList.getRecords());
-        map.put("current", String.valueOf(pageList.getCurrent()));
-        map.put("size", String.valueOf(pageList.getSize()));
-        map.put("pages", String.valueOf(pageList.getPages()));
-        map.put("total_users", count);
         return pageList;
     }
 
@@ -50,6 +42,15 @@ public class TwitterUserInfoServiceImpl implements TwitterUserInfoService {
     public List<TwitterUser> listAll() {
         QueryWrapper<TwitterUser> queryWrapper = new QueryWrapper<>();
         return infoMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public IPage<TwitterUser> findTwitterUserByUsername(TwitterUser twitterUser, Integer pageNum, Integer size) {
+        IPage<TwitterUser> page = new Page<>(pageNum, size);
+        QueryWrapper<TwitterUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("username", twitterUser.getUsername());
+        IPage<TwitterUser> pageList = infoMapper.selectPage(page, queryWrapper);
+        return pageList;
     }
 }
 

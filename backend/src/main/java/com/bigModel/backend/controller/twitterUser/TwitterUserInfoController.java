@@ -5,6 +5,7 @@ import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
 import com.bigModel.backend.utils.UsernameToInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -19,10 +20,11 @@ public class TwitterUserInfoController {
     @Autowired
     private TwitterUserInfoService infoService;
 
-    @GetMapping("getUsers")
-    public IPage<TwitterUser> listAllUser(@RequestParam Map<String, String> data) {
-        Integer pageNum = Integer.parseInt(data.get("page"));
-        return infoService.getTwitterUsers(pageNum);
+    @PostMapping("getUsers")
+    public IPage<TwitterUser> listAllUser(@RequestBody Map<String, String> IPage) {
+        Integer pageNum = Integer.parseInt(IPage.get("page"));
+        Integer size = Integer.parseInt(IPage.get("size"));
+        return infoService.getTwitterUsers(pageNum, size);
     }
 
     @PostMapping("deleteUser")
@@ -31,13 +33,18 @@ public class TwitterUserInfoController {
     }
 
     @PostMapping("addUser")
-    public void addUser(@RequestParam Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
+    public void addUser(@RequestBody Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
         TwitterUser twitterUser = UsernameToInfoUtil.getInfoByUsername(data.get("username"));
         infoService.addTwitterUser(twitterUser);
     }
 
-    @GetMapping("listAll")
-    public List<TwitterUser> listAll() {
-        return infoService.listAll();
+    @PostMapping("findByUsername")
+    public IPage<TwitterUser> findByUsername(@RequestBody Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
+        TwitterUser twitterUser = new TwitterUser();
+        twitterUser.setUsername(data.get("username"));
+        Integer pageNum = Integer.parseInt(data.get("page"));
+        Integer size = Integer.parseInt(data.get("size"));
+        return infoService.findTwitterUserByUsername(twitterUser, pageNum, size);
     }
+
 }

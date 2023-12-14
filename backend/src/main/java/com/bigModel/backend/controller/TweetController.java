@@ -1,11 +1,12 @@
 package com.bigModel.backend.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.bigModel.backend.advice.ResponseNotIntercept;
+import com.bigModel.backend.pojo.Tweet;
+import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -17,11 +18,11 @@ public class TweetController {
     @Autowired
     private TweetService tweetService;
 
-    @GetMapping("/tweet/listAll/")
-    public Map<String, Object> getTweets(@RequestParam Map<String, String> data){
-//        System.out.println(data);
-        Integer pageNum = Integer.parseInt(data.get("page"));
-        return tweetService.getTweets(pageNum);
+    @PostMapping("/tweet/listAll")
+    public IPage<Tweet> getTweets(@RequestBody Map<String, String> IPage){
+        Integer pageNum = Integer.parseInt(IPage.get("page"));
+        Integer size = Integer.parseInt(IPage.get("size"));
+        return tweetService.getTweets(pageNum, size);
     }
 
     @GetMapping("/tweet/queryTweets")

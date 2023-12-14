@@ -31,21 +31,14 @@ public class TweetServiceImpl implements TweetService{
     }
 
     @Override
-    public Map<String, Object> getTweets(Integer pageNum) {
-        IPage<Tweet> page = new Page<>(pageNum, 10);
+    public IPage<Tweet> getTweets(Integer pageNum, Integer size) {
+        IPage<Tweet> page = new Page<>(pageNum, size);
 //        page.setCurrent(pageQuery.getCurrentNum());
 //        page.setSize(pageQuery.getPageSize());
         QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("id");
         IPage<Tweet> pageList = tweetMapper.selectPage(page, queryWrapper);
-        Long count = tweetMapper.selectCount(null);
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", pageList.getRecords());
-        map.put("current", String.valueOf(pageList.getCurrent()));
-        map.put("size", String.valueOf(pageList.getSize()));
-        map.put("pages", String.valueOf(pageList.getPages()));
-        map.put("total_tweets", count);
-        return map;
+        return pageList;
     }
 
     @Override
