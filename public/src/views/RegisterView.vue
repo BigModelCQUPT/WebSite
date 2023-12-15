@@ -79,7 +79,7 @@ export default {
                 if (valid) {
                     console.log(this.registerForm)
                     axios.post('http://localhost:8181/user/account/register', this.registerForm).then(function (resp) {
-                        if (resp.data.error_message === "success") {//返回成功
+                        if (resp.data.data.error_message === "success") {//返回成功
                             _this.$message({
                                 message: '注册成功',
                                 type: 'success'
@@ -90,7 +90,7 @@ export default {
                             // return false;
                         }
                         else {
-                            const error = resp.data.error_message
+                            const error = resp.data.data.error_message
                             _this.$message.error(error);
                         }
                     })
