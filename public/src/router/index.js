@@ -273,23 +273,23 @@ const router = createRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
-  // to and from are both route objects. must call `next`.
-  if (to.path === '/register' || to.path === '/login' || to.path === '/') {
-    next();//直接放行
-  } else {
-    const token = localStorage.getItem('jwt_token');
-    if (token === null || token === '') {
-      next('/')
-    } else {
-      next()
-    }
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   // to and from are both route objects. must call `next`.
+//   if (to.path === '/register' || to.path === '/login' || to.path === '/main') {
+//     next();//直接放行
+//   } else {
+//     const token = localStorage.getItem('jwt_token');
+//     if (token === null || token === '') {
+//       next('/')
+//     } else {
+//       next()
+//     }
+//   }
+// })
 
-//路由设置
+//路由守卫
 router.beforeEach((to, from, next) => {
-  if (to.path === '/') { // 如果跳转登录页面,则移除token
+  if (to.path === '/' || to.path === '/register') { // 如果跳转登录页面,则移除token
     localStorage.removeItem('jwt_token')
     next()
   } else {

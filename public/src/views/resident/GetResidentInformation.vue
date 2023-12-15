@@ -4,10 +4,10 @@
         <!--        工具栏-->
         <div class="toolbar">
             <div>
-                <el-input clearable @clear="init_page" @keydown.enter="findPeople" class="el-input-resident"
+                <el-input clearable @clear="init_page" @keydown.enter="search_initpage" class="el-input-resident"
                     v-model="search_name" placeholder="请输入用户名进行搜索">
                 </el-input>
-                <el-button type="primary" @click="findPeople">
+                <el-button type="primary" @click="search_initpage">
                     <el-icon style="vertical-align: middle;">
                         <search />
                     </el-icon>
@@ -147,16 +147,16 @@ export default {
         currentChange() {
             // console.log(this.currentPage)
             if (!this.search_flag) {  // 非搜索
-                this.init_page()
+                this.fetchData()
             } else {
-                this.search_initpage()
+                this.fetchData()
             }
         },
         sizeChange() {
             if (!this.search_flag) {  // 非搜索
-                this.init_page()
+                this.fetchData()
             } else {
-                this.search_initpage()
+                this.fetchData()
             }
         },
 
@@ -171,7 +171,11 @@ export default {
                 page: this.currentPage,
                 size: this.size
             }
-            axios.post('http://localhost:8181/twitterUser/findByUsername', data).then(function (resp) {
+            request({
+                url: 'http://localhost:8181/twitterUser/findByUsername',
+                method: 'post',
+                data: data,
+            }).then(function (resp) {
                 if (resp.data.status == "200") {//返回成功
                     console.log(resp)
                     _this.tableData = resp.data.data.records
@@ -183,6 +187,7 @@ export default {
                 }
             })
         },
+
         init_page() { // 没有搜索的时候
             const _this = this
             this.search_flag = false
@@ -209,6 +214,10 @@ export default {
 
         },
         search_initpage() { // 有搜索的时候
+            if (this.search_name == '') {
+                this.$message.error('请先输入有效值');
+                return;
+            }
             this.fetchData()
         },
         returnMain() {
@@ -249,7 +258,7 @@ export default {
                 size: this.size
             }
             request({
-                url: 'http://localhost:8181/twitterUser/findByUsername/' + this.currentPage + '/' + this.size,
+                url: 'http://localhost:8181/twitterUser/findByPage/' + this.currentPage + '/' + this.size,
                 method: 'post',
                 data: data
             }).then(function (resp) {
@@ -264,17 +273,6 @@ export default {
                     return false;
                 }
             })
-            // axios.post('http://localhost:8181/twitterUser/findByUsername/{page}/{size}', data).then(function (resp) {
-            //     if (resp.data.status == "200") {//返回成功
-            //         console.log(resp)
-            //         _this.tableData = resp.data.data.records
-            //         _this.total = resp.data.data.total
-            //         _this.search_flag = true
-            //     } else {
-            //         _this.$message.error('出现错误');
-            //         return false;
-            //     }
-            // })
         }
 
     },

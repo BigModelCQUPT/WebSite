@@ -401,11 +401,11 @@ export default {
         }
     },
     created() {
-        if (localStorage.getItem("jwt_token") === "" || localStorage.getItem("jwt_token") === null) {
-            this.$message.error('请先登录')
-            this.$router.replace('/')
-            return false;
-        }
+        // if (localStorage.getItem("jwt_token") === "" || localStorage.getItem("jwt_token") === null) {
+        //     this.$message.error('请先登录')
+        //     this.$router.replace('/')
+        //     return false;
+        // }
         this.username = window.sessionStorage.username
         // console.log(this.$route.matched.length)
         this.value = ref(new Date())
