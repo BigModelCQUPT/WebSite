@@ -299,7 +299,7 @@ router.beforeEach((to, from, next) => {
     } else {
       // 检验token是否正确
       axios({
-        url: 'http://localhost:8181/user/account/info/', //在controller中写一个接口用来token校验
+        url: 'http://localhost:8181/user/account/info', //在controller中写一个接口用来token校验
         method: 'get',
         //将token信息保存在header里
         headers: {

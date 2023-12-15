@@ -65,17 +65,11 @@ export default {
     },
     methods: {
         submitForm() {
-            // if(this.loginForm.username == 'admin' && this.loginForm.password == '111')
-            // {
-            //     this.$router.replace('/adminmain')
-            //     window.sessionStorage.setItem('username','admin');
-            //     return
-            // }
             const _this = this
             // console.log(this.loginForm)
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    axios.post('http://localhost:8181/user/account/login/', this.loginForm).then(function (resp) {
+                    axios.post('http://localhost:8181/user/account/login', this.loginForm).then(function (resp) {
                         // console.log(resp)
                         if (resp.data.error_message === "success") {//返回成功
                             _this.$message({
@@ -92,7 +86,6 @@ export default {
                             // window.sessionStorage.setItem('user', JSON.stringify(tmp))
                             // console.log( JSON.parse( sessionStorage.user))
                             _this.$router.replace('/main')
-
                         } else if (resp.data.code == "101") {
                             _this.$message.error('账号或者密码错误');
                             // return false;

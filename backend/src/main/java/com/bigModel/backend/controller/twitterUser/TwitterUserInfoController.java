@@ -22,6 +22,7 @@ public class TwitterUserInfoController {
 
     @PostMapping("getUsers")
     public IPage<TwitterUser> listAllUser(@RequestBody Map<String, String> IPage) {
+        System.out.println(IPage);
         Integer pageNum = Integer.parseInt(IPage.get("page"));
         Integer size = Integer.parseInt(IPage.get("size"));
         return infoService.getTwitterUsers(pageNum, size);
@@ -38,13 +39,16 @@ public class TwitterUserInfoController {
         infoService.addTwitterUser(twitterUser);
     }
 
-    @PostMapping("findByUsername")
-    public IPage<TwitterUser> findByUsername(@RequestBody Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
+    @PostMapping("findByUsername/{page}/{size}")
+    public IPage<TwitterUser> findByUsername(
+            @PathVariable(value = "page") Integer page,
+            @PathVariable(value = "size") Integer size,
+            @RequestBody Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
         TwitterUser twitterUser = new TwitterUser();
         twitterUser.setUsername(data.get("username"));
-        Integer pageNum = Integer.parseInt(data.get("page"));
-        Integer size = Integer.parseInt(data.get("size"));
-        return infoService.findTwitterUserByUsername(twitterUser, pageNum, size);
+//        Integer pageNum = Integer.parseInt(data.get("page"));
+//        Integer size = Integer.parseInt(data.get("size"));
+        return infoService.findTwitterUserByUsername(twitterUser, page, size);
     }
 
 }
