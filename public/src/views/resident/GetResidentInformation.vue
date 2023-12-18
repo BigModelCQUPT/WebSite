@@ -47,6 +47,7 @@
                 @keyup.enter="handleInputConfirm" @blur="handleInputConfirm">
             </el-input>
             <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+
         </div>
 
 
@@ -310,6 +311,7 @@ export default {
             })
         },
         handleDeleteKeyword(tag) {
+            console.log(tag);
             const _this = this
             request({
                 url: 'http://localhost:8181/tweet/deleteKeyword',
@@ -329,7 +331,6 @@ export default {
                 }
             })
         },
-
         handleAddKeyword(tag) {
             const _this = this
             request({
@@ -347,9 +348,10 @@ export default {
             })
         },
 
+
+
         showInput() {
             this.inputVisible = true;
-
         },
 
         handleInputConfirm() {
