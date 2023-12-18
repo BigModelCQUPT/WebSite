@@ -3,8 +3,8 @@
     <div class="common-layout" style="min-height:100%">
         <el-header style=" font-size: 12px">
             <div class="toolbar">
-                <h1 style="padding-top: 9px; font-size: 30px; text-align: left;">
-                    大模型分析
+                <h1 style="  padding-top: 9px; font-size: 30px; text-align: left; color:#bfcbd9  ">
+                    CQUPT大模型分析
                 </h1>
                 <el-dropdown class="user">
 
@@ -23,11 +23,30 @@
 
             </div>
         </el-header>
-        <el-container style="border: 1px solid #eee">
-            <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+        <el-container style="border: 1px solid #eeeeee">
+            <el-aside width="200px" style="background-color: rgb(6, 50, 126)">
                 <el-scrollbar>
                     <el-menu :default-active="activeIndex" router>
-                        <el-sub-menu index="1">
+
+                        <el-menu-item index="Overview">
+                            <template #title>
+                                <el-icon>
+                                    <Menu />
+                                </el-icon>总览
+                            </template>
+                        </el-menu-item>
+                        <el-menu-item index="getResidentInformation">
+                            <el-icon>
+                                <UserFilled />
+                            </el-icon>账号信息
+                        </el-menu-item>
+                        <el-menu-item index="getTenantInformation">
+                            <el-icon>
+                                <DataBoard />
+
+                            </el-icon>全部信息
+                        </el-menu-item>
+                        <!-- <el-sub-menu index="1">
                             <template #title>
                                 <el-icon>
                                     <Menu />
@@ -141,11 +160,11 @@
                                             </svg></el-icon>
                                         支出分析
                                     </el-menu-item>
-                                </el-sub-menu>
-                                <!--                            </el-menu-item>-->
-                            </el-menu-item-group>
-                        </el-sub-menu>
-                        <el-sub-menu index="4">
+                                </el-sub-menu> -->
+                        <!--                            </el-menu-item>-->
+                        <!-- </el-menu-item-group>
+                        </el-sub-menu> -->
+                        <!-- <el-sub-menu index="4">
                             <template #title>
                                 <el-icon>
                                     <svg t="1650628185729" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -163,13 +182,13 @@
                                             d="M358.4 805.973333H156.16v-648.533333h529.066667V358.4c0 18.773333 15.36 34.133333 34.133333 34.133333s34.133333-15.36 34.133333-34.133333V140.373333c0-28.16-23.04-51.2-51.2-51.2h-563.2c-28.16 0-51.2 23.04-51.2 51.2v682.666667c0 28.16 23.04 51.2 51.2 51.2H358.4c18.773333 0 34.133333-15.36 34.133333-34.133333 0-19.2-15.36-34.133333-34.133333-34.133334z"
                                             fill="#4C4C4C" p-id="3693"></path>
                                     </svg>
-                                </el-icon>居民信息登记
+                                </el-icon>信息查询
                             </template>
                             <el-menu-item-group>
                                 <el-menu-item index="getResidentInformation">
                                     <el-icon>
                                         <document />
-                                    </el-icon>查看居民信息
+                                    </el-icon>账号信息
                                 </el-menu-item>
                                 <el-menu-item index="getTenantInformation">
                                     <el-icon>
@@ -179,7 +198,7 @@
                                                 d="M491.358474 826.501292q4.081488 19.387067 13.264836 41.835251t26.529671 45.406552 44.896366 45.406552 68.364922 41.835251q-27.550043 7.142604-63.263062 11.224092-30.611159 4.081488-74.997339 7.142604t-102.547383 3.061116q-29.590787 0-67.854736-2.040744t-79.589013-6.122232-81.629757-9.183348-73.976967-10.20372-56.630644-10.713906-29.080601-10.713906q-10.20372-8.162976-15.815765-49.998226t4.591674-107.139056q6.122232-37.753763 30.611159-57.14083t56.630644-31.121345 67.34455-21.427811 62.752876-27.039857q21.427811-13.264836 32.651903-25.509299t15.815765-24.488927 4.591674-25.509299-1.020372-28.570415q-2.040744-24.488927-15.815765-37.753763t-31.121345-27.550043q-8.162976-7.142604-14.285208-19.897253t-11.224092-26.019485q-5.10186-15.305579-10.20372-31.631531-7.142604-2.040744-14.285208-7.142604-6.122232-5.10186-12.75465-14.285208t-11.734278-26.529671-3.571302-31.121345 5.612046-24.999113q4.081488-12.244464 12.244464-22.448183 0-38.774135 4.081488-77.548269 4.081488-32.651903 14.285208-69.89548t31.631531-66.834364q19.387067-27.550043 42.855623-45.406552t47.957482-28.060229 49.48804-14.285208 47.447296-4.081488q29.590787 0 56.630644 7.142604t49.998226 18.366695 41.325065 25.509299 29.590787 28.570415q25.509299 32.651903 38.263949 71.936224t17.856509 73.976967q5.10186 40.814879 4.081488 81.629757 7.142604 5.10186 11.224092 13.264836 4.081488 7.142604 6.632418 18.366695t0.510186 27.550043q-2.040744 22.448183-8.673162 35.202833t-14.795393 19.897253q-9.183348 8.162976-19.387067 11.224092-5.10186 16.325951-10.20372 31.631531-5.10186 13.264836-11.224092 26.019485t-14.285208 19.897253q-9.183348 8.162976-14.285208 15.815765t-8.162976 15.815765-6.632418 17.856509-10.713906 20.917625q-23.468555 36.733391-36.733391 69.385294t-18.366695 62.752876-3.061116 58.161202 8.162976 55.610272zM1013.788921 963.231135q14.285208 17.346323 15.815765 29.590787t-9.693534 23.468555q-6.122232 7.142604-15.815765 7.65279t-20.407439-3.571302-20.407439-10.20372-16.836137-12.244464l-71.426038-65.303806q-28.570415 17.346323-60.712132 24.999113t-64.283434 5.612046-62.752876-15.815765-55.100086-39.284321q-28.570415-28.570415-42.855623-64.79362t-14.285208-73.976967 14.285208-73.976967 42.855623-64.79362q27.550043-28.570415 63.263062-42.855623t72.44641-14.285208 72.44641 14.285208 64.283434 42.855623q24.488927 25.509299 38.263949 57.14083t16.325951 64.283434-5.10186 65.303806-24.999113 60.201946l38.774135 38.774135q15.305579 15.305579 28.570415 29.080601t17.346323 17.856509zM769.920021 899.968074q26.529671 0 49.998226-10.20372t40.814879-28.060229 27.550043-41.835251 10.20372-51.528784-10.20372-51.018598-27.550043-41.325065-40.814879-28.060229-49.998226-10.20372-49.998226 10.20372-40.814879 28.060229-27.550043 41.325065-10.20372 51.018598 10.20372 51.528784 27.550043 41.835251 40.814879 28.060229 49.998226 10.20372z"
                                                 p-id="2946"></path>
                                         </svg>
-                                    </el-icon>查看租户信息
+                                    </el-icon>全部信息
                                 </el-menu-item>
                                 <el-menu-item index="communityResidentData">
                                     <el-icon>
@@ -201,9 +220,9 @@
                                     </el-icon>社区居民信息
                                 </el-menu-item>
                             </el-menu-item-group>
-                        </el-sub-menu>
-                        <el-sub-menu index="8">
-                            <template #title>
+                        </el-sub-menu> -->
+                        <!-- <el-sub-menu index="8"> -->
+                        <!-- <template #title>
                                 <el-icon>
                                     <svg t="1650628225034" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                         xmlns="http://www.w3.org/2000/svg" p-id="4512" width="200" height="200">
@@ -304,21 +323,21 @@
                                     <el-icon>
                                         <help />
                                     </el-icon>领导集体
-                                </el-menu-item>
-                            </el-menu-item-group>
-                        </el-sub-menu>
+                                </el-menu-item> -->
+                        <!-- </el-menu-item-group> -->
+                        <!-- </el-sub-menu> -->
                     </el-menu>
                 </el-scrollbar>
             </el-aside>
             <el-main>
-                <el-breadcrumb separator=">" class="bread" v-if="this.$router.currentRoute._rawValue.fullPath != '/main'">
+                <!-- <el-breadcrumb separator=">" class="bread" v-if="this.$router.currentRoute._rawValue.fullPath != '/main'">
                     <el-breadcrumb-item :to="{ path: item.path }" v-for="item in list" :key="item">{{ item.name
                     }}</el-breadcrumb-item>
-                    <!--                    <el-breadcrumb-item>{{this.$router.currentRoute._rawValue.name}}</el-breadcrumb-item>-->
-                    <!--                    <el-breadcrumb-item>promotion list</el-breadcrumb-item>-->
-                    <!--                    <el-breadcrumb-item>promotion detail</el-breadcrumb-item>-->
+                                       <el-breadcrumb-item>{{this.$router.currentRoute._rawValue.name}}</el-breadcrumb-item>
+                                       <el-breadcrumb-item>promotion list</el-breadcrumb-item>
+                                       <el-breadcrumb-item>promotion detail</el-breadcrumb-item>
                     <el-divider border-style="double" />
-                </el-breadcrumb>
+                </el-breadcrumb> -->
 
                 <div class="welcome" v-if="this.$route.matched.length == 1">
                     欢迎
@@ -331,7 +350,7 @@
     </div>
 </template>
 <script  >
-import { Help, Histogram,  /*Fold, Expand,*/  Tickets, Files, Iphone, OfficeBuilding, List, DocumentAdd, Calendar, Document, Setting, Avatar, Menu, Notebook, EditPen } from '@element-plus/icons-vue'
+import {  /*Fold, Expand,*/  Menu, Avatar, DataBoard, UserFilled } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import axios from 'axios'
 import { ElNotification } from 'element-plus'
@@ -357,7 +376,7 @@ export default {
         },
         init() {
             // const _this = this
-            axios.get('http://localhost:8181/getMeetingNotice').then(function (resp) {
+            axios.get('http://10.16.104.183:8181/getMeetingNotice').then(function (resp) {
                 // console.log(resp.data.data)
                 if (resp.data.code == "200") {//返回成功
                     if (resp.data.data[0] != '') {
@@ -412,8 +431,7 @@ export default {
         this.init()
     },
     components: {
-        Help,/* Fold, Expand,*/   Tickets, OfficeBuilding, List, Document, DocumentAdd, Iphone, Files, Setting, Avatar, Menu, Calendar, Notebook,
-        EditPen, Histogram,
+        /* Fold, Expand,*/ Menu, Avatar, DataBoard, UserFilled
     },
     computed: {
         list() {
@@ -426,14 +444,15 @@ export default {
 <style  scoped>
 .el-header {
     position: relative;
-    background-color: #b3c0d1;
+    background-color: #324157;
     color: var(--el-text-color-primary);
 }
 
 .el-aside {
+    height: 800px;
     width: 240px;
     color: var(--el-text-color-primary);
-    background: #fff !important;
+    background: #ffffff !important;
     border-right: solid 1px #e6e6e6;
     box-sizing: border-box;
 }
@@ -472,5 +491,4 @@ export default {
 
 .img-head {
     border-radius: 40px;
-}
-</style>
+}</style>

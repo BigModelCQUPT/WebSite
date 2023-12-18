@@ -38,19 +38,6 @@
             </div>
         </div>
 
-        <div style="margin-top: 30px">
-            <el-tag :key="tag" v-for="tag in keywordData" closable :disable-transitions="false"
-                @close="handleDeleteKeyword(tag)">
-                {{ tag }}
-            </el-tag>
-            <el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small"
-                @keyup.enter="handleInputConfirm" @blur="handleInputConfirm">
-            </el-input>
-            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
-
-        </div>
-
-
         <!--        数据展示-->
         <div style="margin-top: 15px">
             <el-table :data="tableData" border style="width: 100%">
@@ -80,6 +67,21 @@
                 </div>
             </el-dialog>
         </div>
+        <!-- 
+        <div>
+            <el-dialog title="添加关键词" width="30%" v-model="dialogVisible"
+                style="display: flex; justify-content: space-around; align-items: center">
+                <div style="height: 20%">
+                    <el-input :placeholder="'请输入关键词'" style="align:center; width: 60%;" @keydown.enter="completeAdd"
+                        v-model="add_name" @clear="fetchData"></el-input>
+                </div>
+                <div style="margin-top: 60px">
+                    <el-button type="primary" @click="completeAdd">确认</el-button>
+                    <el-button type="primary" @click="cancelAdd">取消</el-button>
+                </div>
+            </el-dialog>
+        </div> -->
+
     </div>
 </template>
 
@@ -93,8 +95,6 @@ export default {
     name: "GetResidentInformation",
     data() {
         return {
-
-            keywordData: [1, 2, 3, 4],
 
             tableData: [{
                 id: '1',
@@ -293,75 +293,6 @@ export default {
             })
         },
 
-        selectKeyWord() {
-            const _this = this
-            request({
-                url: 'http://localhost:8181/tweet/selectKeyword',
-                method: 'get',
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.keywordData = resp.data.data.records
-                    // 因为可能导致 整个分页表是否包含 该关键词发生变化
-                    this.fetchData()
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-        },
-        handleDeleteKeyword(tag) {
-            console.log(tag);
-            const _this = this
-            request({
-                url: 'http://localhost:8181/tweet/deleteKeyword',
-                method: 'post',
-                data: tag
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                    this.fetchData()
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-        },
-        handleAddKeyword(tag) {
-            const _this = this
-            request({
-                url: 'http://localhost:8181/tweet/addKeyword',
-                method: 'post',
-                data: tag
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    this.selectKeyWord()
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-        },
-
-
-
-        showInput() {
-            this.inputVisible = true;
-        },
-
-        handleInputConfirm() {
-            let inputValue = this.inputValue;
-            if (inputValue) {
-                this.dynamicTags.push(inputValue);
-            }
-            this.inputVisible = false;
-            this.inputValue = '';
-        }
     },
     components: {
         Search, Plus, FolderAdd, Upload
@@ -379,23 +310,5 @@ export default {
 .el-input-resident {
     width: 300px;
     margin-right: 10px;
-}
-
-.el-tag+.el-tag {
-    margin-left: 10px;
-}
-
-.button-new-tag {
-    margin-left: 10px;
-    height: 32px;
-    line-height: 30px;
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
-.input-new-tag {
-    width: 90px;
-    margin-left: 10px;
-    vertical-align: bottom;
 }
 </style>

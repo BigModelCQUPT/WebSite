@@ -49,7 +49,7 @@ public class TwitterUserInfoController {
     }
 
     @PostMapping("findByPage/{page}/{size}")
-    public IPage<TwitterUser> findByUsername(
+    public IPage<TwitterUser> findUserByPage(
             @PathVariable(value = "page") Integer page,
             @PathVariable(value = "size") Integer size,
             @RequestBody Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {

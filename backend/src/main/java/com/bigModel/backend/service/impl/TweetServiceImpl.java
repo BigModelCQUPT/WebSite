@@ -12,8 +12,8 @@ import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.bigModel.backend.utils.chatGPT;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,5 +76,14 @@ public class TweetServiceImpl implements TweetService{
         map.put("pages", String.valueOf(pageList.getPages()));
         map.put("total_tweets", count);
         return pageList;
+    }
+
+    @Override
+    public Map<String, Object> analysisByGPT(Integer id) {
+        Tweet tweet = tweetMapper.selectById(id);
+        String content = tweet.getText();
+        Map<String, Object> res = new HashMap<>();
+        res = chatGPT.getAnswer(content);
+        return res;
     }
 }

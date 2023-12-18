@@ -1,14 +1,17 @@
-package com.bigModel.backend.task;
+package com.bigModel.backend.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 
-public class test {
+public class chatGPT {
 
-    public static void main(String[] args) {
+    public static HashMap<String, Object> getAnswer(String content) {
+        HashMap<String, Object> answerHash = new HashMap<>();
+        answerHash.put("content", content);
         try {
             // Replace "sk-xxx" with your actual API key
             String apiKey = "sk-LvLWgzMybUVMovfA0355Ec8599Fb42A7A9D163D4041fD94c";
@@ -24,7 +27,7 @@ public class test {
             connection.setDoOutput(true);
 
             // Replace "Say this is a test" with your actual message
-            String userMessage = "在信息爆炸的时代，很多信息我们无法全面接收，我们需要从中筛选出一些我们感 兴趣的或者说对我们有用的信息进行接收。 怎么选择呢，关键词提取就是其中一个很好 的方法。 如果我们可以准确地将所有文档都用几个简单的关键词描述出来 ，那我们单看 几个关键词就可以了解一篇文章是不是我们所需要的 ，这样会大大提高我们的信息获取效率。" + " 提取上述文本的三个关键词";
+            String userMessage = content + " 请分析上述文字是否为政治敏感，你只需回答是或不是";
 
             String payload = "{\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"" + userMessage + "\"\n    }\n  ],\n  \"model\": \"gpt-3.5-turbo\"\n}";
 
@@ -40,12 +43,16 @@ public class test {
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println(response.toString());
-            }
 
+                String res = response.substring(response.indexOf("\"content\""));
+                String[] tmp = res.split("\"");
+                System.out.println(tmp[3]);
+                answerHash.put("answer", tmp[3]);
+            }
             connection.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return answerHash;
     }
 }
