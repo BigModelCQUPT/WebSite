@@ -6,11 +6,15 @@ import twitter4j.JSONArray;
 import twitter4j.JSONException;
 import twitter4j.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ParseJSONUtil {
     public static List<Tweet> parseJSON(String string,String username, String twitterId) {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         JSONObject json = new JSONObject(string);
         String data = json.getString("data");
         JSONArray jsonArray = new JSONArray(data);
@@ -31,6 +35,7 @@ public class ParseJSONUtil {
             tweet.setTweetid(item.getString("id"));
             tweet.setUsername(username);
             tweet.setTwitterId(twitterId);
+            tweet.setDate(s.format(c.getTime()));
             list.add(tweet);
         }
         return list;

@@ -21,4 +21,5 @@ public class Tweet {
     private String type;
     private String keyword;
     private String twitterId;
+    private String date;
 }

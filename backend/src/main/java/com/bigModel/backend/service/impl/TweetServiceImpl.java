@@ -26,7 +26,7 @@ public class TweetServiceImpl implements TweetService{
     @Override
     public void saveTweet(List<Tweet> list) {
         for (int i = 0; i < list.size(); i ++) {
-            tweetMapper.insert(list.get(i));
+            tweetMapper.saveTweet(list.get(i));
         }
     }
 

@@ -36,8 +36,7 @@ public class OrderTask {
     @Scheduled(cron = "0 0 12 * * ?")
     public void testHello() throws IOException, URISyntaxException, InterruptedException {
         List<TwitterUser> list = infoService.listAll();
-        for (int i = 11; i < list.size(); i++) {
-            System.out.println(i);
+        for (int i = 0; i < 1; i++) {
             Thread.sleep(60000);
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
