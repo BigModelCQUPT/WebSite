@@ -45,6 +45,7 @@ public class OrderTask {
             Pattern p = Pattern.compile("[\u4E00-\u9FA5|\\！|\\，|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]");
             String encode = "";
             if (p.matcher(twitterId).find()) {
+
                 encode = URLEncoder.encode(twitterId, "utf-8");
             } else {
                 encode = twitterId;

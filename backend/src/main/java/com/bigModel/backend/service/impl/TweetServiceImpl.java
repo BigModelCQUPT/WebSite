@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bigModel.backend.mapper.TweetMapper;
 import com.bigModel.backend.pojo.PageQuery;
 import com.bigModel.backend.pojo.Tweet;
+import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,8 +49,9 @@ public class TweetServiceImpl implements TweetService{
 //        page.setSize(pageQuery.getPageSize());
         QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("text", keyword);
+        queryWrapper.orderByDesc("id");
         IPage<Tweet> pageList = tweetMapper.selectPage(page, queryWrapper);
-        Long count = tweetMapper.selectCount(queryWrapper );
+        Long count = tweetMapper.selectCount(queryWrapper);
         Map<String, Object> map = new HashMap<>();
         map.put("data", pageList.getRecords());
         map.put("current", String.valueOf(pageList.getCurrent()));
@@ -57,5 +59,22 @@ public class TweetServiceImpl implements TweetService{
         map.put("pages", String.valueOf(pageList.getPages()));
         map.put("total_tweets", count);
         return map;
+    }
+
+    @Override
+    public IPage<Tweet> findTweetByKeyword(String keyword, Integer pageNum, Integer size) {
+        IPage<Tweet> page = new Page<>(pageNum, size);
+        QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("text", keyword);
+        queryWrapper.orderByDesc("id");
+        IPage<Tweet> pageList = tweetMapper.selectPage(page, queryWrapper);
+        Long count = tweetMapper.selectCount(queryWrapper);
+        Map<String, Object> map = new HashMap<>();
+        map.put("data", pageList.getRecords());
+        map.put("current", String.valueOf(pageList.getCurrent()));
+        map.put("size", String.valueOf(pageList.getSize()));
+        map.put("pages", String.valueOf(pageList.getPages()));
+        map.put("total_tweets", count);
+        return pageList;
     }
 }
