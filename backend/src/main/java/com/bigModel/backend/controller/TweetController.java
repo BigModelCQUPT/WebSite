@@ -58,4 +58,10 @@ public class TweetController {
         Map<String, Object> map = tweetService.getNumberTweet();
         return Result.success(map);
     }
+
+    @PostMapping("/tweet/updateFlag/{id}")
+    public Result updateFlag(@PathVariable("id") int id) {
+        tweetService.updateFlag(id);
+        return Result.success("修改成功");
+    }
 }

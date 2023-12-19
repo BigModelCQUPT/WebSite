@@ -102,4 +102,12 @@ public class TweetServiceImpl implements TweetService{
         List<Tweet> tweetList = tweetMapper.selectList(queryWrapper);
         return tweetList;
     }
+
+    @Override
+    public void updateFlag(Integer id) {
+        Tweet tweet = new Tweet();
+        tweet.setId(id);
+        tweet.setFlag(1);
+        tweetMapper.updateById(tweet);
+    }
 }

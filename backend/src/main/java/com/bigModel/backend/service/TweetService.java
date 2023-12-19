@@ -20,4 +20,6 @@ public interface TweetService {
     Map<String, Object> getNumberTweet();
 
     List<Tweet> getAllTweet();
+
+    void updateFlag(Integer id);
 }
