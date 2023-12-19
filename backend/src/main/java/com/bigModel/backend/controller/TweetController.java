@@ -52,4 +52,10 @@ public class TweetController {
         Map<String, Object> map = tweetService.analysisByGPT(id);
         return Result.success(map);
     }
+
+    @GetMapping("/tweet/getNumberTweet")
+    public Result getNumberTweet(){
+        Map<String, Object> map = tweetService.getNumberTweet();
+        return Result.success(map);
+    }
 }

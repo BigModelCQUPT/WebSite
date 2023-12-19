@@ -42,6 +42,7 @@ import EditIntroductionView from "@/views/admin/EditIntroductionView";
 import EditStructView from "@/views/admin/EditStructView";
 import EditEmployeeView from "@/views/admin/EditEmployeeView";
 import EditLeaderView from "@/views/admin/EditLeaderView";
+import overView from "@/views/overView"
 import axios from 'axios';
 
 const routes = [
@@ -201,6 +202,11 @@ const routes = [
         path:'/updatePassword',
         name:'密码修改',
         component: UpdatePasswordView
+      },
+      {
+        path:'/overView',
+        name:'总览',
+        component: overView
       },
     ]
   },

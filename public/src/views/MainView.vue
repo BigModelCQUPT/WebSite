@@ -28,7 +28,7 @@
                 <el-scrollbar>
                     <el-menu :default-active="activeIndex" router>
 
-                        <el-menu-item index="Overview">
+                        <el-menu-item index="overView">
                             <template #title>
                                 <el-icon>
                                     <Menu />
@@ -43,7 +43,6 @@
                         <el-menu-item index="getTenantInformation">
                             <el-icon>
                                 <DataBoard />
-
                             </el-icon>全部信息
                         </el-menu-item>
                         <!-- <el-sub-menu index="1">
@@ -339,9 +338,10 @@
                     <el-divider border-style="double" />
                 </el-breadcrumb> -->
 
-                <div class="welcome" v-if="this.$route.matched.length == 1">
-                    欢迎
-                </div>
+                <!-- <div>
+                    <div ref="mychart" style="height: 560px; width: 100%; margin-top: 0px">
+                    </div>
+                </div> -->
                 <router-view />
             </el-main>
 
@@ -354,6 +354,9 @@ import {  /*Fold, Expand,*/  Menu, Avatar, DataBoard, UserFilled } from '@elemen
 import { ref } from 'vue'
 import axios from 'axios'
 import { ElNotification } from 'element-plus'
+
+
+
 export default {
     name: 'MainView',
     methods: {
@@ -416,15 +419,10 @@ export default {
             text: "",
             messages: [],
             content: '',
-            img: ''
+            img: '',
         }
     },
     created() {
-        // if (localStorage.getItem("jwt_token") === "" || localStorage.getItem("jwt_token") === null) {
-        //     this.$message.error('请先登录')
-        //     this.$router.replace('/')
-        //     return false;
-        // }
         this.username = window.sessionStorage.username
         // console.log(this.$route.matched.length)
         this.value = ref(new Date())
@@ -491,4 +489,5 @@ export default {
 
 .img-head {
     border-radius: 40px;
-}</style>
+}
+</style>

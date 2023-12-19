@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.bigModel.backend.pojo.TwitterUser;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TwitterUserInfoService {
     void addTwitterUser(TwitterUser twitterUser);
@@ -11,4 +12,6 @@ public interface TwitterUserInfoService {
     void deleteTwitterUserByTwitterId(String twitterId);
     List<TwitterUser> listAll();
     IPage<TwitterUser> findTwitterUserByUsername(TwitterUser twitterUser, Integer pageNum, Integer size);
+
+    Map<String, Object> getNumberUser();
 }
