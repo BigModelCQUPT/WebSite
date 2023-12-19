@@ -5,11 +5,14 @@ import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
 import com.taobao.api.ApiException;
+import okhttp3.*;
 import org.springframework.stereotype.Component;
+import twitter4j.JSONObject;
 
 @Component
 public class DingTalkNoticeUtil {
-    public static void sendNotice() throws ApiException {
+    public static void sendNotice() throws Exception {
+        String accessToken = getAccessToken();
         DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2");
         OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
         request.setAgentId(2832368212L);
@@ -30,7 +33,23 @@ public class DingTalkNoticeUtil {
         // msg.getActionCard().setSingleUrl("https://www.baidu.com");
         // msg.setMsgtype("action_card");
         // request.setMsg(msg);
-        OapiMessageCorpconversationAsyncsendV2Response rsp = client.execute(request, "9d642f2051673c8899050ead24e1cab5");
+        OapiMessageCorpconversationAsyncsendV2Response rsp = client.execute(request, accessToken);
         System.out.println(rsp.getBody());
+    }
+     public static String getAccessToken() throws Exception {
+         OkHttpClient client = new OkHttpClient().newBuilder()
+                 .build();
+         Request request = new Request.Builder()
+                 .url("https://oapi.dingtalk.com/gettoken?appkey=dingksexqekhvsnkpzky&appsecret=QxsgKcezvtCqCcEytHXl4wL6l0sJ9yY12cZ6Ua9rCpDursrg2bXZjgpfJ220c7v1")
+                 .method("GET", null)
+                 .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
+                 .build();
+         Response response = client.newCall(request).execute();
+         ResponseBody res = response.body();
+         JSONObject json = new JSONObject(res.string());
+         return json.getString("access_token");
+     }
+
+    public static void main(String[] args) throws Exception {
     }
 }
