@@ -38,7 +38,7 @@ public class YoutubeVideoUtil {
                 // return e.getMessage();
                 System.out.println("出错");
             }
-            String apiKey = "AIzaSyDsjztyTlmBkAgiscD68WaZ4R19U_WjBRw";
+            String apiKey = "";
             search.setKey(apiKey);
             // 接口返回数据模型
             search.setType("video");
