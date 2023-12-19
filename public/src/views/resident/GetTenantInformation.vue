@@ -30,15 +30,16 @@
                 <template #header>
                     <div class="card-header">
                         <span>关键词</span>
-                        <!-- <el-button class="button" text>Operation button</el-button> -->
+
                     </div>
                 </template>
                 <el-tag :key="tag" v-for="tag in keywordData" closable :disable-transitions="false"
-                    @close="handleDeleteKeyword(tag)" type="danger">
-                    {{ tag }}
+                    @close="handleDeleteKeyword(tag.id)" type="danger">
+                    {{ tag.keyword }}
                 </el-tag>
                 <el-input v-if="keyworddialogVisible" ref="InputRef" v-model="keywordInputValue" class="input-new-tag"
-                    size="small" @keyup.enter="handleAddKeyword" @blur="handleAddKeyword" type="info" />
+                    size="small" @keyup.enter="handleAddKeyword" @blur="blurKeyWord" type="info" />
+
                 <el-button v-else class="button-new-tag" size="large" @click="showInput">
                     + 新增关键词
                 </el-button>
@@ -216,7 +217,7 @@ export default {
     data() {
         return {
 
-            keywordData: [1, 2, 3, 4],
+            keywordData: [],
             tableData: [{
                 id: '123',
                 username: 'abcd',
@@ -400,7 +401,6 @@ export default {
         sizeChange() {
             // console.log(this.size)
             this.fetchData()
-
         },
         // find() {
         //     if (this.search_text == '') {
@@ -507,11 +507,11 @@ export default {
         fetchKeywordData() {
             const _this = this
             request({
-                url: 'http://localhost:8181/tweet/selectKeyword',
+                url: 'http://localhost:8181/keyword/listAll',
                 method: 'get',
             }).then(function (resp) {
                 if (resp.status == "200") {
-                    _this.keywordData = resp.data.data.records
+                    _this.keywordData = resp.data.data
                     // 因为可能导致 整个分页表是否包含 该关键词发生变化
                     this.fetchData()
                 }
@@ -521,13 +521,12 @@ export default {
                 }
             })
         },
-        handleDeleteKeyword(tag) {
-            console.log(tag);
+        handleDeleteKeyword(id) {
+            console.log(id);
             const _this = this
             request({
-                url: 'http://localhost:8181/tweet/deleteKeyword',
-                method: 'post',
-                data: tag
+                url: 'http://localhost:8181/keyword/delete/' + id,
+                method: 'get',
             }).then(function (resp) {
                 if (resp.status == "200") {
                     _this.$message({
@@ -541,27 +540,34 @@ export default {
                     return false;
                 }
             })
+            this.fetchKeywordData()
         },
         handleAddKeyword() {
-            let keywordInputValue = this.keywordInputValue;
             const _this = this
+            const data = {
+                keyword: this.keywordInputValue
+            }
             request({
-                url: 'http://localhost:8181/tweet/addKeyword',
+                url: 'http://localhost:8181/keyword/add',
                 method: 'post',
-                data: keywordInputValue
+                data: data
             }).then(function (resp) {
                 if (resp.status == "200") {
-                    this.selectKeyWord()
+                    _this.$message.success('添加成功');
                 }
                 else {
                     _this.$message.error('出错了');
                     return false;
                 }
-                this.keyworddialogVisible = false;
-                this.keywordInputValue = '';
             })
+            this.keyworddialogVisible = false
+            this.keywordInputValue = ''
+            this.fetchKeywordData()
         },
-
+        blurKeyWord() {
+            this.keyworddialogVisible = false
+            this.keywordInputValue = ''
+        },
 
         showInput() {
             this.keyworddialogVisible = true;
@@ -621,6 +627,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: lightblue;
 }
 
 .text {

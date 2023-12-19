@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/keyword")
@@ -16,7 +17,6 @@ public class KeywordController {
 
     @PostMapping("/add")
     public void addKeyword(@RequestBody Keyword keyword) {
-        System.out.println(keyword.getKeyword());
         keywordService.addKeyword(keyword);
     }
 

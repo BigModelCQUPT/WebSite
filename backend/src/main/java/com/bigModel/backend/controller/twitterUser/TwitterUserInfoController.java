@@ -65,7 +65,6 @@ public class TwitterUserInfoController {
     @GetMapping("/getNumberUser")
     public Result getNumberUser(){
         Map<String, Object> map = infoService.getNumberUser();
-        System.out.println(map);
         return Result.success(map);
     }
 }
