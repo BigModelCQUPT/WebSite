@@ -18,4 +18,6 @@ public interface TweetService {
     Map<String, Object> analysisByGPT(Integer id);
 
     Map<String, Object> getNumberTweet();
+
+    List<Tweet> getAllTweet();
 }

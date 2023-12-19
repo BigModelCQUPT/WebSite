@@ -95,4 +95,11 @@ public class TweetServiceImpl implements TweetService{
         res.put("totalTweet",count);
         return res;
     }
+
+    @Override
+    public List<Tweet> getAllTweet() {
+        QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
+        List<Tweet> tweetList = tweetMapper.selectList(queryWrapper);
+        return tweetList;
+    }
 }

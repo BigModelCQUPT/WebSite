@@ -9,6 +9,9 @@ import okhttp3.*;
 import org.springframework.stereotype.Component;
 import twitter4j.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class DingTalkNoticeUtil {
     public static void sendNotice() throws Exception {
@@ -16,13 +19,16 @@ public class DingTalkNoticeUtil {
         DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2");
         OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
         request.setAgentId(2832368212L);
-        request.setUseridList("260665454821659594");
+        request.setUseridList("260665454821659594, 0233530551481796729358, 284563571837719894");
         request.setToAllUser(false);
 
         OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
         msg.setMsgtype("text");
         msg.setText(new OapiMessageCorpconversationAsyncsendV2Request.Text());
-        msg.getText().setContent("发现风险信息");
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String date = df.format(now);
+        msg.getText().setContent("发现风险信息" + date);
         request.setMsg(msg);
 
 
@@ -50,6 +56,4 @@ public class DingTalkNoticeUtil {
          return json.getString("access_token");
      }
 
-    public static void main(String[] args) throws Exception {
-    }
 }

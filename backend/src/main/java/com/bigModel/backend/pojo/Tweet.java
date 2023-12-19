@@ -22,4 +22,5 @@ public class Tweet {
     private String keyword;
     private String twitterId;
     private String date;
+    private Integer needReturn;
 }
