@@ -86,4 +86,13 @@ public class TweetServiceImpl implements TweetService{
         res = chatGPT.getAnswer(content);
         return res;
     }
+
+    @Override
+    public Map<String, Object> getNumberTweet() {
+        QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
+        Long count = tweetMapper.selectCount(queryWrapper);
+        Map<String, Object> res = new HashMap<>();
+        res.put("totalTweet",count);
+        return res;
+    }
 }

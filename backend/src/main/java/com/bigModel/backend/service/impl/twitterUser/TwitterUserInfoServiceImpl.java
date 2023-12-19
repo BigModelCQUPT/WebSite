@@ -52,6 +52,15 @@ public class TwitterUserInfoServiceImpl implements TwitterUserInfoService {
         IPage<TwitterUser> pageList = infoMapper.selectPage(page, queryWrapper);
         return pageList;
     }
+
+    @Override
+    public Map<String, Object> getNumberUser() {
+        QueryWrapper<TwitterUser> queryWrapper = new QueryWrapper<>();
+        Long count = infoMapper.selectCount(queryWrapper);
+        Map<String, Object> res = new HashMap<>();
+        res.put("totalUser",count);
+        return res;
+    }
 }
 
 //

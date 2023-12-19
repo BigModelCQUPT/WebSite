@@ -85,7 +85,7 @@ export default {
                             // sessionStorage.setItem("head_img", resp.data.data.img)
                             // window.sessionStorage.setItem('user', JSON.stringify(tmp))
                             // console.log( JSON.parse( sessionStorage.user))
-                            _this.$router.replace('/main')
+                            _this.$router.replace('/overView')
                         } else if (resp.data.code == "101") {
                             _this.$message.error('账号或者密码错误');
                             // return false;

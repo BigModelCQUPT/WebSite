@@ -16,4 +16,6 @@ public interface TweetService {
     IPage<Tweet> findTweetByKeyword(String keyword, Integer pageNum, Integer size);
 
     Map<String, Object> analysisByGPT(Integer id);
+
+    Map<String, Object> getNumberTweet();
 }

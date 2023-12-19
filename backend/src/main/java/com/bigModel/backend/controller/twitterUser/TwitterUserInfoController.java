@@ -1,6 +1,7 @@
 package com.bigModel.backend.controller.twitterUser;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.bigModel.backend.advice.result.Result;
 import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
 import com.bigModel.backend.utils.UsernameToInfoUtil;
@@ -59,5 +60,12 @@ public class TwitterUserInfoController {
 //        Integer pageNum = Integer.parseInt(data.get("page"));
 //        Integer size = Integer.parseInt(data.get("size"));
         return infoService.findTwitterUserByUsername(twitterUser, page, size);
+    }
+
+    @GetMapping("/getNumberUser")
+    public Result getNumberUser(){
+        Map<String, Object> map = infoService.getNumberUser();
+        System.out.println(map);
+        return Result.success(map);
     }
 }
