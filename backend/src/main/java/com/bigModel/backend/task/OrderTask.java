@@ -5,7 +5,6 @@ import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.TweetService;
 import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
 import com.bigModel.backend.utils.ParseJSONUtil;
-import com.sun.org.apache.xpath.internal.operations.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,7 +19,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
