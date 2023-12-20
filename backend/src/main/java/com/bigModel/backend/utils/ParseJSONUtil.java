@@ -2,6 +2,7 @@ package com.bigModel.backend.utils;
 
 
 import com.bigModel.backend.pojo.Tweet;
+import com.bigModel.backend.service.impl.util.TraditionalToSimplifiedUtil;
 import twitter4j.JSONArray;
 import twitter4j.JSONException;
 import twitter4j.JSONObject;
@@ -29,7 +30,7 @@ public class ParseJSONUtil {
             }catch (JSONException exception) {
             }
             Tweet tweet = new Tweet();
-            tweet.setText(item.getString("text"));
+            tweet.setText(TraditionalToSimplifiedUtil.TraditionalToSimplified(item.getString("text")));
             tweet.setFlag(0);
             tweet.setType(type);
             tweet.setTweetid(item.getString("id"));
