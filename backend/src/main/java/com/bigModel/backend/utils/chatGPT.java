@@ -17,7 +17,7 @@ public class chatGPT {
             String apiKey = "sk-LvLWgzMybUVMovfA0355Ec8599Fb42A7A9D163D4041fD94c";
 
             // Replace "https://orisound.cn//v1" with the actual base URL
-            String baseUrl = "https://aihubmix.com/v1";
+            String baseUrl = "https://orisound.cn/v1";
 
             URL url = new URL(baseUrl + "/chat/completions");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
