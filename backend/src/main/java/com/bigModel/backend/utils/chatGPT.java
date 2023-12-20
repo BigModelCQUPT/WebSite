@@ -27,7 +27,7 @@ public class chatGPT {
             connection.setDoOutput(true);
 
             // Replace "Say this is a test" with your actual message
-            String userMessage = content + " 请分析上述文字是否为政治敏感，你只需回答是或不是";
+            String userMessage = content + " 请将上述文字归类为以下类别枪支武器、毒品药品、数据交易、诈骗制假、洗钱、赌博、网安威胁、反共反体制、民运活动、组党结社、维权抗议、民族分裂、宗教极端、非法宗教、反对政府、恐怖暴力、海外利益。若无法分类，则输出无类别。只需输出具体类别，无需其他描述。";
 
             String payload = "{\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"" + userMessage + "\"\n    }\n  ],\n  \"model\": \"gpt-3.5-turbo\"\n}";
 
@@ -47,7 +47,7 @@ public class chatGPT {
                 String res = response.substring(response.indexOf("\"content\""));
                 String[] tmp = res.split("\"");
                 System.out.println(tmp[3]);
-                answerHash.put("answer", tmp[3]);
+                answerHash.put("category", tmp[3]);
             }
             connection.disconnect();
         } catch (Exception e) {

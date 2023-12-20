@@ -49,7 +49,7 @@
 
                     <div class="flex items-center justify-between mt-5">
                         <div class="text-lg text-right">
-                            {{ Math.round(totalTweet) }}
+                            {{ Math.round(tweetCount) }}
                         </div>
                         <svg-icon icon-class="ip" size="2em" />
                     </div>
@@ -78,7 +78,7 @@ export default {
     data() {
         return {
             twitterUserCount: 0,
-            totalTweet: 0,
+            tweetCount: 0,
 
             option: {
                 title: {
@@ -134,7 +134,7 @@ export default {
                 method: 'get',
             }).then(function (resp) {
                 if (resp.status == "200") {
-                    _this.totalTweet = resp.data.data.totalTweet
+                    _this.tweetCount = resp.data.data.totalTweet
                 }
                 else {
                     _this.$message.error('出错了');

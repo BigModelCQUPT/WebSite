@@ -13,6 +13,7 @@ import com.bigModel.backend.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bigModel.backend.utils.chatGPT;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -79,11 +80,15 @@ public class TweetServiceImpl implements TweetService{
     }
 
     @Override
+    @Transactional
     public Map<String, Object> analysisByGPT(Integer id) {
         Tweet tweet = tweetMapper.selectById(id);
         String content = tweet.getText();
-        Map<String, Object> res = new HashMap<>();
-        res = chatGPT.getAnswer(content);
+        Map<String, Object> res = chatGPT.getAnswer(content);
+
+//        存入类别
+        tweet.setCategory(res.get("category").toString());
+        tweetMapper.updateById(tweet);
         return res;
     }
 

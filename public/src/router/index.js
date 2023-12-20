@@ -43,6 +43,9 @@ import EditStructView from "@/views/admin/EditStructView";
 import EditEmployeeView from "@/views/admin/EditEmployeeView";
 import EditLeaderView from "@/views/admin/EditLeaderView";
 import overView from "@/views/overView"
+import GetYoutubeInformation from "@/views/resident/GetYoutubeInformation"
+import keywordView from "@/views/resident/keywordView"
+import KeyInformation from "@/views/resident/KeyInformation"
 import axios from 'axios';
 
 const routes = [
@@ -58,12 +61,11 @@ const routes = [
     },
     component: MainView,
     children:[
-
-        {
-          path:"/bookMeeting",
-          name:'预约会议',
-          component: BookMeetingView
-        },
+      {
+        path:"/bookMeeting",
+        name:'预约会议',
+        component: BookMeetingView
+      },
       {
         path: "/recordMeeting",
         name:'会议记录',
@@ -207,6 +209,21 @@ const routes = [
         path:'/overView',
         name:'总览',
         component: overView
+      },
+      {
+        path: '/keyword',
+        name:'关键词',
+        component: keywordView
+      },
+      {
+        path:'/getYoutubeInformation',
+        name:'油管',
+        component: GetYoutubeInformation
+      },
+      {
+        path:'/keyInformation',
+        name:'关键信息',
+        component: KeyInformation
       },
     ]
   },

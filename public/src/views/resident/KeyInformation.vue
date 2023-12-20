@@ -43,39 +43,32 @@
                         <el-tag v-else type="info">引用</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="keyword" label="关键词" width="90" align="center" />
-                <el-table-column label="已读状态" width="90" align="center">
-                    <template #default="scope">
-                        <el-button v-if="scope.row.flag == 0" type="success"
-                            @click="updateFlag(scope.row.id)">未读</el-button>
-                        <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
+                <!-- <el-table-column prop="keyword" label="关键词" width="90" align="center" /> -->
+                <el-table-column label="查看状态" width="60" align="center">
+                    <template #default="tableData">
+                        <el-tag v-if="tableData.row.flag === 0" type=" success">未读</el-tag>
+                        <el-tag v-else type="success">已读</el-tag>
                     </template>
                 </el-table-column>
 
-                <el-table-column label="钉钉返回" width="60" align="center">
-                    <template #default="scope">
-                        <el-tag v-if="scope.row.needReturn === 0" type="success">否</el-tag>
-                        <el-tag v-else-if="scope.row.needReturn === 1" type=" success">是</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="category" label="GPT分类类别" width="80" align="center" />
-                <el-table-column fixed="right" label="操作" width="100" align="center">
-                    <template v-slot="tableData">
-                        <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red" title="确定删除该条信息吗">
+                <!-- <el-table-column prop="" label="是否返回" width="60" align="center" /> -->
+                <!-- <el-table-column fixed="right" label="操作" width="100" align="center"> -->
+                <!-- <template v-slot="tableData"> -->
+                <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red" title="确定删除该条信息吗">
                             
                             <el-button @click="classify(scope.row)" type="success" size="small">大模型分析</el-button>
                         </el-popconfirm> -->
 
-                        <!-- <el-button  @click="editClick(scope.row)" type="primary" size="small">不使用</el-button> -->
-                        <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red"
+                <!-- <el-button  @click="editClick(scope.row)" type="primary" size="small">不使用</el-button> -->
+                <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red"
                             title="确认使用大模型分析该信息吗" @confirm="analysis(tableData.row.id)" @cancel="cancleAnalysis()">
                             <template #reference>
                                 <el-button type="danger" size="small">大模型分析</el-button>
                             </template>
-                        </el-popconfirm>
+                        </el-popconfirm> -->
 
-                    </template>
-                </el-table-column>
+                <!-- </template> -->
+                <!-- </el-table-column> -->
             </el-table>
             <div style="display: flex;justify-content: flex-end; margin-top: 10px">
                 <el-pagination background layout="sizes, prev, pager, next, jumper, ->, total, slot" :total="total"
@@ -192,15 +185,16 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { Search } from '@element-plus/icons-vue'
-import { export_retailer } from "@/utils/api";
+
 import request from '@/utils/http'
 
 export default {
     name: "GetResidentInformation",
     data() {
         return {
+
+            keywordData: [],
             tableData: [{
                 id: '123',
                 username: 'abcd',
@@ -211,7 +205,6 @@ export default {
             }, {
             }],
             search_text: '',
-            search_keyword: '',
             total: 0,//总条数
             currentPage: 1,//第几页
             size: 10,//每页条数
@@ -221,11 +214,13 @@ export default {
             filename: '',
             detaildialogVisible: false,
 
+            keyworddialogVisible: false,
+            keywordInputValue: '',
+            search_keyword: '',
         }
     },
     created() {
         this.fetchData()
-        this.fetchKeywordData()
     },
     methods: {
         fileSuccess() {//上传失败
@@ -236,32 +231,13 @@ export default {
                 this.filename = file.name;
             // console.log(file.name + "111")
         },
-        importData(name) {
-            const _this = this
-            axios.post('http://localhost:8181/upload/' + name).then(function (resp) {
-                if (resp.data.code == "200") {//返回成功
-                    _this.$message({
-                        message: '上传成功',
-                        type: 'success'
-                    });
-                } else if (resp.data.code == "101") {
-                    _this.$message.error('上传失败');
-                }
-            })
-        },
-        exportData() {
-            // const _this = this
-            // axios.get('http://localhost:8181/download/aaa').then(function () {
-            //
-            // })
-            export_retailer()
-        },
         showDialog() {
             this.dialogVisible = true
         },
         cancleAnalysis() {
             return
         },
+
         currentChange() {
             // console.log(this.currentPage)
             this.fetchData()
@@ -270,25 +246,6 @@ export default {
             // console.log(this.size)
             this.fetchData()
         },
-        // find() {
-        //     if (this.search_text == '') {
-        //         this.$message.error('请先输入有效值');
-        //         return;
-        //     }
-        //     const _this = this
-        //     axios.get('http://localhost:8181/tenantInformation/find/' + this.search_name).then(function (resp) {
-        //         if (resp.data.code == "200") {//返回成功
-        //             // console.log(resp)
-        //             _this.tableData = resp.data.data.content
-        //             _this.total = resp.data.data.length
-        //         } else if (resp.data.code == "101") {
-        //             _this.$message.error('出现错误');
-        //             return false;
-        //         } else {
-        //             console.log("error")
-        //         }
-        //     })
-        // },
         init_page() {
             const _this = this
             const data = {
@@ -357,26 +314,25 @@ export default {
                 id: id
             }
             request({
-                url: 'http://localhost:8181/tweet/analysisByGPT',
+                url: 'http://10.16.104.183:8181/tweet/analysisByGPT',
                 method: 'post',
                 data: data,
             }).then(function (resp) {
                 if (resp.status == "200") {
-                    _this.$message.success("该文本的类别属于  " + resp.data.data.category)
+
+                    _this.$message.success("该文本的分析内容\n" + resp.data.data.answer)
                 }
                 else {
                     _this.$message.error('出错了');
                     return false;
                 }
             })
-            // location.reload()
-            this.$router.go(0)
         },
 
         fetchKeywordData() {
             const _this = this
             request({
-                url: 'http://localhost:8181/keyword/listAll',
+                url: 'http://10.16.104.183:8181/keyword/listAll',
                 method: 'get',
             }).then(function (resp) {
                 if (resp.status == "200") {
@@ -394,7 +350,7 @@ export default {
             console.log(id);
             const _this = this
             request({
-                url: 'http://localhost:8181/keyword/delete/' + id,
+                url: 'http://10.16.104.183:8181/keyword/delete/' + id,
                 method: 'get',
             }).then(function (resp) {
                 if (resp.status == "200") {
@@ -409,8 +365,7 @@ export default {
                     return false;
                 }
             })
-            // this.fetchKeywordData()
-            this.$router.go(0)
+            this.fetchKeywordData()
         },
         handleAddKeyword() {
             const _this = this
@@ -418,7 +373,7 @@ export default {
                 keyword: this.keywordInputValue
             }
             request({
-                url: 'http://localhost:8181/keyword/add',
+                url: 'http://10.16.104.183:8181/keyword/add',
                 method: 'post',
                 data: data
             }).then(function (resp) {
@@ -433,7 +388,6 @@ export default {
             this.keyworddialogVisible = false
             this.keywordInputValue = ''
             this.fetchKeywordData()
-            this.$router.go(0)
         },
         blurKeyWord() {
             this.keyworddialogVisible = false
@@ -444,35 +398,12 @@ export default {
             this.keyworddialogVisible = true;
         },
 
-        updateFlag(id) {
-            const _this = this
-            const data = {
-                data: id
-            }
-            request({
-                url: 'http://localhost:8181/tweet/updateFlag/' + id,
-                method: 'post',
-                data: data
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.$message.success('已读该信息');
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-            // this.fetchData()
-            this.$router.go(0)
-        },
-
         handleInputConfirm() {
             // let keywordInputValue = this.keywordInputValue;
             // if (keywordInputValue) {
             //     this.dynamicTags.push(keywordInputValue);
             // }
         }
-
 
     },
     components: {

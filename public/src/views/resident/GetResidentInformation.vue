@@ -244,24 +244,33 @@ export default {
             this.dialogVisible = false
             return
         },
+        okAdd() {
+            this.dialogVisible = false
+            this.add_name = ''
+            return
+        },
         completeAdd() {
             const _this = this
             // console.log(this.add_name)
             const data = {
                 username: this.add_name
             }
-            axios.post('http://localhost:8181/twitterUser/addUser', data).then(function (resp) {
+            request({
+                url: 'http://localhost:8181/twitterUser/addUser',
+                method: 'post',
+                data: data
+            }).then(function (resp) {
                 console.log(resp)
                 if (resp.status == "200") {
-                    console.log(resp)
                     _this.$message.success('添加成功');
-
                 }
                 else {
                     _this.$message.error('出错了');
                     return false;
                 }
             })
+            this.okAdd()
+            this.$router.go(0)
         },
 
         fetchData() {
