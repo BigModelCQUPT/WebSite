@@ -38,7 +38,7 @@ public class OrderTask {
     //    测试定时任务
 //    每小时
 //    @Scheduled(cron = "0/40 * * * * ?")
-    @Scheduled(cron = "0 0 12 * * ?")
+    @Scheduled(cron = "0 0 7 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void testHello() throws IOException, URISyntaxException, InterruptedException {
         List<TwitterUser> list = infoService.listAll();
@@ -50,7 +50,6 @@ public class OrderTask {
             Pattern p = Pattern.compile("[\u4E00-\u9FA5|\\！|\\，|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]");
             String encode = "";
             if (p.matcher(twitterId).find()) {
-
                 encode = URLEncoder.encode(twitterId, "utf-8");
             } else {
                 encode = twitterId;
@@ -91,6 +90,7 @@ public class OrderTask {
             }
             if (list.size() > 0) {
                 tweetService.updateReturn(id);
+                tweetService.saveKeywordList(id, list);
             }
         }
     }

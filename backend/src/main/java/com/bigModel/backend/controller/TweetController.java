@@ -36,13 +36,13 @@ public class TweetController {
     }
 
     @PostMapping("/tweet/findByPage/{page}/{size}")
-    public IPage<Tweet> findTweetByPage(
+    public Result findTweetByPage(
             @PathVariable(value = "page") Integer page,
             @PathVariable(value = "size") Integer size,
             @RequestBody Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
 
         String keyword = data.get("keyword");
-        return tweetService.findTweetByKeyword(keyword, page, size);
+        return Result.success(tweetService.findTweetByKeyword(keyword, page, size));
     }
 
     @PostMapping("/tweet/analysisByGPT")

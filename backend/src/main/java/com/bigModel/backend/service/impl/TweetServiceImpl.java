@@ -135,4 +135,12 @@ public class TweetServiceImpl implements TweetService{
         tweet.setNeedReturn(1);
         tweetMapper.updateById(tweet);
     }
+
+    @Override
+    public void saveKeywordList(int id, List<String> list) {
+        String join = String.join(",", list);
+        Tweet tweet = tweetMapper.selectById(id);
+        tweet.setKeyword(join);
+        tweetMapper.updateById(tweet);
+    }
 }

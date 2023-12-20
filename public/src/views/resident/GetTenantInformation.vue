@@ -43,7 +43,15 @@
                         <el-tag v-else type="info">引用</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="keyword" label="关键词" width="90" align="center" />
+                <!-- <el-table-column prop="keyword" label="关键词" width="90" align="center" /> -->
+                <el-table-column prop="keyword" label="关键词" width="90">
+                    <template #default="scope">
+                        <div v-for="item in companyCut(scope.row.keyword)" :key='item'>
+                            <!-- <el-tag type="success">{{ item }}</el-tag> -->
+                            {{ item }}
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column label="已读状态" width="90" align="center">
                     <template #default="scope">
                         <el-button v-if="scope.row.flag == 0" type="success"
@@ -132,61 +140,7 @@
                     <el-button type="primary" @click="nextStep">{{ activeindex == 9 ? '完成' : '下一个' }}</el-button>
                 </div>
             </el-dialog>
-            <el-dialog v-model="detaildialogVisible" title="租户信息" width="50%">
-                <el-form :model="form">
-                    <div style="display: inline-flex">
-                        <div>
-                            <el-form-item style="width: 80%">
-                                <label style="font-weight: bolder; font-family: 仿宋">租户姓名</label>
-                                <el-input v-model="form.tenant_name" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">租户电话</label>
-                                <el-input v-model="form.tenant_tele" disabled></el-input>
-                            </el-form-item>
-
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">身份证号码</label>
-                                <el-input v-model="form.tenant_id_no" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">居住人数</label>
-                                <el-input v-model="form.number" disabled></el-input>
-                            </el-form-item>
-                        </div>
-                        <div>
-                            <el-form-item style="width: 80%">
-                                <label style="font-weight: bolder; font-family: 仿宋">社区</label>
-                                <el-input v-model="form.community" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">房屋地址</label>
-                                <el-input v-model="form.house_id" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">房东姓名</label>
-                                <el-input v-model="form.owner_name" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">房东电话</label>
-                                <el-input v-model="form.owner_tele" disabled></el-input>
-                            </el-form-item>
-
-                        </div>
-                    </div>
-                    <div style="margin-left: 30px">
-                        <el-form-item style="width: 85%" class="margin-topa">
-                            <label style="font-weight: bolder; font-family: 仿宋">备注</label>
-                            <el-input v-model="form.note" disabled></el-input>
-                        </el-form-item>
-                    </div>
-                </el-form>
-                <template #footer>
-                    <span class="dialog-footer">
-                        <el-button round style="margin-top: -30px" @click="returnMain">返回</el-button>
-                    </span>
-                </template>
-            </el-dialog>
+            
         </div> -->
     </div>
 </template>
@@ -208,6 +162,7 @@ export default {
                 type: 'null',
                 keyword: '彭于晏',
                 flag: '0',
+                needReturn: '',
             }, {
             }],
             search_text: '',
@@ -330,8 +285,8 @@ export default {
                 data: data
             }).then(function (resp) {
                 if (resp.status == "200") {
-                    _this.tableData = resp.data.records
-                    _this.total = resp.data.total
+                    _this.tableData = resp.data.data.records
+                    _this.total = resp.data.data.total
                 }
                 else {
                     _this.$message.error('出错了');
@@ -471,7 +426,11 @@ export default {
             // if (keywordInputValue) {
             //     this.dynamicTags.push(keywordInputValue);
             // }
-        }
+        },
+        companyCut(name) {
+            let company = (name || "").split(',')
+            return company
+        },
 
 
     },

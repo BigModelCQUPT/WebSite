@@ -23,4 +23,6 @@ public interface TweetService {
     List<Tweet> getTweetByDate(String date);
     boolean checkKeyword(Integer id, String keyword);
     void updateReturn(Integer id);
+
+    void saveKeywordList(int id, List<String> list);
 }

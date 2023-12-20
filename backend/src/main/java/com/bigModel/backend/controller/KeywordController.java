@@ -1,5 +1,6 @@
 package com.bigModel.backend.controller;
 
+import com.bigModel.backend.advice.result.Result;
 import com.bigModel.backend.pojo.Keyword;
 import com.bigModel.backend.service.KeywordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,16 @@ public class KeywordController {
     private KeywordService keywordService;
 
     @PostMapping("/add")
-    public void addKeyword(@RequestBody Keyword keyword) {
+    public Result addKeyword(@RequestBody Keyword keyword) {
         keywordService.addKeyword(keyword);
+        return Result.success("success");
     }
 
     @GetMapping("/delete/{id}")
-    public void deleteKeyword(@PathVariable(value = "id") Integer id) {
+    public Result deleteKeyword(@PathVariable(value = "id") Integer id) {
         System.out.println(id);
         keywordService.deleteKeyword(id);
+        return Result.success("success");
     }
 
     @GetMapping("/listAll")
