@@ -110,4 +110,24 @@ public class TweetServiceImpl implements TweetService{
         tweet.setFlag(1);
         tweetMapper.updateById(tweet);
     }
+
+    @Override
+    public List<Tweet> getTweetByDate(String date) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("date", date);
+        return tweetMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public boolean checkKeyword(Integer id, String keyword) {
+        return tweetMapper.checkKeyword(id, keyword) == 1;
+    }
+
+    @Override
+    public void updateReturn(Integer id) {
+        Tweet tweet = new Tweet();
+        tweet.setId(id);
+        tweet.setNeedReturn(1);
+        tweetMapper.updateById(tweet);
+    }
 }

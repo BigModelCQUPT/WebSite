@@ -1,9 +1,7 @@
 package com.bigModel.backend.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.bigModel.backend.pojo.PageQuery;
 import com.bigModel.backend.pojo.Tweet;
-import com.bigModel.backend.pojo.TwitterUser;
 
 import java.util.List;
 import java.util.Map;
@@ -22,4 +20,7 @@ public interface TweetService {
     List<Tweet> getAllTweet();
 
     void updateFlag(Integer id);
+    List<Tweet> getTweetByDate(String date);
+    boolean checkKeyword(Integer id, String keyword);
+    void updateReturn(Integer id);
 }
