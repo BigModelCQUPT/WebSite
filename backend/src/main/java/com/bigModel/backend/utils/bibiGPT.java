@@ -1,37 +1,29 @@
 package com.bigModel.backend.utils;
 
 import okhttp3.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
 public class bibiGPT {
 
-    public void getContent(){
-        OkHttpClient client = new OkHttpClient().newBuilder().build();
+    public static String getSummary(String videoUrl){
+        RestTemplate restTemplate = new RestTemplate();
 
-        MediaType mediaType = MediaType.parse("text/plain");
-        RequestBody body = RequestBody.create(mediaType, "");
+        // Set the URL and headers
+        String url = "https://bibigpt.co/api/open/LLZaSC9Vhgaq?url=" + videoUrl;
 
-        Request request = new Request.Builder()
-                .url("https://bibigpt.co/api/open/LLZaSC9Vhgaq?url=https://www.youtube.com/watch?v=LNWLSQl_jfc")
-                .method("GET", body)
-                .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
-                .addHeader("Accept", "*/*")
-                .addHeader("Host", "bibigpt.co")
-                .addHeader("Connection", "keep-alive")
-                .build();
+        // Make the HTTP GET request
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 
-        try {
-            Response response = client.newCall(request).execute();
+        // Access the response body and other information
+        String responseBody = responseEntity.getBody();
+        // Process the response as needed
+        String summary = responseBody.substring(responseBody.indexOf("\"summary\":\"") + 11, responseBody.indexOf("\",\"costDuration\""));
 
-            // Do something with the response here if needed
-
-            // Make sure to close the response to release resources
-            if (response != null) {
-                response.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println(summary);
+        return summary;
     }
+
 }

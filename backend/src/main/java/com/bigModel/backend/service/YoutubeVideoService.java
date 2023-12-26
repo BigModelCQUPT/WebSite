@@ -8,4 +8,16 @@ import java.util.List;
 public interface YoutubeVideoService {
     void addVideo(YoutubeVideo youtubeVideo);
     IPage<YoutubeVideo> listAll(int page, int size);
+
+    List<YoutubeVideo> listAllVideo();
+
+    void saveSummary(YoutubeVideo youtubeVideo);
+
+    boolean checkKeyword(int id, String keyword);
+
+    void updateReturn(int id);
+
+    void saveKeywordList(int id, List<String> list);
+
+    List<YoutubeVideo> listAllNoReturn();
 }

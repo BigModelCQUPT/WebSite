@@ -59,7 +59,24 @@ export default {
             checked: true,
             loginRules: {
                 username: [{ required: true, message: "请输入账号", trigger: "blur" }],
-                password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+                password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+                mobile: [
+                    {
+                        required: true,
+                        message: "请输入手机号码",
+                        trigger: "blur"
+                    },
+                    {
+                        validator: function (rule, value, callback) {
+                            if (/^1[34578]\d{9}$/.test(value) == false) {
+                                callback(new Error("手机号格式错误"));
+                            } else {
+                                callback();
+                            }
+                        },
+                        trigger: "blur"
+                    }
+                ],
             }
         }
     },
