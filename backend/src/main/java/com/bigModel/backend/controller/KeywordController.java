@@ -1,6 +1,7 @@
 package com.bigModel.backend.controller;
 
 import com.bigModel.backend.advice.result.Result;
+import com.bigModel.backend.config.filter.JwtAuthenticationTokenFilter;
 import com.bigModel.backend.pojo.Keyword;
 import com.bigModel.backend.service.KeywordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class KeywordController {
 
     @GetMapping("/listAll")
     public List<Keyword> listAll() {
+        System.out.println(JwtAuthenticationTokenFilter.getUserBasic().getUserId());
         return keywordService.listAllKeywords();
     }
 }

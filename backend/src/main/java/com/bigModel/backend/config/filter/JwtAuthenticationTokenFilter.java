@@ -2,6 +2,7 @@ package com.bigModel.backend.config.filter;
 
 import com.bigModel.backend.mapper.UserMapper;
 import com.bigModel.backend.pojo.User;
+import com.bigModel.backend.pojo.UserInformation;
 import com.bigModel.backend.service.impl.util.UserDetailsImpl;
 import com.bigModel.backend.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -27,8 +28,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserMapper userMapper;
 
+    private static String userid;
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
+    public void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
 //        未来从前端读的 报文  Authorization
         String token = request.getHeader("Authorization");
 
@@ -39,10 +41,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         token = token.substring(7);
 
-        String userid;
         try {
             Claims claims = JwtUtil.parseJWT(token);
             userid = claims.getSubject();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -50,7 +52,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         User user = userMapper.selectById(Integer.parseInt(userid));
 
         if (user == null) {
-            throw new RuntimeException("用户名未登录");
+            throw new RuntimeException("用户名未注册");
         }
 
         UserDetailsImpl loginUser = new UserDetailsImpl(user);
@@ -60,5 +62,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         filterChain.doFilter(request, response);
+    }
+
+    public static UserInformation getUserBasic(){
+
+        UserInformation userInformation = UserInformation.builder().userId(Integer.parseInt(userid)).build();
+        return userInformation;
     }
 }
