@@ -2,7 +2,7 @@
 <template>
   <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
 
-    <h2 style="margin-left: -120px">Token管理</h2>
+    <h2 style="margin-left: -120px">token管理</h2>
     <div style="margin-top: 30px">
       <el-card class="box-card" style="width: 100%" shadow="never">
 

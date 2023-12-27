@@ -33,7 +33,7 @@
 
 
                 <el-table-column prop="id" label="序号" width="90" align="center" />
-                <el-table-column prop="username" label="用户名" width="120" align="center" />
+                <el-table-column prop="username" label="用户名" width="100" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
                 <el-table-column label="推文类型" width="70" align="center">
                     <template #default="tableData">

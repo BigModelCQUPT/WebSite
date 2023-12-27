@@ -29,9 +29,9 @@
         <div style="margin-top: 15px">
             <!-- <el-table :data="tableData" border style="width: 100%"> -->
 
-            <el-table :data="tableData" border style="width: 100%">
+            <el-table :data="tableData" border style="width: 100% ">
                 <el-table-column prop="id" label="序号" align="center" width="90" />
-                <el-table-column prop="coverUrl" label="视频封面" align="center">
+                <el-table-column prop="coverUrl" label="视频封面" width="180" align="center">
                     <template #default="scope">
                         <el-image :src="scope.row.coverUrl"></el-image>
                         <!-- <div style="text-align: center;width: 100px;">视频标题</div> -->
@@ -45,7 +45,7 @@
                     </el-image>
                 </template> -->
 
-                <el-table-column prop="username" label="发布者" align="center" width="200" />
+                <el-table-column prop="username" label="发布者" align="center" width="150" />
                 <el-table-column prop="title" label="视频标题" align="center">
                     <template #default="scope">
                         <a :href="scope.row.videoUrl" target="_blank" style="text-decoration: none">

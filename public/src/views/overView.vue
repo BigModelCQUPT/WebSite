@@ -58,8 +58,8 @@
             </el-col>
             <el-col :span="12">
                 <el-card shadow="hover" style="height: 320px" class="chart-card2">
-                    <el-text tag="b">词云统计</el-text>
-                    <div ref="mychart2" style="height: 300px; width: 100%; margin-top: 0px"></div>
+                    <h3 style="margin-top: 0px">词云统计</h3>
+                    <div ref="mychart2" style="height: 300px; width: 100%; margin-top: -35px"></div>
 
                 </el-card>
 
@@ -72,15 +72,15 @@
     <div class="container">
         <el-row :gutter="20">
             <el-col :span="12">
-                <el-card shadow="hover">
-                    <el-text tag="b">热门话题趋势统计</el-text>
+                <el-card shadow="hover" style="height: 360px">
+                    <h3 style="margin-top: 0px">热门话题趋势统计</h3>
                     <!-- <span>热门话题趋势统计</span> -->
                     <div ref="mychart1" style="height: 280px; width:100%; margin-top: 0px">
                     </div>
                 </el-card>
             </el-col>
             <el-col :span="12">
-                <el-card shadow="hover" style="height: 320px">
+                <el-card shadow="hover" style="height: 360px">
                     <!-- <template #header>
                     <div class="clearfix">
                         <span>活跃账户topN</span>
@@ -100,8 +100,8 @@
                 <el-progress :percentage="33" color="#59561a"></el-progress> -->
                     <!-- <div id="wordCloud" class="wordCloudBox"></div> -->
                     <!-- <span>活跃账户</span> -->
-                    <el-text tag="b">活跃账户</el-text>
-                    <div ref="mychart3" style="height: 300px; width:100%; margin-top: -20px"></div>
+                    <h3 style="margin-top: 0px">活跃账户</h3>
+                    <div ref="mychart3" style="height: 300px; width:100%; margin-top: -40px"></div>
                 </el-card>
 
             </el-col>
