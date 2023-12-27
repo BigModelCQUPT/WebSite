@@ -8,8 +8,6 @@ import java.util.List;
 public interface YoutubeVideoService {
     void addVideo(YoutubeVideo youtubeVideo);
     IPage<YoutubeVideo> listAll(int page, int size);
-<<<<<<< HEAD
-=======
 
     List<YoutubeVideo> listAllVideo();
 
@@ -22,5 +20,4 @@ public interface YoutubeVideoService {
     void saveKeywordList(int id, List<String> list);
 
     List<YoutubeVideo> listAllNoReturn();
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 }

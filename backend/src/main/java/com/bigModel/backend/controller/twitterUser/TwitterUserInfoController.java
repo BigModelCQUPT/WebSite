@@ -36,10 +36,7 @@ public class TwitterUserInfoController {
 
     @PostMapping("addUser")
     public void addUser(@RequestBody Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
-<<<<<<< HEAD
-=======
         System.out.println(data);
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         TwitterUser twitterUser = UsernameToInfoUtil.getInfoByUsername(data.get("username"));
         infoService.addTwitterUser(twitterUser);
     }
