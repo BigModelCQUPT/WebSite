@@ -4,7 +4,7 @@
         <el-header style=" font-size: 12px">
             <div class="toolbar">
                 <h1 style="padding-top: 9px; font-size: 30px; text-align: left;">
-                    大模型管理员系统
+                    社区工作辅助系统
                 </h1>
                 <el-dropdown class="user">
                     <el-icon style="padding-right: 5px">
@@ -140,11 +140,11 @@ export default {
         }
     },
     created() {
-        // if (localStorage.getItem("jwt_token") === "" || localStorage.getItem("jwt_token") === null) {
-        //     this.$message.error('请先登录')
-        //     this.$router.replace('/')
-        //     return false;
-        // }
+        if (localStorage.getItem("jwt_token") === "" || localStorage.getItem("jwt_token") === null) {
+            this.$message.error('请先登录')
+            this.$router.replace('/')
+            return false;
+        }
         // this.username = window.sessionStorage.username
         // console.log(this.$route.matched.length)
         this.value = ref(new Date())

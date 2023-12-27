@@ -67,179 +67,179 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { Search, Plus } from '@element-plus/icons-vue'
-import { export_retailer } from "@/utils/api";
-import request from '@/utils/http'
+    import axios from 'axios'
+    import { Search, Plus } from '@element-plus/icons-vue'
+    import { export_retailer } from "@/utils/api";
+    import request from '@/utils/http'
 
 
-export default {
-    name: "GetResidentInformation",
-    data() {
-        return {
-            tableData: [{
-                id: '123',
-                coverUrl: 'abcd',
-                username: '张三啊',
-                channelId: 'null',
-                videoUrl: 'null',
-                title: '',
-            }, {
-            }],
-            search_text: '',
-            total: 0,//总条数
-            currentPage: 1,//第几页
-            size: 10,//每页条数
-            dialogVisible: false,
+    export default {
+        name: "GetResidentInformation",
+        data() {
+            return {
+                tableData: [{
+                    id: '123',
+                    coverUrl: 'abcd',
+                    username: '张三啊',
+                    channelId: 'null',
+                    videoUrl: 'null',
+                    title: '',
+                }, {
+                }],
+                search_text: '',
+                total: 0,//总条数
+                currentPage: 1,//第几页
+                size: 10,//每页条数
+                dialogVisible: false,
+            }
+        },
+        created() {
+            this.fetchData()
+        },
+        methods: {
+            fileSuccess() {//上传失败
+                this.importData(this.filename)
+            },
+            fileChange(file) {
+                if (this.filename == '')
+                    this.filename = file.name;
+                // console.log(file.name + "111")
+            },
+            importData(name) {
+                const _this = this
+                axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
+                    if (resp.data.code == "200") {//返回成功
+                        _this.$message({
+                            message: '上传成功',
+                            type: 'success'
+                        });
+                    } else if (resp.data.code == "101") {
+                        _this.$message.error('上传失败');
+                    }
+                })
+            },
+            exportData() {
+                // const _this = this
+                // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
+                //
+                // })
+                export_retailer()
+            },
+            showDialog() {
+                this.dialogVisible = true
+            },
+
+            currentChange() {
+                // console.log(this.currentPage)
+                this.fetchData()
+            },
+            sizeChange() {
+                // console.log(this.size)
+                this.fetchData()
+            },
+
+            fetchData() {
+                const _this = this
+                const data = {
+                    page: this.currentPage,
+                    size: this.size,
+                }
+                request({
+                    url: '/youtube/listAll/' + this.currentPage + '/' + this.size,
+                    method: 'post',
+                    data: data
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.tableData = resp.data.data.records
+                        _this.total = resp.data.data.total
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+            },
+
+            updateYoutube() {
+                const _this = this
+                const data = {
+                    page: this.currentPage,
+                    size: this.size,
+                }
+                request({
+                    url: '/youtube/update',
+                    method: 'get',
+                    data: data
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success("刷新成功")
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                this.$router.go(0)
+            },
+
+        },
+        components: {
+            Search, Plus,
         }
-    },
-    created() {
-        this.fetchData()
-    },
-    methods: {
-        fileSuccess() {//上传失败
-            this.importData(this.filename)
-        },
-        fileChange(file) {
-            if (this.filename == '')
-                this.filename = file.name;
-            // console.log(file.name + "111")
-        },
-        importData(name) {
-            const _this = this
-            axios.post('http://localhost:8181/upload/' + name).then(function (resp) {
-                if (resp.data.code == "200") {//返回成功
-                    _this.$message({
-                        message: '上传成功',
-                        type: 'success'
-                    });
-                } else if (resp.data.code == "101") {
-                    _this.$message.error('上传失败');
-                }
-            })
-        },
-        exportData() {
-            // const _this = this
-            // axios.get('http://localhost:8181/download/aaa').then(function () {
-            //
-            // })
-            export_retailer()
-        },
-        showDialog() {
-            this.dialogVisible = true
-        },
-
-        currentChange() {
-            // console.log(this.currentPage)
-            this.fetchData()
-        },
-        sizeChange() {
-            // console.log(this.size)
-            this.fetchData()
-        },
-
-        fetchData() {
-            const _this = this
-            const data = {
-                page: this.currentPage,
-                size: this.size,
-            }
-            request({
-                url: '/youtube/listAll/' + this.currentPage + '/' + this.size,
-                method: 'post',
-                data: data
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.tableData = resp.data.data.records
-                    _this.total = resp.data.data.total
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-        },
-
-        updateYoutube() {
-            const _this = this
-            const data = {
-                page: this.currentPage,
-                size: this.size,
-            }
-            request({
-                url: '/youtube/update',
-                method: 'get',
-                data: data
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.$message.success("刷新成功")
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-            this.$router.go(0)
-        },
-
-    },
-    components: {
-        Search, Plus,
     }
-}
 </script>
 
 <style scoped>
-.toolbar {
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-}
+    .toolbar {
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+    }
 
-.el-input-resident {
-    width: 300px;
-    margin-right: 10px;
-}
+    .el-input-resident {
+        width: 300px;
+        margin-right: 10px;
+    }
 
-.margin-topa {
-    margin-top: -15px;
-}
+    .margin-topa {
+        margin-top: -15px;
+    }
 
 
-.el-tag+.el-tag {
-    margin-left: 10px;
-}
+    .el-tag+.el-tag {
+        margin-left: 10px;
+    }
 
-.button-new-tag {
-    margin-left: 10px;
-    height: 32px;
-    line-height: 30px;
-    padding-top: 0;
-    padding-bottom: 0;
-}
+    .button-new-tag {
+        margin-left: 10px;
+        height: 32px;
+        line-height: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 
-.input-new-tag {
-    width: 90px;
-    margin-left: 10px;
-    vertical-align: bottom;
-}
+    .input-new-tag {
+        width: 90px;
+        margin-left: 10px;
+        vertical-align: bottom;
+    }
 
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: lightblue;
-}
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: lightblue;
+    }
 
-.text {
-    font-size: 14px;
-}
+    .text {
+        font-size: 14px;
+    }
 
-.item {
-    margin-bottom: 18px;
-}
+    .item {
+        margin-bottom: 18px;
+    }
 
-.box-card {
-    width: 480px;
-}
+    .box-card {
+        width: 480px;
+    }
 </style>

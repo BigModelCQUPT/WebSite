@@ -1,22 +1,22 @@
 import axios from 'axios'
 
-export function export_retailer () {
+export function export_retailer() {
     // eslint-disable-next-line no-undef
     return axios({
-        method:'get',
+        method: 'get',
         url: 'http://10.16.104.183:8181/download/aaa',
         responseType: 'blob'
     }).then(res => {
         let data = res.data
         let filename = "居民信息表.xlsx"
-        if(res.headers.filename){
+        if (res.headers.filename) {
             filename = decodeURI(res.headers.filename)
         }
         let url = window.URL.createObjectURL(new Blob([data]))
         let link = document.createElement('a')
         link.style.display = 'none'
         link.href = url
-        link.setAttribute('download',filename)
+        link.setAttribute('download', filename)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link) // 下载完成移除元素

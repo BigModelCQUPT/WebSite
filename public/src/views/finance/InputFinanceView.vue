@@ -2,22 +2,14 @@
 
 <template>
     <div style="width: 70%;  margin: auto; margin-top: 20px;">
-        <el-form :model="formData"
-                 label-width="120px"
-                 :rules="rulesForm"
-                 ref="formData"
-        >
+        <el-form :model="formData" label-width="120px" :rules="rulesForm" ref="formData">
             <el-form-item label="收入项目" prop="input">
                 <el-input v-model="formData.input" />
             </el-form-item>
             <el-form-item label="收入日期" prop="date">
                 <el-col :span="10">
-                    <el-date-picker
-                            v-model="formData.date"
-                            type="date"
-                            placeholder="选择日期"
-                            style="width: 100%"
-                            value-format="YYYY-MM-DD"                     />
+                    <el-date-picker v-model="formData.date" type="date" placeholder="选择日期" style="width: 100%"
+                        value-format="YYYY-MM-DD" />
                 </el-col>
                 <el-col :span="14">
                     <el-form-item label="收入金额" prop="input_number">
@@ -49,31 +41,31 @@
     import axios from "axios";
 
     export default {
-        name:'InputFinanceView',
-        data(){
+        name: 'InputFinanceView',
+        data() {
             return {
-                formData:{
+                formData: {
                     name: null,
                     date: null,
-                    radio:null,
+                    radio: null,
                     note: null,
-                    input_number:0,
-                    input:null,
-                    input_type:null,
-                    output:null,
-                    output_type:null,
-                    output_number:0
+                    input_number: 0,
+                    input: null,
+                    input_type: null,
+                    output: null,
+                    output_type: null,
+                    output_number: 0
                 },
                 checked: true,
                 rulesForm: {
-                    input: [{required: true, message: '请输入收入项目内容', trigger: 'blur'},],
-                    input_number: [{required: true, message: '请输入收入金额', trigger: 'blur'},],
-                    date: [{type: 'date', required: true, message: '请选择登记日期', trigger: 'change',}],
-                    radio: [{required: true, message: '请选择收入类型', trigger: 'change',},],
+                    input: [{ required: true, message: '请输入收入项目内容', trigger: 'blur' },],
+                    input_number: [{ required: true, message: '请输入收入金额', trigger: 'blur' },],
+                    date: [{ type: 'date', required: true, message: '请选择登记日期', trigger: 'change', }],
+                    radio: [{ required: true, message: '请选择收入类型', trigger: 'change', },],
                 }
             }
         },
-        methods:{
+        methods: {
             onSubmit() {
                 const _this = this
                 this.formData.input_type = this.formData.radio
@@ -81,13 +73,13 @@
                     if (valid) {
                         axios.post('http://10.16.104.183:8181/communityFinance/addInput', this.formData).then(function (resp) {
                             // console.log(resp)
-                            if(resp.data.code == "200"){//返回成功
+                            if (resp.data.code == "200") {//返回成功
                                 _this.$message({
                                     message: '添加成功',
                                     type: 'success'
                                 });
                                 _this.$router.push('/communityFinance')
-                            }else if(resp.data.code == "101"){
+                            } else if (resp.data.code == "101") {
                                 _this.$message.error('提交失败');
                             }
                         })

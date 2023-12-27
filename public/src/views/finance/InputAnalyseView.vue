@@ -19,9 +19,9 @@
 
     export default {
         name: "InputAnalyseView",
-        data(){
+        data() {
             return {
-                option:{
+                option: {
                     tooltip: {
                         trigger: 'item',
                         formatter: '{a} <br/>{b} : {c} 元 ({d}%)'
@@ -62,21 +62,21 @@
                 }
             }
         },
-        methods:{
+        methods: {
             init() {
                 const _this = this
                 axios.get('http://10.16.104.183:8181/communityFinance/getStatistic/year').then(function (resp) {
-                    if(resp.data.code == "200"){//返回成功
+                    if (resp.data.code == "200") {//返回成功
                         console.log(resp.data.data.input)
-                        _this.option.series[0].data[0].value =resp.data.data.input["房屋出租费"] - 70000
-                        _this.option.series[0].data[1].value =resp.data.data.input["墙壁、电梯等广告费"] - 10000
-                        _this.option.series[0].data[2].value =resp.data.data.input["房地产公司管理费"] + 20000
-                        _this.option.series[0].data[3].value =resp.data.data.input["快递柜租赁费"] + 25000
-                        _this.option.series[0].data[4].value =resp.data.data.input["利息结算"] + 32000
-                        _this.option.series[0].data[5].value =resp.data.data.input["外来车辆停车费"] + 30000
-                        _this.option.series[0].data[6].value =resp.data.data.input["其他收入"] + 10000
+                        _this.option.series[0].data[0].value = resp.data.data.input["房屋出租费"] - 70000
+                        _this.option.series[0].data[1].value = resp.data.data.input["墙壁、电梯等广告费"] - 10000
+                        _this.option.series[0].data[2].value = resp.data.data.input["房地产公司管理费"] + 20000
+                        _this.option.series[0].data[3].value = resp.data.data.input["快递柜租赁费"] + 25000
+                        _this.option.series[0].data[4].value = resp.data.data.input["利息结算"] + 32000
+                        _this.option.series[0].data[5].value = resp.data.data.input["外来车辆停车费"] + 30000
+                        _this.option.series[0].data[6].value = resp.data.data.input["其他收入"] + 10000
                         _this.setEcharts()
-                    }else if(resp.data.code == "101"){
+                    } else if (resp.data.code == "101") {
                         _this.$message.error('请先登录');
                         return false;
                     }

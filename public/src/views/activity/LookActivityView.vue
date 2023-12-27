@@ -289,14 +289,14 @@
 
 <template>
     <div style="margin-left: 5px; margin-right:5px; margin-top: -20px">
-        <div v-for="index in tableData" :key="index" >
+        <div v-for="index in tableData" :key="index">
             <el-card class="box-card" style="width: 100%" @click="getDetail(index)">
                 <template #header>
                     <div class="card-header">
                         <span><b>{{index.theme}}</b></span>
                     </div>
                 </template>
-                <div class="content-item"  > {{index.content}} </div>
+                <div class="content-item"> {{index.content}} </div>
             </el-card>
         </div>
     </div>
@@ -305,14 +305,14 @@
 
     import axios from 'axios'
     export default {
-        name:'lookActivity',
-        data(){
+        name: 'lookActivity',
+        data() {
             return {
-                tableData:[
+                tableData: [
                     {
                         theme: '“八·一”建军节慰问',
                         content: '',
-                        address:''
+                        address: ''
                     }]
             }
         },
@@ -321,9 +321,9 @@
                 const _this = this
                 axios.get('http://10.16.104.183:8181/activity/get').then(function (resp) {
                     // console.log(resp.data)
-                    if(resp.data.code == "200"){//返回成功
+                    if (resp.data.code == "200") {//返回成功
                         _this.tableData = resp.data.data
-                    }else if(resp.data.code == "101"){
+                    } else if (resp.data.code == "101") {
                         this.$message.error('出现错误');
                         return false;
                     }
@@ -332,10 +332,10 @@
             getDetail(index) {
                 // console.log(index)
                 this.$router.push({
-                    path:'/activityDetail',
-                    query:{
-                        theme:index.theme,
-                        address:index.address
+                    path: '/activityDetail',
+                    query: {
+                        theme: index.theme,
+                        address: index.address
                     },
                 })
             }
@@ -360,6 +360,7 @@
     .box-card {
         width: 480px;
     }
+
     .content-item {
         text-align: left;
         overflow: hidden;

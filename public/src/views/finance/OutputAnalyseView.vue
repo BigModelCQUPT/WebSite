@@ -19,9 +19,9 @@
 
     export default {
         name: "OutputAnalyseView",
-        data(){
+        data() {
             return {
-                option :{
+                option: {
                     tooltip: {
                         trigger: 'item',
                         formatter: '{a} <br/>{b}: {c} ({d}%)'
@@ -112,22 +112,22 @@
                 }
             }
         },
-        methods:{
+        methods: {
             init() {
                 const _this = this
                 axios.get('http://10.16.104.183:8181/communityFinance/getStatistic/year').then(function (resp) {
-                    if(resp.data.code == "200"){//返回成功
+                    if (resp.data.code == "200") {//返回成功
                         console.log(resp.data.data.output)
-                        _this.option.series[0].data[0].value =resp.data.data.output["购买社区公共设备"]
-                        _this.option.series[0].data[1].value =resp.data.data.output["公共区域设备能耗费用"]
-                        _this.option.series[0].data[2].value =resp.data.data.output["社区公共植物栽培以及养护"]
-                        _this.option.series[0].data[3].value =resp.data.data.output["日常活动支出"]
-                        _this.option.series[0].data[4].value =resp.data.data.output["公共设备维修、保养费用"]
-                        _this.option.series[0].data[5].value =resp.data.data.output["其他支出"]
-                        _this.option.series[0].data[6].value =resp.data.data.output["疫情期间防疫活动支出"]
-                        _this.option.series[0].data[7].value =resp.data.data.output["居委会办公支出"]
+                        _this.option.series[0].data[0].value = resp.data.data.output["购买社区公共设备"]
+                        _this.option.series[0].data[1].value = resp.data.data.output["公共区域设备能耗费用"]
+                        _this.option.series[0].data[2].value = resp.data.data.output["社区公共植物栽培以及养护"]
+                        _this.option.series[0].data[3].value = resp.data.data.output["日常活动支出"]
+                        _this.option.series[0].data[4].value = resp.data.data.output["公共设备维修、保养费用"]
+                        _this.option.series[0].data[5].value = resp.data.data.output["其他支出"]
+                        _this.option.series[0].data[6].value = resp.data.data.output["疫情期间防疫活动支出"]
+                        _this.option.series[0].data[7].value = resp.data.data.output["居委会办公支出"]
                         _this.setEcharts()
-                    }else if(resp.data.code == "101"){
+                    } else if (resp.data.code == "101") {
                         _this.$message.error('请先登录');
                         return false;
                     }

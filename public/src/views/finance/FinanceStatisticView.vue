@@ -3,10 +3,10 @@
     <div>
         <el-card class="box-card">
             <template #header>
-            <div class="card-header">
-                <span><b>年度月收入与支出对比</b></span>
-            </div>
-        </template>
+                <div class="card-header">
+                    <span><b>年度月收入与支出对比</b></span>
+                </div>
+            </template>
             <div ref="mychart1" style="height: 448px; width: 100%; margin-top: -15px">
             </div>
             <div style="margin-top: -40px; display: inline-block; margin-left: -440px; font-size: 20px;">
@@ -17,7 +17,7 @@
     </div>
 </template>
 <script>
-    import  axios from 'axios'
+    import axios from 'axios'
     import * as echarts from 'echarts'
     export default {
         name: 'FinanceStatisticView',
@@ -25,19 +25,19 @@
             init() {
                 const _this = this
                 axios.get('http://10.16.104.183:8181/communityFinance/getStatistic/month').then(function (resp) {
-                    if(resp.data.code == "200"){//返回成功
+                    if (resp.data.code == "200") {//返回成功
                         _this.option.series[0].data = resp.data.data.input
                         _this.option.series[1].data = resp.data.data.output
                         var sum_input = 0
                         var sum_output = 0
-                        for(var i = 0; i < 12; i ++) {
+                        for (var i = 0; i < 12; i++) {
                             sum_input += resp.data.data.input[i];
                             sum_output += resp.data.data.output[i];
                         }
                         _this.sum_input = sum_input;
                         _this.sum_output = sum_output
                         _this.setEcharts()
-                    }else if(resp.data.code == "101"){
+                    } else if (resp.data.code == "101") {
                         _this.$message.error('请先登录');
                         return false;
                     }
@@ -51,9 +51,9 @@
         },
         data() {
             return {
-                option : {
+                option: {
                     title: {
-                        text:''
+                        text: ''
                     },
                     tooltip: {
                         trigger: 'axis'
@@ -65,8 +65,8 @@
                             dataZoom: {
                                 yAxisIndex: 'none'
                             },
-                            dataView: {readOnly: false},
-                            magicType: {type: ['line', 'bar']},
+                            dataView: { readOnly: false },
+                            magicType: { type: ['line', 'bar'] },
                             restore: {},
                             saveAsImage: {}
                         }
@@ -86,30 +86,30 @@
                         {
                             name: '收入',
                             type: 'line',
-                            data: [ 1, 2, 3, 4, 6],
+                            data: [1, 2, 3, 4, 6],
                             markPoint: {
                                 data: [
-                                    {type: 'max', name: 'Max'},
-                                    {type: 'min', name: 'Min'}
+                                    { type: 'max', name: 'Max' },
+                                    { type: 'min', name: 'Min' }
                                 ]
                             },
                             markLine: {
-                                data: [{type: 'average', name: 'Avg'}]
+                                data: [{ type: 'average', name: 'Avg' }]
                             }
                         },
                         {
                             name: '支出',
                             type: 'line',
-                            data:  [3, 1.2, 2, 4, 8, 5, 10],
+                            data: [3, 1.2, 2, 4, 8, 5, 10],
                             markPoint: {
                                 data: [
-                                    {type: 'max', name: 'Max'},
-                                    {type: 'min', name: 'Min'}
+                                    { type: 'max', name: 'Max' },
+                                    { type: 'min', name: 'Min' }
                                 ]
                             },
                             markLine: {
                                 data: [
-                                    {type: 'average', name: 'Avg'},
+                                    { type: 'average', name: 'Avg' },
                                     [
                                         {
                                             symbol: 'none',
@@ -131,8 +131,8 @@
                         }
                     ]
                 },
-                sum_input:0,
-                sum_output:0
+                sum_input: 0,
+                sum_output: 0
             }
         },
 
@@ -159,7 +159,3 @@
         margin-right: 25px;
     }
 </style>
-
-
-
-

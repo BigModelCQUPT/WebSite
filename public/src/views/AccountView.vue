@@ -18,23 +18,23 @@
 
     </div>
 </template>
-<script  >
+<script>
     import axios from 'axios'
     export default {
         name: "AccountView",
-        data(){
+        data() {
             return {
                 msg: "tips",
-                accounts:[
+                accounts: [
                     {
-                        num:1,
-                        id:'admin',
-                        pw:'123'
+                        num: 1,
+                        id: 'admin',
+                        pw: '123'
                     },
                     {
-                        num:2,
-                        id:'admin',
-                        pw:'123'
+                        num: 2,
+                        id: 'admin',
+                        pw: '123'
                     }
                 ]
             }

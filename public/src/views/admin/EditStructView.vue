@@ -1,18 +1,16 @@
 <!--党群结构-->
 <template>
     <div>
-        <el-upload
-                list-type="picture-card"
-                :auto-upload="false"
-                :limit="1"
-                :on-exceed="tip"
-                style="margin-bottom: 15px"
-        >
-            <el-icon ><Plus /></el-icon>
-            <template #file="{ file }" >
+        <el-upload list-type="picture-card" :auto-upload="false" :limit="1" :on-exceed="tip"
+            style="margin-bottom: 15px">
+            <el-icon>
+                <Plus />
+            </el-icon>
+            <template #file="{ file }">
                 <div>
-                    <img  class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                    <span class="el-upload-list__item-actions"><el-button @click="submit_img(file)">上传</el-button></span>
+                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                    <span class="el-upload-list__item-actions"><el-button
+                            @click="submit_img(file)">上传</el-button></span>
                 </div>
             </template>
         </el-upload>
@@ -23,26 +21,26 @@
 
 <script>
     import axios from "axios";
-    import {Plus} from '@element-plus/icons-vue'
+    import { Plus } from '@element-plus/icons-vue'
     export default {
         name: "EditStructView",
-        data(){
+        data() {
             return {
                 formData: {
-                    struct_img:null
+                    struct_img: null
                 },
 
             }
         },
-        methods:{
-            submit(){
-                if(this.formData.struct_img == null) {
+        methods: {
+            submit() {
+                if (this.formData.struct_img == null) {
                     this.$message.error('请先点击图片上传按钮上传图片');
                     return
                 }
                 const _this = this
                 axios.post('http://10.16.104.183:8181/community/edit_struct', this.formData).then(function (resp) {
-                    if(resp.data.code == "200"){//返回成功
+                    if (resp.data.code == "200") {//返回成功
                         _this.$message({
                             message: '编辑成功',
                             type: 'success'
@@ -57,7 +55,7 @@
                 this.formData.struct_img = file.name
             }
         },
-        components:{
+        components: {
             Plus
         }
     }

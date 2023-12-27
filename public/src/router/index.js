@@ -43,9 +43,12 @@ import EditStructView from "@/views/admin/EditStructView";
 import EditEmployeeView from "@/views/admin/EditEmployeeView";
 import EditLeaderView from "@/views/admin/EditLeaderView";
 import overView from "@/views/overView"
+import GetYoutubeInformation from "@/views/resident/GetYoutubeInformation"
+import keywordView from "@/views/resident/keywordView"
+import KeyInformation from "@/views/resident/KeyInformation"
 import TokenList from "@/views/TokenList"
 import GetTelegramInformation from "@/views/resident/GetTelegramInformation"
-// import axios from 'axios';
+import axios from 'axios';
 
 const routes = [
   {
@@ -60,7 +63,6 @@ const routes = [
     },
     component: MainView,
     children: [
-
       {
         path: "/bookMeeting",
         name: '预约会议',
@@ -211,10 +213,26 @@ const routes = [
         component: overView
       },
       {
+        path: '/keyword',
+        name: '关键词',
+        component: keywordView
+      },
+      {
+        path: '/getYoutubeInformation',
+        name: '油管',
+        component: GetYoutubeInformation
+      },
+      {
+        path: '/keyInformation',
+        name: '关键信息',
+        component: KeyInformation
+      },
+      {
         path: '/TokenList',
         name: 'token',
         component: TokenList
-      }, {
+      },
+      {
         path: '/GetTelegramInformation',
         name: 'getTelegramInformation',
         component: GetTelegramInformation
@@ -305,33 +323,33 @@ const router = createRouter({
 // })
 
 //路由守卫
-// router.beforeEach((to, from, next) => {
-//   if (to.path === '/' || to.path === '/register') { // 如果跳转登录页面,则移除token
-//     localStorage.removeItem('jwt_token')
-//     next()
-//   } else {
-//     let token = localStorage.getItem('jwt_token');
-//     if (token === null || token === '') { //token不存在页跳转到登录页面
-//       router.replace({path:'/'})
-//     } else {
-//       // 检验token是否正确
-//       axios({
-//         url: 'http://10.16.104.183:8181/user/account/info', //在controller中写一个接口用来token校验
-//         method: 'get',
-//         //将token信息保存在header里
-//         headers: {
-//           Authorization: "Bearer " + token,
-//         }
-//       }).then((resp) => {
-//         if (resp.data.error_message != "success") {
-//           console.log('检验失败')
-//           router.replace({path:'/'}) // 如果token失效,返回到登录页面
-//         }
-//       })
-//       next();
-//     }
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (to.path === '/' || to.path === '/register') { // 如果跳转登录页面,则移除token
+    localStorage.removeItem('jwt_token')
+    next()
+  } else {
+    let token = localStorage.getItem('jwt_token');
+    if (token === null || token === '') { //token不存在页跳转到登录页面
+      router.replace({ path: '/' })
+    } else {
+      // 检验token是否正确
+      axios({
+        url: 'http://10.16.104.183:8181/user/account/info', //在controller中写一个接口用来token校验
+        method: 'get',
+        //将token信息保存在header里
+        headers: {
+          Authorization: "Bearer " + token,
+        }
+      }).then((resp) => {
+        if (resp.data.error_message != "success") {
+          console.log('检验失败')
+          router.replace({ path: '/' }) // 如果token失效,返回到登录页面
+        }
+      })
+      next();
+    }
+  }
+})
 
 
 export default router
