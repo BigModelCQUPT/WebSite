@@ -54,11 +54,7 @@
                 _this.$refs.ruleForm.validate((valid) => {
                     console.log(_this.ruleForm)
                     if (valid) {
-<<<<<<< HEAD
                         axios.post('http://10.16.104.183:8181/forgetAccount', this.ruleForm).then(function (resp) {
-=======
-                        axios.post('http://localhost:8181/forgetAccount', this.ruleForm).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                             if (resp.data.code == "200") {
                                 _this.$message({
                                     message: '修改成功',

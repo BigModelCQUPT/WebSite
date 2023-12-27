@@ -139,11 +139,7 @@ export default {
         },
         importData(name) {
             const _this = this
-<<<<<<< HEAD
             axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
-=======
-            axios.post('http://localhost:8181/upload/' + name).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 if (resp.data.code == "200") {//返回成功
                     _this.$message({
                         message: '上传成功',
@@ -156,11 +152,7 @@ export default {
         },
         exportData() {
             // const _this = this
-<<<<<<< HEAD
             // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
-=======
-            // axios.get('http://localhost:8181/download/aaa').then(function () {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
             //
             // })
             export_retailer()
@@ -198,11 +190,7 @@ export default {
                 size: this.size
             }
             request({
-<<<<<<< HEAD
                 url: 'http://10.16.104.183:8181/twitterUser/findByUsername',
-=======
-                url: 'http://localhost:8181/twitterUser/findByUsername',
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 method: 'post',
                 data: data,
             }).then(function (resp) {
@@ -256,48 +244,24 @@ export default {
             this.dialogVisible = false
             return
         },
-<<<<<<< HEAD
-=======
-        okAdd() {
-            this.dialogVisible = false
-            this.add_name = ''
-            return
-        },
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         completeAdd() {
             const _this = this
             // console.log(this.add_name)
             const data = {
                 username: this.add_name
             }
-<<<<<<< HEAD
             axios.post('http://10.16.104.183:8181/twitterUser/addUser', data).then(function (resp) {
                 console.log(resp)
                 if (resp.status == "200") {
                     console.log(resp)
                     _this.$message.success('添加成功');
 
-=======
-            request({
-                url: 'http://localhost:8181/twitterUser/addUser',
-                method: 'post',
-                data: data
-            }).then(function (resp) {
-                console.log(resp)
-                if (resp.status == "200") {
-                    _this.$message.success('添加成功');
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 }
                 else {
                     _this.$message.error('出错了');
                     return false;
                 }
             })
-<<<<<<< HEAD
-=======
-            this.okAdd()
-            this.$router.go(0)
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         },
 
         fetchData() {
@@ -312,11 +276,7 @@ export default {
                 size: this.size
             }
             request({
-<<<<<<< HEAD
                 url: 'http://10.16.104.183:8181/twitterUser/findByPage/' + this.currentPage + '/' + this.size,
-=======
-                url: 'http://localhost:8181/twitterUser/findByPage/' + this.currentPage + '/' + this.size,
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 method: 'post',
                 data: data
             }).then(function (resp) {

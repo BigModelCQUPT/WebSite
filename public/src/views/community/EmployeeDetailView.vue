@@ -53,11 +53,7 @@
         created() {
             const _this = this
             console.log(window.sessionStorage.employee_id)
-<<<<<<< HEAD
             axios.post('http://10.16.104.183:8181/employee/getById/'  + window.sessionStorage.employee_id).then(function (resp) {
-=======
-            axios.post('http://localhost:8181/employee/getById/'  + window.sessionStorage.employee_id).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 if(resp.data.code == "200"){//返回成功
                     console.log(resp.data.data)
                     _this.img = resp.data.data.img

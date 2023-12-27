@@ -111,11 +111,7 @@
                     return ;
                 }
                 const _this = this
-<<<<<<< HEAD
                 axios.post('http://10.16.104.183:8181/activity/add', _this.form).then(function (resp) {
-=======
-                axios.post('http://localhost:8181/activity/add', _this.form).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     console.log(resp)
                     if(resp.data.code == "200"){//返回成功
                         window.sessionStorage.img = ''
@@ -143,11 +139,7 @@
                 }
                 axios({
                     method:'post',
-<<<<<<< HEAD
                     url: 'http://10.16.104.183:8181/activity/exportWord',
-=======
-                    url: 'http://localhost:8181/activity/exportWord',
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     data:this.form,
                     responseType: 'blob'
                 }).then(res => {

@@ -76,11 +76,7 @@
         methods:{
             init() {
                 const _this = this
-<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/community/get').then(function (resp) {
-=======
-                axios.get('http://localhost:8181/community/get').then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if (resp.data.code == "200") {//返回成功
                         _this.p1 = resp.data.data.p1
                         _this.p2 = resp.data.data.p2

@@ -117,11 +117,7 @@
                         // console.log(JSON.stringify(str) )
                         // console.log(JSON.parse( JSON.stringify(str) ))
                         const _this = this
-<<<<<<< HEAD
                         axios.post('http://10.16.104.183:8181/reportDaily', JSON.parse(JSON.stringify(str)) ).then(function (resp) {
-=======
-                        axios.post('http://localhost:8181/reportDaily', JSON.parse(JSON.stringify(str)) ).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                             if(resp.data.code == "200"){//返回成功
                                 // console.log(resp.data)
                                 _this.$message({
@@ -141,11 +137,7 @@
             },
             init() {
                 const _this = this
-<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/getInforByUsername/' + window.sessionStorage.username).then(function (resp) {
-=======
-                axios.get('http://localhost:8181/getInforByUsername/' + window.sessionStorage.username).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     // console.log(resp.data)
                     if(resp.data.code == "200"){//返回成功
                         _this.name = resp.data.data.name

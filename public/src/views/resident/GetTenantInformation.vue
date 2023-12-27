@@ -24,7 +24,6 @@
             </div> -->
         </div>
 
-<<<<<<< HEAD
 
         <div style="margin-top: 30px">
             <el-card class="box-card" style="width: 100%">
@@ -47,8 +46,6 @@
             </el-card>
         </div>
 
-=======
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         <!--        数据展示-->
         <div style="margin-top: 15px">
             <!-- <el-table :data="tableData" border style="width: 100%"> -->
@@ -60,11 +57,7 @@
                 <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="120" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
-<<<<<<< HEAD
                 <el-table-column label="推文类型" width="90" align="center">
-=======
-                <el-table-column label="推文类型" width="60" align="center">
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     <template #default="tableData">
                         <el-tag v-if="tableData.row.type === 'replied_to'" type="success">回复</el-tag>
                         <el-tag v-else-if="tableData.row.type === 'tweet'" type=" success">原创</el-tag>
@@ -72,7 +65,6 @@
                         <el-tag v-else type="info">引用</el-tag>
                     </template>
                 </el-table-column>
-<<<<<<< HEAD
                 <el-table-column prop="keyword" label="关键词" width="90" align="center" />
                 <el-table-column label="查看状态" width="90" align="center">
                     <template #default="tableData">
@@ -83,33 +75,6 @@
 
                 <el-table-column prop="" label="是否返回" width="60" align="center" />
                 <el-table-column fixed="right" label="操作" width="120" align="center">
-=======
-                <!-- <el-table-column prop="keyword" label="关键词" width="90" align="center" /> -->
-                <el-table-column prop="keyword" label="关键词" width="90">
-                    <template #default="scope">
-                        <div v-for="item in companyCut(scope.row.keyword)" :key='item'>
-                            <!-- <el-tag type="success">{{ item }}</el-tag> -->
-                            {{ item }}
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column label="已读状态" width="90" align="center">
-                    <template #default="scope">
-                        <el-button v-if="scope.row.flag == 0" type="success"
-                            @click="updateFlag(scope.row.id)">未读</el-button>
-                        <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="钉钉返回" width="60" align="center">
-                    <template #default="scope">
-                        <el-tag v-if="scope.row.needReturn === 0" type="success">否</el-tag>
-                        <el-tag v-else-if="scope.row.needReturn === 1" type=" success">是</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="category" label="GPT分类类别" width="80" align="center" />
-                <el-table-column fixed="right" label="操作" width="100" align="center">
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     <template v-slot="tableData">
                         <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red" title="确定删除该条信息吗">
                             
@@ -182,7 +147,6 @@
                     <el-button type="primary" @click="nextStep">{{ activeindex == 9 ? '完成' : '下一个' }}</el-button>
                 </div>
             </el-dialog>
-<<<<<<< HEAD
             <el-dialog v-model="detaildialogVisible" title="租户信息" width="50%">
                 <el-form :model="form">
                     <div style="display: inline-flex">
@@ -238,9 +202,6 @@
                     </span>
                 </template>
             </el-dialog>
-=======
-            
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         </div> -->
     </div>
 </template>
@@ -255,11 +216,8 @@ export default {
     name: "GetResidentInformation",
     data() {
         return {
-<<<<<<< HEAD
 
             keywordData: [],
-=======
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
             tableData: [{
                 id: '123',
                 username: 'abcd',
@@ -267,24 +225,15 @@ export default {
                 type: 'null',
                 keyword: '彭于晏',
                 flag: '0',
-<<<<<<< HEAD
             }, {
             }],
             search_text: '',
-=======
-                needReturn: '',
-            }, {
-            }],
-            search_text: '',
-            search_keyword: '',
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
             total: 0,//总条数
             currentPage: 1,//第几页
             size: 10,//每页条数
             dialogVisible: false,
             editdialogVisible: false,
             activeindex: 0,
-<<<<<<< HEAD
             informationItem: [
                 '社区名称',
                 '房东姓名',
@@ -325,11 +274,6 @@ export default {
             keyworddialogVisible: false,
             keywordInputValue: '',
             search_keyword: '',
-=======
-            filename: '',
-            detaildialogVisible: false,
-
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         }
     },
     created() {
@@ -347,11 +291,7 @@ export default {
         },
         importData(name) {
             const _this = this
-<<<<<<< HEAD
             axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
-=======
-            axios.post('http://localhost:8181/upload/' + name).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 if (resp.data.code == "200") {//返回成功
                     _this.$message({
                         message: '上传成功',
@@ -364,11 +304,7 @@ export default {
         },
         exportData() {
             // const _this = this
-<<<<<<< HEAD
             // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
-=======
-            // axios.get('http://localhost:8181/download/aaa').then(function () {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
             //
             // })
             export_retailer()
@@ -379,7 +315,6 @@ export default {
         cancleAnalysis() {
             return
         },
-<<<<<<< HEAD
         editClick(row) {
             // console.log(row.id_no)
             this.editdialogVisible = true
@@ -459,8 +394,6 @@ export default {
             }
             this.activeindex--;
         },
-=======
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         currentChange() {
             // console.log(this.currentPage)
             this.fetchData()
@@ -475,11 +408,7 @@ export default {
         //         return;
         //     }
         //     const _this = this
-<<<<<<< HEAD
         //     axios.get('http://10.16.104.183:8181/tenantInformation/find/' + this.search_name).then(function (resp) {
-=======
-        //     axios.get('http://localhost:8181/tenantInformation/find/' + this.search_name).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         //         if (resp.data.code == "200") {//返回成功
         //             // console.log(resp)
         //             _this.tableData = resp.data.data.content
@@ -533,13 +462,8 @@ export default {
                 data: data
             }).then(function (resp) {
                 if (resp.status == "200") {
-<<<<<<< HEAD
                     _this.tableData = resp.data.records
                     _this.total = resp.data.total
-=======
-                    _this.tableData = resp.data.data.records
-                    _this.total = resp.data.data.total
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 }
                 else {
                     _this.$message.error('出错了');
@@ -565,42 +489,25 @@ export default {
                 id: id
             }
             request({
-<<<<<<< HEAD
                 url: 'http://10.16.104.183:8181/tweet/analysisByGPT',
-=======
-                url: 'http://localhost:8181/tweet/analysisByGPT',
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 method: 'post',
                 data: data,
             }).then(function (resp) {
                 if (resp.status == "200") {
-<<<<<<< HEAD
 
                     _this.$message.success("该文本的分析内容\n" + resp.data.data.answer)
-=======
-                    _this.$message.success("该文本的类别属于  " + resp.data.data.category)
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 }
                 else {
                     _this.$message.error('出错了');
                     return false;
                 }
             })
-<<<<<<< HEAD
-=======
-            // location.reload()
-            this.$router.go(0)
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         },
 
         fetchKeywordData() {
             const _this = this
             request({
-<<<<<<< HEAD
                 url: 'http://10.16.104.183:8181/keyword/listAll',
-=======
-                url: 'http://localhost:8181/keyword/listAll',
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 method: 'get',
             }).then(function (resp) {
                 if (resp.status == "200") {
@@ -618,11 +525,7 @@ export default {
             console.log(id);
             const _this = this
             request({
-<<<<<<< HEAD
                 url: 'http://10.16.104.183:8181/keyword/delete/' + id,
-=======
-                url: 'http://localhost:8181/keyword/delete/' + id,
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 method: 'get',
             }).then(function (resp) {
                 if (resp.status == "200") {
@@ -637,12 +540,7 @@ export default {
                     return false;
                 }
             })
-<<<<<<< HEAD
             this.fetchKeywordData()
-=======
-            // this.fetchKeywordData()
-            this.$router.go(0)
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         },
         handleAddKeyword() {
             const _this = this
@@ -650,11 +548,7 @@ export default {
                 keyword: this.keywordInputValue
             }
             request({
-<<<<<<< HEAD
                 url: 'http://10.16.104.183:8181/keyword/add',
-=======
-                url: 'http://localhost:8181/keyword/add',
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                 method: 'post',
                 data: data
             }).then(function (resp) {
@@ -669,10 +563,6 @@ export default {
             this.keyworddialogVisible = false
             this.keywordInputValue = ''
             this.fetchKeywordData()
-<<<<<<< HEAD
-=======
-            this.$router.go(0)
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         },
         blurKeyWord() {
             this.keyworddialogVisible = false
@@ -683,45 +573,12 @@ export default {
             this.keyworddialogVisible = true;
         },
 
-<<<<<<< HEAD
-=======
-        updateFlag(id) {
-            const _this = this
-            const data = {
-                data: id
-            }
-            request({
-                url: 'http://localhost:8181/tweet/updateFlag/' + id,
-                method: 'post',
-                data: data
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.$message.success('已读该信息');
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-            // this.fetchData()
-            this.$router.go(0)
-        },
-
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         handleInputConfirm() {
             // let keywordInputValue = this.keywordInputValue;
             // if (keywordInputValue) {
             //     this.dynamicTags.push(keywordInputValue);
             // }
-<<<<<<< HEAD
         }
-=======
-        },
-        companyCut(name) {
-            let company = (name || "").split(',')
-            return company
-        },
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 
 
     },

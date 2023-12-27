@@ -188,11 +188,7 @@
             },
             deleteItem(row) {
                 const _this = this
-<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/abnormalWarm/delete/' + row.id_no).then(function (resp) {
-=======
-                axios.get('http://localhost:8181/abnormalWarm/delete/' + row.id_no).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if (resp.data.code == "200") {//返回成功
                         _this.$message({
                             message: '删除成功',
@@ -235,11 +231,7 @@
                             this.$message.error('请输入姓名');
                             return
                         }
-<<<<<<< HEAD
                         axios.post('http://10.16.104.183:8181/abnormalWarm/add', this.information).then(function (resp) {
-=======
-                        axios.post('http://localhost:8181/abnormalWarm/add', this.information).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                             // console.log(resp)
                             if (resp.data.code == "200") {//返回成功
                                 _this.$message({
@@ -266,11 +258,7 @@
                             return
                         }
                         // console.log(this.information)
-<<<<<<< HEAD
                         axios.post('http://10.16.104.183:8181/abnormalWarm/edit', this.information).then(function (resp) {
-=======
-                        axios.post('http://localhost:8181/abnormalWarm/edit', this.information).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                             console.log(resp)
                             if (resp.data.code == "200") {//返回成功
                                 _this.$message({
@@ -320,11 +308,7 @@
                     return ;
                 }
                 const _this= this
-<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/abnormalWarm/find/'  + this.search_name).then(function (resp) {
-=======
-                axios.get('http://localhost:8181/abnormalWarm/find/'  + this.search_name).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if(resp.data.code == "200"){//返回成功
                         console.log(resp)
                         _this.tableData = resp.data.data.content
@@ -339,11 +323,7 @@
             },
             init_page() {
                 const _this = this
-<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/abnormalWarm/get/' + this.currentPage + '/' + this.size).then(function (resp) {
-=======
-                axios.get('http://localhost:8181/abnormalWarm/get/' + this.currentPage + '/' + this.size).then(function (resp) {
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if(resp.data.code == "200"){//返回成功
                          console.log(resp)
                         _this.tableData = resp.data.data.content
