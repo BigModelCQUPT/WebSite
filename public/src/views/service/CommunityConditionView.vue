@@ -67,7 +67,11 @@
                         // 确认
                         // console.log(index)
                         index.flag = '1'
+<<<<<<< HEAD
                         axios.post('http://10.16.104.183:8181/communityCondition/edit', index).then(function (resp) {
+=======
+                        axios.post('http://localhost:8181/communityCondition/edit', index).then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                             if(resp.data.code == "200"){//返回成功
                                 _this.$message({
                                     message: '修改成功',
@@ -85,7 +89,11 @@
             },
             init_page() {
                 const _this = this
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/communityCondition/get').then(function (resp) {
+=======
+                axios.get('http://localhost:8181/communityCondition/get').then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if(resp.data.code == "200"){//返回成功
                         // console.log(resp)
                         _this.tableData = resp.data.data

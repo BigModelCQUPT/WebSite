@@ -27,4 +27,48 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
         IPage<YoutubeVideo> page = new Page<>(pageNum, size);
         return youtubeVideoMapper.selectPage(page, null);
     }
+<<<<<<< HEAD
+=======
+
+
+    @Override
+    public List<YoutubeVideo> listAllVideo() {
+        QueryWrapper<YoutubeVideo> queryWrapper = new QueryWrapper<>();
+        return youtubeVideoMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public void saveSummary(YoutubeVideo youtubeVideo) {
+        youtubeVideoMapper.updateById(youtubeVideo);
+    }
+
+    @Override
+    public boolean checkKeyword(int id, String keyword) {
+        return youtubeVideoMapper.checkKeyword(id, keyword) == 1;
+    }
+
+    @Override
+    public void updateReturn(int id) {
+        YoutubeVideo youtubeVideo = new YoutubeVideo();
+        youtubeVideo.setId(id);
+        youtubeVideo.setNeedReturn(1);
+        youtubeVideoMapper.updateById(youtubeVideo);
+    }
+
+    @Override
+    public void saveKeywordList(int id, List<String> list) {
+        String join = String.join(",", list);
+        YoutubeVideo youtubeVideo = youtubeVideoMapper.selectById(id);
+        youtubeVideo.setKeyword(join);
+        youtubeVideoMapper.updateById(youtubeVideo);
+    }
+
+    @Override
+    public List<YoutubeVideo> listAllNoReturn() {
+        QueryWrapper<YoutubeVideo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("need_return", 1);
+        List<YoutubeVideo> youtubeVideoList = youtubeVideoMapper.selectList(queryWrapper);
+        return youtubeVideoList;
+    }
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 }

@@ -24,7 +24,11 @@
         methods: {
             init() {
                 const _this = this
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/communityFinance/getStatistic/month').then(function (resp) {
+=======
+                axios.get('http://localhost:8181/communityFinance/getStatistic/month').then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if(resp.data.code == "200"){//返回成功
                         _this.option.series[0].data = resp.data.data.input
                         _this.option.series[1].data = resp.data.data.output

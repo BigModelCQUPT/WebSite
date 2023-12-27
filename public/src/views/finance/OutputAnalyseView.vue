@@ -115,7 +115,11 @@
         methods:{
             init() {
                 const _this = this
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/communityFinance/getStatistic/year').then(function (resp) {
+=======
+                axios.get('http://localhost:8181/communityFinance/getStatistic/year').then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if(resp.data.code == "200"){//返回成功
                         console.log(resp.data.data.output)
                         _this.option.series[0].data[0].value =resp.data.data.output["购买社区公共设备"]

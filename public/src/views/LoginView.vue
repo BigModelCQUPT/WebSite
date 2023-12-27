@@ -59,7 +59,28 @@ export default {
             checked: true,
             loginRules: {
                 username: [{ required: true, message: "请输入账号", trigger: "blur" }],
+<<<<<<< HEAD
                 password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+=======
+                password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+                mobile: [
+                    {
+                        required: true,
+                        message: "请输入手机号码",
+                        trigger: "blur"
+                    },
+                    {
+                        validator: function (rule, value, callback) {
+                            if (/^1[34578]\d{9}$/.test(value) == false) {
+                                callback(new Error("手机号格式错误"));
+                            } else {
+                                callback();
+                            }
+                        },
+                        trigger: "blur"
+                    }
+                ],
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
             }
         }
     },
@@ -69,7 +90,11 @@ export default {
             // console.log(this.loginForm)
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
+<<<<<<< HEAD
                     axios.post('http://10.16.104.183:8181/user/account/login', this.loginForm).then(function (resp) {
+=======
+                    axios.post('http://localhost:8181/user/account/login', this.loginForm).then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                         // console.log(resp)
                         if (resp.data.error_message === "success") {//返回成功
                             _this.$message({

@@ -121,7 +121,11 @@
         methods:{
             lookDanger() {
                 const _this = this
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/dailyAdmin/getDanger').then(function (resp) {
+=======
+                axios.get('http://localhost:8181/dailyAdmin/getDanger').then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     console.log(resp.data.data)
                     if(resp.data.code == "200"){//返回成功
                          _this.tableData = resp.data.data.infor
@@ -148,7 +152,11 @@
             },
             init_page() {
                 const _this = this
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/dailyAdmin/get/' + this.currentPage + '/' +
+=======
+                axios.get('http://localhost:8181/dailyAdmin/get/' + this.currentPage + '/' +
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     this.size).then(function (resp) {
                     if(resp.data.code == "200"){//返回成
                         // console.log(resp)

@@ -79,7 +79,11 @@
                 this.formData.input_type = this.formData.radio
                 this.$refs.formData.validate((valid) => {
                     if (valid) {
+<<<<<<< HEAD
                         axios.post('http://10.16.104.183:8181/communityFinance/addInput', this.formData).then(function (resp) {
+=======
+                        axios.post('http://localhost:8181/communityFinance/addInput', this.formData).then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                             // console.log(resp)
                             if(resp.data.code == "200"){//返回成功
                                 _this.$message({

@@ -80,7 +80,11 @@
                 var theme = this.$route.query.theme
                 var address = this.$route.query.address
                 const _this = this
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/activity/getDetail/' + theme + '/' + address ).then(function (resp) {
+=======
+                axios.get('http://localhost:8181/activity/getDetail/' + theme + '/' + address ).then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if(resp.data.code == "200"){//返回成功
                         _this.form = resp.data.data
                     }else{
@@ -92,7 +96,11 @@
                 // console.log(this.form.id )
                 axios({
                     method:'get',
+<<<<<<< HEAD
                     url: 'http://10.16.104.183:8181/activity/export/' + this.form.id,
+=======
+                    url: 'http://localhost:8181/activity/export/' + this.form.id,
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     responseType: 'blob'
                 }).then(res => {
                     let data = res.data

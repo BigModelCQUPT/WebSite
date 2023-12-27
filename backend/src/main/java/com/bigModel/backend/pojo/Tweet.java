@@ -23,4 +23,8 @@ public class Tweet {
     private String twitterId;
     private String date;
     private Integer needReturn;
+<<<<<<< HEAD
+=======
+    private String category;
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 }

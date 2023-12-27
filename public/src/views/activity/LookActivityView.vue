@@ -164,7 +164,11 @@
             deleteItem(row) {
                 const _this = this
                 console.log(row.theme)
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/activity/delete/' + row.theme).then(function (resp) {
+=======
+                axios.get('http://localhost:8181/activity/delete/' + row.theme).then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     // console.log(resp)
                     if (resp.data.code == "200") {//返回成功
                         _this.$message({
@@ -192,7 +196,11 @@
                             return
                         }
                         // console.log(this.information)
+<<<<<<< HEAD
                         axios.post('http://10.16.104.183:8181/activity/edit', this.information).then(function (resp) {
+=======
+                        axios.post('http://localhost:8181/activity/edit', this.information).then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                             console.log(resp)
                             if (resp.data.code == "200") {//返回成功
                                 _this.$message({
@@ -241,7 +249,11 @@
                     return ;
                 }
                 const _this= this
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/residentInformation/find/'  + this.search_name).then(function (resp) {
+=======
+                axios.get('http://localhost:8181/residentInformation/find/'  + this.search_name).then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if(resp.data.code == "200"){//返回成功
                         console.log(resp)
                         _this.tableData = resp.data.data.content
@@ -256,7 +268,11 @@
             },
             init_page() {
                 const _this = this
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/activity/get/' + this.currentPage + '/' + this.size).then(function (resp) {
+=======
+                axios.get('http://localhost:8181/activity/get/' + this.currentPage + '/' + this.size).then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     if(resp.data.code == "200"){//返回成功
                         // console.log(resp)
                         _this.tableData = resp.data.data.content
@@ -319,7 +335,11 @@
         methods: {
             init() {
                 const _this = this
+<<<<<<< HEAD
                 axios.get('http://10.16.104.183:8181/activity/get').then(function (resp) {
+=======
+                axios.get('http://localhost:8181/activity/get').then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                     // console.log(resp.data)
                     if(resp.data.code == "200"){//返回成功
                         _this.tableData = resp.data.data

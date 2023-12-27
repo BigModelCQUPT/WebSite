@@ -2,6 +2,10 @@ package com.bigModel.backend.config.filter;
 
 import com.bigModel.backend.mapper.UserMapper;
 import com.bigModel.backend.pojo.User;
+<<<<<<< HEAD
+=======
+import com.bigModel.backend.pojo.UserInformation;
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 import com.bigModel.backend.service.impl.util.UserDetailsImpl;
 import com.bigModel.backend.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -27,8 +31,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserMapper userMapper;
 
+<<<<<<< HEAD
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
+=======
+    private static String userid;
+    @Override
+    public void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 //        未来从前端读的 报文  Authorization
         String token = request.getHeader("Authorization");
 
@@ -39,10 +49,17 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         token = token.substring(7);
 
+<<<<<<< HEAD
         String userid;
         try {
             Claims claims = JwtUtil.parseJWT(token);
             userid = claims.getSubject();
+=======
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -50,7 +67,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         User user = userMapper.selectById(Integer.parseInt(userid));
 
         if (user == null) {
+<<<<<<< HEAD
             throw new RuntimeException("用户名未登录");
+=======
+            throw new RuntimeException("用户名未注册");
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         }
 
         UserDetailsImpl loginUser = new UserDetailsImpl(user);
@@ -61,4 +82,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+<<<<<<< HEAD
+=======
+
+    public static UserInformation getUserBasic(){
+
+        UserInformation userInformation = UserInformation.builder().userId(Integer.parseInt(userid)).build();
+        return userInformation;
+    }
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 }

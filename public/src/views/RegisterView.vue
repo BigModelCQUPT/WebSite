@@ -78,7 +78,11 @@ export default {
             this.$refs.registerForm.validate((valid) => {
                 if (valid) {
                     console.log(this.registerForm)
+<<<<<<< HEAD
                     axios.post('http://10.16.104.183:8181/user/account/register', this.registerForm).then(function (resp) {
+=======
+                    axios.post('http://localhost:8181/user/account/register', this.registerForm).then(function (resp) {
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
                         if (resp.data.data.error_message === "success") {//返回成功
                             _this.$message({
                                 message: '注册成功',

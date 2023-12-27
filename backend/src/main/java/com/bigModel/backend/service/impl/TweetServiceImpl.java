@@ -13,6 +13,10 @@ import com.bigModel.backend.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bigModel.backend.utils.chatGPT;
+<<<<<<< HEAD
+=======
+import org.springframework.transaction.annotation.Transactional;
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 
 import java.util.HashMap;
 import java.util.List;
@@ -79,11 +83,23 @@ public class TweetServiceImpl implements TweetService{
     }
 
     @Override
+<<<<<<< HEAD
     public Map<String, Object> analysisByGPT(Integer id) {
         Tweet tweet = tweetMapper.selectById(id);
         String content = tweet.getText();
         Map<String, Object> res = new HashMap<>();
         res = chatGPT.getAnswer(content);
+=======
+    @Transactional
+    public Map<String, Object> analysisByGPT(Integer id) {
+        Tweet tweet = tweetMapper.selectById(id);
+        String content = tweet.getText();
+        Map<String, Object> res = chatGPT.getAnswer(content);
+
+//        存入类别
+        tweet.setCategory(res.get("category").toString());
+        tweetMapper.updateById(tweet);
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         return res;
     }
 
@@ -110,4 +126,35 @@ public class TweetServiceImpl implements TweetService{
         tweet.setFlag(1);
         tweetMapper.updateById(tweet);
     }
+<<<<<<< HEAD
+=======
+
+    @Override
+    public List<Tweet> getTweetByDate(String date) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("date", date);
+        return tweetMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public boolean checkKeyword(Integer id, String keyword) {
+        return tweetMapper.checkKeyword(id, keyword) == 1;
+    }
+
+    @Override
+    public void updateReturn(Integer id) {
+        Tweet tweet = new Tweet();
+        tweet.setId(id);
+        tweet.setNeedReturn(1);
+        tweetMapper.updateById(tweet);
+    }
+
+    @Override
+    public void saveKeywordList(int id, List<String> list) {
+        String join = String.join(",", list);
+        Tweet tweet = tweetMapper.selectById(id);
+        tweet.setKeyword(join);
+        tweetMapper.updateById(tweet);
+    }
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 }

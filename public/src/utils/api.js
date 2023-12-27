@@ -4,7 +4,11 @@ export function export_retailer () {
     // eslint-disable-next-line no-undef
     return axios({
         method:'get',
+<<<<<<< HEAD
         url: 'http://10.16.104.183:8181/download/aaa',
+=======
+        url: 'http://localhost:8181/download/aaa',
+>>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
         responseType: 'blob'
     }).then(res => {
         let data = res.data
