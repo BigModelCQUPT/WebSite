@@ -46,6 +46,8 @@ import overView from "@/views/overView"
 import GetYoutubeInformation from "@/views/resident/GetYoutubeInformation"
 import keywordView from "@/views/resident/keywordView"
 import KeyInformation from "@/views/resident/KeyInformation"
+import TokenList from "@/views/TokenList"
+import GetTelegramInformation from "@/views/resident/GetTelegramInformation"
 import axios from 'axios';
 
 const routes = [
@@ -224,6 +226,16 @@ const routes = [
         path:'/keyInformation',
         name:'关键信息',
         component: KeyInformation
+      },
+      {
+        path: '/TokenList',
+        name: 'token',
+        component: TokenList
+      }, 
+      {
+        path: '/GetTelegramInformation',
+        name: 'getTelegramInformation',
+        component: GetTelegramInformation
       },
     ]
   },

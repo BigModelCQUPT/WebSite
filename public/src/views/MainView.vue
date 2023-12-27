@@ -60,6 +60,18 @@
                                 <DataBoard />
                             </el-icon>关键信息
                         </el-menu-item>
+
+                        <el-menu-item index="getTelegramInformation">
+                            <el-icon>
+                                <DataAnalysis />
+                            </el-icon>Telegram信息
+                        </el-menu-item>
+
+                        <el-menu-item index="TokenList">
+                            <el-icon>
+                                <Key />
+                            </el-icon>token管理
+                        </el-menu-item>
                     </el-menu>
                 </el-scrollbar>
             </el-aside>
@@ -85,7 +97,7 @@
     </div>
 </template>
 <script  >
-import {  /*Fold, Expand,*/  Menu, Avatar, DataBoard, UserFilled } from '@element-plus/icons-vue'
+import {  /*Fold, Expand,*/  Menu, Avatar, DataBoard, UserFilled, Key, DataAnalysis } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import axios from 'axios'
 import { ElNotification } from 'element-plus'
@@ -164,7 +176,7 @@ export default {
         this.init()
     },
     components: {
-        /* Fold, Expand,*/ Menu, Avatar, DataBoard, UserFilled
+        /* Fold, Expand,*/ Menu, Avatar, DataBoard, UserFilled, DataAnalysis, Key
     },
     computed: {
         list() {
