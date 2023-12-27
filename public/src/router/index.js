@@ -231,7 +231,11 @@ const routes = [
         path: '/TokenList',
         name: 'token',
         component: TokenList
+<<<<<<< HEAD
       },
+=======
+      }, 
+>>>>>>> f3834dc5dab10614b11c71efa51e9f92b7e70dd4
       {
         path: '/GetTelegramInformation',
         name: 'getTelegramInformation',
