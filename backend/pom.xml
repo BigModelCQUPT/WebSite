@@ -158,15 +158,12 @@
             <artifactId>okhttp</artifactId>
             <version>3.8.1</version>
         </dependency>
-<<<<<<< HEAD
-=======
 
         <dependency>
             <groupId>com.github.houbb</groupId>
             <artifactId>opencc4j</artifactId>
             <version>1.1.0</version>
         </dependency>
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
     </dependencies>
 
     <build>

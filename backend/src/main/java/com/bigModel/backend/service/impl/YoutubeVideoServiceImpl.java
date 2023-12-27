@@ -27,8 +27,6 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
         IPage<YoutubeVideo> page = new Page<>(pageNum, size);
         return youtubeVideoMapper.selectPage(page, null);
     }
-<<<<<<< HEAD
-=======
 
 
     @Override
@@ -70,5 +68,4 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
         List<YoutubeVideo> youtubeVideoList = youtubeVideoMapper.selectList(queryWrapper);
         return youtubeVideoList;
     }
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 }

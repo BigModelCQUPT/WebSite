@@ -19,10 +19,7 @@ public class YoutubeVideo {
     private String channelId;
     private String videoUrl;
     private String title;
-<<<<<<< HEAD
-=======
     private String summary;
     private Integer needReturn;
     private String keyword;
->>>>>>> ffc14b02a948452209c8504655d41786bdd0c07f
 }
