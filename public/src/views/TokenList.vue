@@ -48,11 +48,11 @@
     methods: {
       submitForm1() {
         const data = {
-          token1: this.formData.token1,
+          mailtoken: this.formData.token1,
         }
         const _this = this
         request({
-          url: '/token/addtoken1',
+          url: '/token/add/mailtoken',
           method: 'post',
           data: data
         }).then(function (resp) {
