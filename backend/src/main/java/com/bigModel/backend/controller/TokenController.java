@@ -23,4 +23,17 @@ public class TokenController {
         tokenService.addMailtoken(mailtoken);
         return Result.success("添加成功");
     }
+
+    @PostMapping("/youtubetoken")
+    public Result youtubetoken(@RequestBody Map<String, String> data){
+        String youtubetoken = data.get("youtubetoken");
+        tokenService.addYoutubetoken(youtubetoken);
+        return Result.success("添加成功");
+    }
+    @PostMapping("/twittertoken")
+    public Result twittertoken(@RequestBody Map<String, String> data){
+        String twittertoken = data.get("twittertoken");
+        tokenService.addTwittertoken(twittertoken);
+        return Result.success("添加成功");
+    }
 }
