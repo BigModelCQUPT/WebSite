@@ -7,24 +7,17 @@ import com.bigModel.backend.service.KeywordService;
 import com.bigModel.backend.service.TweetService;
 import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
 import com.bigModel.backend.utils.ParseJSONUtil;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Component
 public class OrderTask {
@@ -35,38 +28,32 @@ public class OrderTask {
     private TwitterUserInfoService infoService;
     @Autowired
     private KeywordService keywordService;
+
     //    测试定时任务
 //    每小时
 //    @Scheduled(cron = "0/40 * * * * ?")
-    @Scheduled(cron = "0 0 7 * * ?")
+//     @Scheduled(cron = "0 0 7 * * ?")
+    @Scheduled(cron = "*/5 * * * * ?")
     @Transactional(rollbackFor = Exception.class)
-    public void testHello() throws IOException, URISyntaxException, InterruptedException {
+    public void testHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
+        String token = "13893747a348d8fc";
         for (int i = 0; i < list.size(); i++) {
-            Thread.sleep(60000);
+            System.out.println(i);
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
-            System.out.println(username);
-            Pattern p = Pattern.compile("[\u4E00-\u9FA5|\\！|\\，|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]");
-            String encode = "";
-            if (p.matcher(twitterId).find()) {
-                encode = URLEncoder.encode(twitterId, "utf-8");
-            } else {
-                encode = twitterId;
-            }
-            // System.out.println(new Date().toInstant());
-            String apiUrl = "https://api.twitter.com/2/users/" + encode + "/tweets?max_results=5&expansions=referenced_tweets.id";
-            String bearerToken = "Bearer AAAAAAAAAAAAAAAAAAAAAIRBrAEAAAAAgU%2BrSU6jqqQhmNjGbP9Vw24qUfI%3DyeaoWbeaoWvguoY0PWb56I0NFoGYbwIf8M9alsTWyuqThfi3Tq";
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
-            headers.add("Authorization", bearerToken);
-            headers.add("Accept", "*/*");
-            headers.add("Host", "api.twitter.com");
-            headers.add("Connection", "keep-alive");
-            RequestEntity<String> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, new URI(apiUrl));
-            ResponseEntity<String> responseEntity = new RestTemplate().exchange(requestEntity, String.class);
-            String data = responseEntity.getBody();
-            List<Tweet> tweetList = ParseJSONUtil.parseJSON(data, username, twitterId);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            Request request = new Request.Builder()
+                    .url("http://106.227.5.196:13422/twitter/user_timeline_byid?token=" + token + "&userId=" + twitterId+ "&max_id=")
+                    .method("GET", null)
+                    .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+            Response response = client.newCall(request).execute();
+            ResponseBody res = response.body();
+            List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId);
+            // tweetList.forEach(System.out::println);
             tweetService.saveTweet(tweetList);
         }
         this.keywordMatch();

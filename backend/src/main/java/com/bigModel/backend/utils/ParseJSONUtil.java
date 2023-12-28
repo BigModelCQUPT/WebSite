@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class ParseJSONUtil {
-    public static List<Tweet> parseJSON(String string,String username, String twitterId) {
+    public static List<Tweet> parseJSON(String string, String username, String twitterId) {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         JSONObject json = new JSONObject(string);
@@ -23,22 +23,23 @@ public class ParseJSONUtil {
         for (int i = 0; i < jsonArray.length(); i ++) {
             JSONObject item = new JSONObject(jsonArray.getString(i));
             String type = "tweet";
-            try {
-                JSONArray referenced_tweets = new JSONArray(item.getString("referenced_tweets"));
-                JSONObject referenced_tweet_item = new JSONObject((String) referenced_tweets.getString(0));
-                type = referenced_tweet_item.getString("type");
-            }catch (JSONException exception) {
-            }
             Tweet tweet = new Tweet();
-            tweet.setText(TraditionalToSimplifiedUtil.TraditionalToSimplified(item.getString("text")));
+            String text = TraditionalToSimplifiedUtil.TraditionalToSimplified(item.getString("full_text"));
+            tweet.setText(text);
+            if (text.charAt(0) == '@' || (text.charAt(0) == 'R' && text.charAt(0) == 'T'))
+                type = "reply";
             tweet.setFlag(0);
             tweet.setType(type);
-            tweet.setTweetid(item.getString("id"));
+            tweet.setTweetid(item.getString("id_str"));
             tweet.setUsername(username);
             tweet.setTwitterId(twitterId);
             tweet.setDate(s.format(c.getTime()));
             list.add(tweet);
         }
         return list;
+    }
+
+    public static void main(String[] args) {
+        parseJSON(null, null, null);
     }
 }
