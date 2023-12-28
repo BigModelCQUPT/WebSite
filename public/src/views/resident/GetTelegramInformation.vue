@@ -269,7 +269,7 @@ export default {
         },
         importData(name) {
             const _this = this
-            axios.post('http://10.16.104.183:8181/telegram/upload/' + name).then(function (resp) {
+            axios.post('http://localhost:5000/telegram/upload/' + name).then(function (resp) {
                 if (resp.data.code == "200") {//返回成功
                     _this.$message({
                         message: '上传成功',
@@ -429,15 +429,15 @@ export default {
             //     return;
             // }
             const _this = this
-            const data = {
-                page: this.currentPage,
-                size: this.size,
-                keyword: this.search_keyword,
-            }
+            // const data = {
+            //     page: this.currentPage,
+            //     size: this.size,
+            //     keyword: this.search_keyword,
+            // }
             request({
-                url: '/telegram/findByPage/' + this.currentPage + '/' + this.size,
-                method: 'post',
-                data: data
+                url: 'http://127.0.0.1:5000/update_group',
+                method: 'GET',
+                // data: data
             }).then(function (resp) {
                 if (resp.status == "200") {
                     _this.tableData = resp.data.records
