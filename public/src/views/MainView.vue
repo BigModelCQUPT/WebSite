@@ -35,7 +35,7 @@
                                 </el-icon>总览
                             </template>
                         </el-menu-item>
-                        <el-menu-item index="getResidentInformation">
+                        <el-menu-item index="getUserInformation">
                             <el-icon>
                                 <UserFilled />
                             </el-icon>账号信息
@@ -51,7 +51,7 @@
                                     <DataBoard />
                                 </el-icon>全部信息
                             </template>
-                            <el-menu-item index="getTenantInformation">
+                            <el-menu-item index="getTwitterInformation">
                                 <el-icon>
                                     <DataAnalysis />
                                 </el-icon>Twitter全部信息
@@ -83,19 +83,6 @@
                 </el-scrollbar>
             </el-aside>
             <el-main>
-                <!-- <el-breadcrumb separator=">" class="bread" v-if="this.$router.currentRoute._rawValue.fullPath != '/main'">
-                    <el-breadcrumb-item :to="{ path: item.path }" v-for="item in list" :key="item">{{ item.name
-                    }}</el-breadcrumb-item>
-                                       <el-breadcrumb-item>{{this.$router.currentRoute._rawValue.name}}</el-breadcrumb-item>
-                                       <el-breadcrumb-item>promotion list</el-breadcrumb-item>
-                                       <el-breadcrumb-item>promotion detail</el-breadcrumb-item>
-                    <el-divider border-style="double" />
-                </el-breadcrumb> -->
-
-                <!-- <div>
-                    <div ref="mychart" style="height: 560px; width: 100%; margin-top: 0px">
-                    </div>
-                </div> -->
                 <router-view />
             </el-main>
 

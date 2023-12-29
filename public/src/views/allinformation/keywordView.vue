@@ -1,4 +1,4 @@
-<!--获取租户信息展示-->
+<!--获取关键词信息展示-->
 <template>
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
 

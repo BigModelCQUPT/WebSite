@@ -8,18 +8,18 @@
 
         <el-form :model="formData" label-width="180px" style="margin-top: 40px;margin-bottom : 40px">
 
-          <el-form-item label="token1" prop="token1">
+          <el-form-item label="Mail token" prop="token1">
             <el-input v-model="formData.token1" style="width: 80%" type="text" placeholder='请输入token1' />
             <el-button type="primary" style="margin-left: 25px" @click="submitForm1">提交</el-button>
           </el-form-item>
 
-          <el-form-item label="token2" prop="token2">
+          <el-form-item label="YouTube token" prop="token2">
             <el-input v-model="formData.token2" style="width: 80%" type="text" placeholder='请输入token2' />
 
             <el-button type="primary" style="margin-left: 25px" @click="submitForm2">提交</el-button>
           </el-form-item>
 
-          <el-form-item label="token3" prop="token3">
+          <el-form-item label="Twitter token" prop="token3">
             <el-input v-model="formData.token3" style="width: 80%" type="text" placeholder='请输入token3' />
             <el-button type="primary" style="margin-left: 25px" @click="submitForm3">提交</el-button>
           </el-form-item>
@@ -68,11 +68,11 @@
       },
       submitForm2() {
         const data = {
-          token1: this.formData.token1,
+          youtubetoken: this.formData.token2,
         }
         const _this = this
         request({
-          url: '/token/addtoken2',
+          url: '/token/add/youtubetoken',
           method: 'post',
           data: data
         }).then(function (resp) {
@@ -88,11 +88,11 @@
       },
       submitForm3() {
         const data = {
-          token1: this.formData.token1,
+          twittertoken: this.formData.token3,
         }
         const _this = this
         request({
-          url: '/token/addtoken3',
+          url: '/token/add/twittertoken',
           method: 'post',
           data: data
         }).then(function (resp) {

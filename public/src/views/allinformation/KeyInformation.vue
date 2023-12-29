@@ -1,4 +1,4 @@
-<!--获取租户信息展示-->
+<!--获取关键信息展示-->
 <template>
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
         <!--        工具栏-->
@@ -91,40 +91,7 @@
         </div> -->
 
 
-        <!--        添加框  编辑框-->
-        <!-- <div>
-            <el-dialog title="添加租户信息" width="50%" v-model="dialogVisible"
-                style="display: flex; justify-content: space-around; align-items: center">
-                <div style="height: 300px">
-                    <el-steps direction="vertical" :active="activeindex">
-                        <el-step :title="item" v-for="(item, index) in informationItem" :key="index" />
-                    </el-steps>
-                    <el-input :placeholder="'请输入' + informationItem[index]" v-for="(val, key, index) in information"
-                        :key="index" v-show="activeindex == index" style="float: right; width: 400px; margin-top: -150px"
-                        v-model="information[key]" @keydown.enter="nextStep"></el-input>
-                </div>
-                <div style="margin-top: 60px">
-                    <el-button type="primary" @click="preStep">{{ activeindex == 0 ? '取消' : '上一步' }}</el-button>
-                    <el-button type="primary" @click="nextStep">{{ activeindex == 9 ? '完成' : '下一个' }}</el-button>
-                </div>
-            </el-dialog>
-            <el-dialog title="编辑居民信息" width="50%" v-model="editdialogVisible"
-                style="display: flex; justify-content: space-around; align-items: center">
-                <div style="height: 300px">
-                    <el-steps direction="vertical" :active="activeindex">
-                        <el-step :title="item" v-for="(item, index) in informationItem" :key="index" />
-                    </el-steps>
-                    <el-input :placeholder="'请输入' + informationItem[index]" v-for="(val, key, index) in information"
-                        :key="index" v-show="activeindex == index" style="float: right; width: 400px; margin-top: -150px"
-                        v-model="information[key]" @keydown.enter="nextStep"></el-input>
-                </div>
-                <div style="margin-top: 60px">
-                    <el-button type="primary" @click="preStep">{{ activeindex == 0 ? '取消' : '上一步' }}</el-button>
-                    <el-button type="primary" @click="nextStep">{{ activeindex == 9 ? '完成' : '下一个' }}</el-button>
-                </div>
-            </el-dialog>
-            
-        </div> -->
+
     </div>
 </template>
 
