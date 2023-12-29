@@ -33,7 +33,7 @@ public class OrderTask {
 //    每小时
 //    @Scheduled(cron = "0/40 * * * * ?")
 //     @Scheduled(cron = "0 0 7 * * ?")
-    @Scheduled(cron = "*/5 * * * * ?")
+//     @Scheduled(cron = "*/5 * * * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void testHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
@@ -53,7 +53,6 @@ public class OrderTask {
             Response response = client.newCall(request).execute();
             ResponseBody res = response.body();
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId);
-            // tweetList.forEach(System.out::println);
             tweetService.saveTweet(tweetList);
         }
         this.keywordMatch();
