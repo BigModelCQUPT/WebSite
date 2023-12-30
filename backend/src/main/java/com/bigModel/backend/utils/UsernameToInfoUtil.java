@@ -25,6 +25,7 @@ public class UsernameToInfoUtil {
         else{
             encode = username;
         }
+//        TODO 接口修改
         String apiUrl = "https://api.twitter.com/2/users/by/username/" + encode;
         String bearerToken = "Bearer AAAAAAAAAAAAAAAAAAAAAIRBrAEAAAAAgU%2BrSU6jqqQhmNjGbP9Vw24qUfI%3DyeaoWbeaoWvguoY0PWb56I0NFoGYbwIf8M9alsTWyuqThfi3Tq";
         HttpHeaders headers = new HttpHeaders();

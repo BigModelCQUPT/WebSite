@@ -17,4 +17,5 @@ public class YoutubeUser {
     private Integer id;
     private String username;
     private String channelId;
+    private String resume;
 }

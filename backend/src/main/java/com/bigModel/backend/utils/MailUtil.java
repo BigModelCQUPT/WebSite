@@ -9,6 +9,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
+// TODO 用户信息中添加邮件 从而获取邮件信息
 @Component
 public class MailUtil {
 
