@@ -5,6 +5,7 @@ import com.bigModel.backend.mapper.ActiveAccountMapper;
 import com.bigModel.backend.mapper.KeywordMapper;
 import com.bigModel.backend.pojo.ActiveAccount;
 import com.bigModel.backend.pojo.Keyword;
+import com.bigModel.backend.pojo.TopicKeyword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +29,7 @@ public class OverviewController {
     }
 
     @GetMapping("topickeyword")
-    public List<Keyword> getTopicKeyword(){
-        QueryWrapper<Keyword> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("number");
-        return topicKeywordMapper.selectList(queryWrapper);
+    public List<TopicKeyword> getTopicKeyword(){
+        return topicKeywordMapper.getTopicKeyword();
     }
 }
