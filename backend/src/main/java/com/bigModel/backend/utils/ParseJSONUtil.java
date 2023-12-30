@@ -4,7 +4,6 @@ package com.bigModel.backend.utils;
 import com.bigModel.backend.pojo.Tweet;
 import com.bigModel.backend.service.impl.util.TraditionalToSimplifiedUtil;
 import twitter4j.JSONArray;
-import twitter4j.JSONException;
 import twitter4j.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +25,9 @@ public class ParseJSONUtil {
             Tweet tweet = new Tweet();
             String text = TraditionalToSimplifiedUtil.TraditionalToSimplified(item.getString("full_text"));
             tweet.setText(text);
-            if (text.charAt(0) == '@' || (text.charAt(0) == 'R' && text.charAt(0) == 'T'))
+            if (text.charAt(0) == 'R' && text.charAt(1) == 'T')
+                type = "reposted";
+            else if (text.charAt(0) == '@')
                 type = "reply";
             tweet.setFlag(0);
             tweet.setType(type);

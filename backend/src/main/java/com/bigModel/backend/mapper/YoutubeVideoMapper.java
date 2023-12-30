@@ -15,8 +15,8 @@ public interface YoutubeVideoMapper extends BaseMapper<YoutubeVideo> {
             "        ELSE FALSE \n" +
             "    END \n" +
             "FROM \n" +
-            "    tweet\n" +
+            "    youtube\n" +
             "WHERE \n" +
-            "    id = #{id} and text like '%${keyword}%';\n")
+            "    id = #{id} and summary like '%${keyword}%';\n")
     int checkKeyword(Integer id, String keyword);
 }

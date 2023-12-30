@@ -37,10 +37,9 @@
                 <el-table-column prop="text" label="推文内容" align="center" />
                 <el-table-column label="推文类型" width="70" align="center">
                     <template #default="tableData">
-                        <el-tag v-if="tableData.row.type === 'replied_to'" type="success">回复</el-tag>
-                        <el-tag v-else-if="tableData.row.type === 'tweet'" type=" success">原创</el-tag>
-                        <el-tag v-else-if="tableData.row.type === 'retweeted'" type=”success”>转发</el-tag>
-                        <el-tag v-else type="info">引用</el-tag>
+                        <el-tag v-if="tableData.row.type === 'reply'" type="success">评论</el-tag>
+                        <el-tag v-else-if="tableData.row.type === 'tweet'" type=" success">推文</el-tag>
+                        <el-tag v-else-if="tableData.row.type === 'reposted'" type=”success”>转发</el-tag>
                     </template>
                 </el-table-column>
                 <!-- <el-table-column prop="keyword" label="关键词" width="90" align="center" /> -->
