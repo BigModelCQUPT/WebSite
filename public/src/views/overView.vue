@@ -89,7 +89,7 @@
 
     import 'echarts-wordcloud'
 
-    // eslint-disable-next-line no-undef
+    // eslint - disable - next - line no - undef
 
     export default {
 
@@ -100,7 +100,7 @@
                 twitterUserCount: 0,
                 totalTweet: 0,
                 activateUserData: [],
-
+                topicKeywordData: [],
                 // option2: {
 
                 // },
@@ -328,6 +328,7 @@
                     }
                 })
             },
+
             getActivateUser() {
                 const _this = this
                 request({
@@ -356,13 +357,13 @@
                         source: _this.activateUserData
                     },
                     grid: { containLabel: true },
-                    xAxis: { name: '推文数量', type: 'value' },
+                    xAxis: { name: '推文数', type: 'value' },
                     yAxis: { name: '用户名', type: 'category', inverse: true },
                     visualMap: {
                         orient: 'horizontal',
                         left: 'center',
-                        min: 10,
-                        max: 100,
+                        min: _this.activateUserData[_this.activateUserData.length - 1].tweetCnt,
+                        max: _this.activateUserData[0].tweetCnt,
                         text: ['High', 'Low'],
                         // Map the score column to color
                         dimension: 0,
@@ -389,24 +390,28 @@
 
             // 主要话题
             getTopicKeyword() {
-                // const _this = this
+                const _this = this
                 request({
                     url: '/overview/topickeyword',
                     method: 'get',
-                }).then(function () {
-                    // if (resp.status == "200") {
-
-                    // }
-                    // else {
-                    //     _this.$message.error('出错了');
-                    //     return false;
-                    // }
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        for (var i = 0; i < 5; i++) {
+                            _this.topicKeywordData[i] = resp.data.data[i]
+                        }
+                        // _this.tableOption2 = resp.data.data;
+                        _this.TopicKeywordChart()
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
                 })
             },
 
             TopicKeywordChart() {
                 // const _this = this
-                this.userChart = echarts.init(this.$refs.getActivateUserChart)
+                this.userChart = echarts.init(this.$refs.getTopicKeywordChart)
 
                 const optionTopicKeyword = {
                     title: {
@@ -426,13 +431,7 @@
                             name: '热门话题',
                             type: 'pie',
                             radius: '50%',
-                            data: [
-                                { value: 1048, name: '话题一' },
-                                // { value: 735, name: '话题二' },
-                                // { value: 580, name: '话题三' },
-                                // { value: 484, name: '话题四' },
-                                // { value: 300, name: '话题五' }
-                            ],
+                            data: this.topicKeywordData,
                             emphasis: {
                                 itemStyle: {
                                     shadowBlur: 10,
