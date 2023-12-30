@@ -123,7 +123,7 @@
                 chart: null,
                 twitterUserCount: 0,
                 totalTweet: 0,
-
+                tableoption2: [{ username: "", tweetCnt: 0, }],
                 option: {
 
                     title: {
@@ -163,15 +163,16 @@
                 },
                 option2: {
                     dataset: {
-                        source: [
-                            ['score', 'tweets', 'product'],
-                            [26, 260, '用户1'],
-                            [40, 400, '用户2'],
-                            [55, 550, '用户3'],
-                            [60, 600, '用户4'],
-                            [75, 750, '用户5'],
-                            [90, 900, '用户6'],
-                        ]
+                        tableoption2: [{}, {},]
+                        // source: [
+                        //     ['score', 'tweetCnt', 'username'],
+                        //     [26, 260, '用户1'],
+                        //     [40, 400, '用户2'],
+                        //     [55, 550, '用户3'],
+                        //     [60, 600, '用户4'],
+                        //     [75, 750, '用户5'],
+                        //     [90, 900, '用户6'],
+                        // ]
                     },
                     grid: { containLabel: true },
                     xAxis: { name: 'tweets' },
@@ -322,25 +323,6 @@
                         ]
                     }]
                 },
-                //            charoption : {
-                //             legend: {},
-                //   tooltip: {},
-                //   dataset: {
-                //     source: [
-                //       ['product', '2015', '2016', '2017'],
-                //       ['Matcha Latte', 43.3, 85.8, 93.7],
-                //       ['Milk Tea', 83.1, 73.4, 55.1],
-                //       ['Cheese Cocoa', 86.4, 65.2, 82.5],
-                //       ['Walnut Brownie', 72.4, 53.9, 39.1]
-                //     ]
-                //   },
-                //   xAxis: { type: 'category' },
-                //   yAxis: {},
-                //   // Declare several bar series, each will be mapped
-                //   // to a column of dataset.source by default.
-                //   series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }]
-                // },
-
                 chartoption: {
 
                     legend: {},
@@ -369,6 +351,7 @@
         created() {
             this.getNumberUser()
             this.getNumberTweet()
+            this.getActivateUser()
         },
         components: {
     /* Fold, Expand,*/  User, ChatDotRound,
@@ -419,7 +402,25 @@
                         return false;
                     }
                 })
+            },
+            getActivateUser() {
+                const _this = this
+                request({
+                    url: '/overview/account',
+                    method: 'get',
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.tableoption2 = resp.data.data;
+
+                        console.log(_this.tableoption2)
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
             }
+
 
         },
 

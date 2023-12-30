@@ -35,11 +35,22 @@
                                 </el-icon>总览
                             </template>
                         </el-menu-item>
-                        <el-menu-item index="getUserInformation">
-                            <el-icon>
-                                <UserFilled />
-                            </el-icon>账号信息
-                        </el-menu-item>
+                        <el-sub-menu index="1">
+                            <template #title>
+                                <el-icon>
+                                    <UserFilled />
+                                </el-icon>账号信息</template>
+                            <el-menu-item index="getTwiUserInformation">
+                                <el-icon>
+                                    <UserFilled />
+                                </el-icon>推特账号信息
+                            </el-menu-item>
+                            <el-menu-item index="getTubeUserInformation">
+                                <el-icon>
+                                    <UserFilled />
+                                </el-icon>油管账号信息
+                            </el-menu-item>
+                        </el-sub-menu>
                         <el-menu-item index="keyword">
                             <el-icon>
                                 <Collection />

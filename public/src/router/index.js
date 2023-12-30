@@ -4,7 +4,8 @@ import ForgetAccountView from "@/views/ForgetAccountView";
 
 import MainView from "@/views/MainView";
 import LoginView from "@/views/LoginView";
-import GetUserInformation from "@/views/allinformation/GetUserInformation";
+import GetTwiUserInformation from "@/views/allinformation/GetTwiUserInformation";
+import GetTubeUserInformation from "@/views/allinformation/GetTubeUserInformation";
 import GetTwitterInformation from "@/views/allinformation/GetTwitterInformation";
 import UpdatePasswordView from "@/views/UpdatePasswordView";
 
@@ -27,9 +28,14 @@ const routes = [
     component: MainView,
     children: [
       {
-        path: '/getUserInformation',
-        name: '用户信息',
-        component: GetUserInformation
+        path: '/getTwiUserInformation',
+        name: '推特用户信息',
+        component: GetTwiUserInformation
+      },
+      {
+        path: '/getTubeUserInformation',
+        name: '油管用户信息',
+        component: GetTubeUserInformation
       },
       {
         path: '/getTwitterInformation',
