@@ -38,7 +38,7 @@
                         <el-sub-menu index="1">
                             <template #title>
                                 <el-icon>
-                                    <UserFilled />
+                                    <User />
                                 </el-icon>账号信息</template>
                             <el-menu-item index="getTwiUserInformation">
                                 <el-icon>
@@ -102,7 +102,7 @@
     </div>
 </template>
 <script>
-    import {  /*Fold, Expand,*/  Menu, Avatar, DataBoard, UserFilled, Key, DataAnalysis, Place, Collection } from '@element-plus/icons-vue'
+    import {  /*Fold, Expand,*/  Menu, Avatar, DataBoard, UserFilled, Key, DataAnalysis, Place, Collection, User } from '@element-plus/icons-vue'
     import { ref } from 'vue'
     import axios from 'axios'
     import { ElNotification } from 'element-plus'
@@ -181,7 +181,7 @@
             this.init()
         },
         components: {
-        /* Fold, Expand,*/ Menu, Avatar, DataBoard, UserFilled, DataAnalysis, Key, Place, Collection
+        /* Fold, Expand,*/ Menu, Avatar, DataBoard, UserFilled, DataAnalysis, Key, Place, Collection, User
         },
         computed: {
             list() {

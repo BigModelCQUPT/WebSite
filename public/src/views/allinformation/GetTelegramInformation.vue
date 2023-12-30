@@ -14,39 +14,50 @@
                     <span style="vertical-align: middle;"> 搜索 </span>
                 </el-button>
             </div>
-            <!-- <div>
-                <el-button type="primary" @click="showDialog" style="margin-top: 0px">
-                    <el-icon style="vertical-align: middle;">
-                        <plus />
+            <div>
+                <el-upload style="  display: inline-flex; margin-right: 12px;" :show-file-list="false"
+                    :on-change="fileChange" :on-error="fileSuccess">
+                    <el-button type="success">
+                        <el-icon><folder-add /></el-icon>
+                        <span style="vertical-align: middle;">导入数据</span>
+                    </el-button>
+                </el-upload>
+                <el-button type="success" @click="exportData"
+                    style=" display: inline-flex; margin-left: 12px;margin-top: -5px;">
+                    <el-icon>
+                        <upload />
                     </el-icon>
-                    <span style="vertical-align: middle;">手动添加</span>
+                    <span style="vertical-align: middle;">导出数据</span>
                 </el-button>
-            </div> -->
+            </div>
+
         </div>
+    </div>
 
-        <!--        数据展示-->
-        <div style="margin-top: 15px">
-            <!-- <el-table :data="tableData" border style="width: 100%"> -->
-
-
-            <el-table :data="tableData" border style="width: 100%">
+    <!--        数据展示-->
+    <div style="margin-top: 15px">
+        <!-- <el-table :data="tableData" border style="width: 100%"> -->
 
 
-                <el-table-column prop="id" label="序号" width="90" align="center" />
-                <el-table-column prop="username" label="用户名" width="120" align="center" />
-                <el-table-column prop="userId" label="用户id" width="90" align="center"></el-table-column>
-                <el-table-column prop="postalTime" label="发送时间" width="180" align="center" />
-                <el-table-column prop="message" label="聊天内容" align="center" />
-                <!-- <el-table-column prop="postalTime" label="发送时间" width="180" align="center" /> -->
-                <!-- <el-table-column label="查看状态" width="90" align="center">
+        <el-table :data="tableData" border style="width: 100%">
+
+
+            <el-table-column prop="id" label="序号" width="90" align="center" />
+            <el-table-column prop="username" label="用户名" width="120" align="center" />
+            <el-table-column prop="userId" label="用户id" width="90" align="center"></el-table-column>
+            <el-table-column prop="groupName" label="群组名" width="90" align="center"></el-table-column>
+            <el-table-column prop="postalTime" label="发送时间" width="180" align="center" />
+            <el-table-column prop="message" label="聊天内容" align="center" />
+            <!-- <el-table-column prop="postalTime" label="发送时间" width="180" align="center" /> -->
+            <!-- <el-table-column label="查看状态" width="90" align="center">
                     <template #default="tableData">
                         <el-tag v-if="tableData.row.flag === 0" type=" success">未读</el-tag>
                         <el-tag v-else type="success">已读</el-tag>
                     </template>
                 </el-table-column> -->
 
-                <!-- <el-table-column prop="" label="是否返回" width="60" align="center" /> -->
-                <!-- <el-table-column fixed="right" label="操作" width="120" align="center">
+            <!-- <el-table-column prop="" label="是否返回" width="60" align="center" /> -->
+            <!-- <el-table-column fixed="right" label="操作" width="120" align="center">
                     <template v-slot="tableData">
                         <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red"
                             title="确定删除该条信息吗">
@@ -62,17 +73,41 @@
 
                     </template>
                 </el-table-column> -->
-            </el-table>
-            <div style="display: flex;justify-content: flex-end; margin-top: 10px">
-                <el-pagination background layout="sizes, prev, pager, next, jumper, ->, total, slot" :total="total"
-                    :page-sizes="[10, 20, 30, 50]" @size-change="sizeChange" @current-change="currentChange"
-                    v-model:currentPage="currentPage" v-model:page-size="size" />
-            </div>
+            <el-table-column prop="keyword" label="关键词" width="90" align="center">
+                <template #default="scope">
+                    <div v-for="item in companyCut(scope.row.keyword)" :key='item'>
+                        <!-- <el-tag type="success">{{ item }}</el-tag> -->
+                        {{ item }}
+                    </div>
+                </template>
+            </el-table-column>
+
+
+            <el-table-column label="钉钉返回" width="60" align="center">
+                <template #default="scope">
+                    <el-tag v-if="scope.row.needReturn === 0" type="success">否</el-tag>
+                    <el-tag v-else-if="scope.row.needReturn === 1" type=" success">是</el-tag>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="已读状态" width="90" align="center">
+                <template #default="scope">
+                    <el-button v-if="scope.row.flag == 0" type="success"
+                        @click="updateFlag(scope.row.id)">未读</el-button>
+                    <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div style="display: flex;justify-content: flex-end; margin-top: 10px">
+            <el-pagination background layout="sizes, prev, pager, next, jumper, ->, total, slot" :total="total"
+                :page-sizes="[10, 20, 30, 50]" @size-change="sizeChange" @current-change="currentChange"
+                v-model:currentPage="currentPage" v-model:page-size="size" />
         </div>
+    </div>
 
 
-        <!-- chatgpt 分析结果 弹窗 -->
-        <!-- <div>
+    <!-- chatgpt 分析结果 弹窗 -->
+    <!-- <div>
             <el-dialog title="ChatGPT分析结果" width="30%" v-model="dialogVisible"
                 style="display: flex; justify-content: space-around; align-items: center">
                 <div style="height: 20%">
@@ -86,7 +121,7 @@
         </div> -->
 
 
-    </div>
+
 </template>
 
 <script>
@@ -94,7 +129,7 @@
     import { Search } from '@element-plus/icons-vue'
     import { export_retailer } from "@/utils/api";
     import request from '@/utils/http'
-
+    import { FolderAdd, Upload } from '@element-plus/icons-vue'
     export default {
         name: "GetResidentInformation",
         data() {
@@ -107,6 +142,9 @@
                     userId: '1232342',
                     message: 'alsifgeuf',
                     postalTime: '1312434',
+                    groupName: 'jsgfcoauebfa',
+                    keyword: '彭于晏',
+                    needReturn: '',
                     flag: '0',
                 }, {
                 }],
@@ -164,76 +202,7 @@
             cancleAnalysis() {
                 return
             },
-            editClick(row) {
-                // console.log(row.id_no)
-                this.editdialogVisible = true
-                this.information["community"] = row.community
-                this.information["house_id"] = row.house_id
-                this.information["owner_name"] = row.owner_name
-                this.information["owner_tele"] = row.owner_tele
-                this.information["tenant_name"] = row.tenant_name
-                this.information["tenant_tele"] = row.tenant_tele
-                this.information["tenant_id_no"] = row.tenant_id_no
-                this.information["note"] = row.note
-                this.information["number"] = row.number
-            },
-            nextStep() {
-                if (this.activeindex == 9) {
 
-                    const _this = this
-                    if (this.dialogVisible == true) {//添加
-                        if (this.information.id_no == '') {
-                            this.$message.error('请输入身份证号码');
-                            return
-                        }
-                        if (this.information.name == '') {
-                            this.$message.error('请输入姓名');
-                            return
-                        }
-                        axios.post('http://10.16.104.183:8181/telegramInformation/add', this.information).then(function (resp) {
-                            // console.log(resp)
-                            if (resp.data.code == "200") {//返回成功
-                                _this.$message({
-                                    message: '添加成功',
-                                    type: 'success'
-                                });
-                                //     _this.$router.replace('/main')
-                            } else if (resp.data.code == "101") {
-                                _this.$message.error('出现未知错误');
-                                return false;
-                            }
-                        })
-                        this.dialogVisible = false;
-                    }
-                    else if (this.editdialogVisible == true) {//编辑
-                        if (this.information.id_no == '') {
-                            this.$message.error('请输入身份证号码');
-                            return
-                        }
-                        if (this.information.name == '') {
-                            this.$message.error('请输入姓名');
-                            return
-                        }
-                        // console.log(this.information)
-                        axios.post('http://10.16.104.183:8181/telegramInformation/edit', this.information).then(function (resp) {
-                            // console.log(resp)
-                            if (resp.data.code == "200") {//返回成功
-                                _this.$message({
-                                    message: '编辑成功',
-                                    type: 'success'
-                                });
-                            } else if (resp.data.code == "101") {
-                                _this.$message.error('出现未知错误');
-                                return false;
-                            }
-                        })
-                        this.editdialogVisible = false;
-                    }
-                    this.$router.go(0)
-                    return;
-                }
-                this.activeindex++;
-            },
             preStep() {
                 if (this.activeindex == 0) {
                     this.dialogVisible = false
@@ -425,12 +394,33 @@
                 // if (keywordInputValue) {
                 //     this.dynamicTags.push(keywordInputValue);
                 // }
-            }
+            },
+            updateFlag(id) {
+                const _this = this
+                const data = {
+                    data: id
+                }
+                request({
+                    url: 'http://10.16.104.183:8181/youtube/updateFlag/' + id,
+                    method: 'post',
+                    data: data
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success('已读该信息');
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                // this.fetchData()
+                this.$router.go(0)
+            },
 
 
         },
         components: {
-            Search,
+            Search, FolderAdd, Upload,
         }
     }
 </script>

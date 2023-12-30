@@ -51,13 +51,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="已读状态" width="90" align="center">
-                    <template #default="scope">
-                        <el-button v-if="scope.row.flag == 0" type="success"
-                            @click="updateFlag(scope.row.id)">未读</el-button>
-                        <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
-                    </template>
-                </el-table-column>
+
 
                 <el-table-column label="钉钉返回" width="60" align="center">
                     <template #default="scope">
@@ -65,24 +59,32 @@
                         <el-tag v-else-if="scope.row.needReturn === 1" type=" success">是</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="category" label="GPT分类类别" width="80" align="center" />
-                <el-table-column fixed="right" label="操作" width="110" align="center">
-                    <template v-slot="tableData">
-                        <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red" title="确定删除该条信息吗">
+
+                <el-table-column label="已读状态" width="90" align="center">
+                    <template #default="scope">
+                        <el-button v-if="scope.row.flag == 0" type="success"
+                            @click="updateFlag(scope.row.id)">未读</el-button>
+                        <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
+                    </template>
+                </el-table-column>
+                <!-- <el-table-column prop="category" label="GPT分类类别" width="80" align="center" /> -->
+                <!-- <el-table-column fixed="right" label="操作" width="110" align="center">
+                    <template v-slot="tableData"> -->
+                <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red" title="确定删除该条信息吗">
                             
                             <el-button @click="classify(scope.row)" type="success" size="small">大模型分析</el-button>
                         </el-popconfirm> -->
 
-                        <!-- <el-button  @click="editClick(scope.row)" type="primary" size="small">不使用</el-button> -->
-                        <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red"
+                <!-- <el-button  @click="editClick(scope.row)" type="primary" size="small">不使用</el-button> -->
+                <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red"
                             title="确认使用大模型分析该信息吗" @confirm="analysis(tableData.row.id)" @cancel="cancleAnalysis()">
                             <template #reference>
                                 <el-button type="danger" size="small">大模型分析</el-button>
                             </template>
                         </el-popconfirm>
 
-                    </template>
-                </el-table-column>
+                    </template> -->
+                <!-- </el-table-column> -->
             </el-table>
             <div style="display: flex;justify-content: flex-end; margin-top: 10px">
                 <el-pagination background layout="sizes, prev, pager, next, jumper, ->, total, slot" :total="total"
@@ -110,351 +112,351 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { Search } from '@element-plus/icons-vue'
-import { export_retailer } from "@/utils/api";
-import request from '@/utils/http'
+    import axios from 'axios'
+    import { Search } from '@element-plus/icons-vue'
+    import { export_retailer } from "@/utils/api";
+    import request from '@/utils/http'
 
-export default {
-    name: "GetResidentInformation",
-    data() {
-        return {
-            tableData: [{
-                id: '123',
-                username: 'abcd',
-                text: '张三啊',
-                type: 'null',
-                keyword: '彭于晏',
-                flag: '0',
-                needReturn: '',
-            }, {
-            }],
-            search_text: '',
-            search_keyword: '',
-            total: 0,//总条数
-            currentPage: 1,//第几页
-            size: 10,//每页条数
-            dialogVisible: false,
-            editdialogVisible: false,
-            activeindex: 0,
-            filename: '',
-            detaildialogVisible: false,
+    export default {
+        name: "GetResidentInformation",
+        data() {
+            return {
+                tableData: [{
+                    id: '123',
+                    username: 'abcd',
+                    text: '张三啊',
+                    type: 'null',
+                    keyword: '彭于晏',
+                    flag: '0',
+                    needReturn: '',
+                }, {
+                }],
+                search_text: '',
+                search_keyword: '',
+                total: 0,//总条数
+                currentPage: 1,//第几页
+                size: 10,//每页条数
+                dialogVisible: false,
+                editdialogVisible: false,
+                activeindex: 0,
+                filename: '',
+                detaildialogVisible: false,
 
-        }
-    },
-    created() {
-        this.fetchData()
-        this.fetchKeywordData()
-    },
-    methods: {
-        fileSuccess() {//上传失败
-            this.importData(this.filename)
+            }
         },
-        fileChange(file) {
-            if (this.filename == '')
-                this.filename = file.name;
-            // console.log(file.name + "111")
-        },
-        importData(name) {
-            const _this = this
-            axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
-                if (resp.data.code == "200") {//返回成功
-                    _this.$message({
-                        message: '上传成功',
-                        type: 'success'
-                    });
-                } else if (resp.data.code == "101") {
-                    _this.$message.error('上传失败');
-                }
-            })
-        },
-        exportData() {
-            // const _this = this
-            // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
-            //
-            // })
-            export_retailer()
-        },
-        showDialog() {
-            this.dialogVisible = true
-        },
-        cancleAnalysis() {
-            return
-        },
-        currentChange() {
-            // console.log(this.currentPage)
+        created() {
             this.fetchData()
-        },
-        sizeChange() {
-            // console.log(this.size)
-            this.fetchData()
-        },
-        // find() {
-        //     if (this.search_text == '') {
-        //         this.$message.error('请先输入有效值');
-        //         return;
-        //     }
-        //     const _this = this
-        //     axios.get('http://10.16.104.183:8181/tenantInformation/find/' + this.search_name).then(function (resp) {
-        //         if (resp.data.code == "200") {//返回成功
-        //             // console.log(resp)
-        //             _this.tableData = resp.data.data.content
-        //             _this.total = resp.data.data.length
-        //         } else if (resp.data.code == "101") {
-        //             _this.$message.error('出现错误');
-        //             return false;
-        //         } else {
-        //             console.log("error")
-        //         }
-        //     })
-        // },
-        init_page() {
-            const _this = this
-            const data = {
-                page: this.currentPage,
-                size: this.size
-            }
-            request({
-                url: '/tweet/listAll',
-                method: 'post',
-                data: data
-            }).then(function (resp) {
-                if (resp.status == "200") {//返回成功
-                    // console.log(resp)
-                    _this.tableData = resp.data.data.records
-                    _this.total = resp.data.data.total
-                } else if (resp.data.code == "101") {
-                    _this.$message.error('请先登录');
-                    return false;
-                } else {
-                    console.log("error")
-                }
-            })
-        },
-
-        fetchData() {
-            // if (this.search_name == '') {
-            //     this.$message.error('请先输入有效值');
-            //     return;
-            // }
-            const _this = this
-            const data = {
-                page: this.currentPage,
-                size: this.size,
-                keyword: this.search_keyword,
-            }
-            request({
-                url: '/tweet/findByPage/' + this.currentPage + '/' + this.size,
-                method: 'post',
-                data: data
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.tableData = resp.data.data.records
-                    _this.total = resp.data.data.total
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-        },
-
-        getDetail(row) {
-            // console.log(row)
-            this.form = row
-            this.detaildialogVisible = true
-
-        },
-        returnMain() {
-            this.detaildialogVisible = false;
-        },
-
-        analysis(id) {
-            const _this = this
-            // console.log(id)
-            const data = {
-                id: id
-            }
-            request({
-                url: 'http://10.16.104.183:8181/tweet/analysisByGPT',
-                method: 'post',
-                data: data,
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.$message.success("该文本的类别属于  " + resp.data.data.category)
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-            // location.reload()
-            this.$router.go(0)
-        },
-
-        fetchKeywordData() {
-            const _this = this
-            request({
-                url: 'http://10.16.104.183:8181/keyword/listAll',
-                method: 'get',
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.keywordData = resp.data.data
-                    // 因为可能导致 整个分页表是否包含 该关键词发生变化
-                    this.fetchData()
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-        },
-        handleDeleteKeyword(id) {
-            console.log(id);
-            const _this = this
-            request({
-                url: 'http://10.16.104.183:8181/keyword/delete/' + id,
-                method: 'get',
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                    this.fetchData()
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-            // this.fetchKeywordData()
-            this.$router.go(0)
-        },
-        handleAddKeyword() {
-            const _this = this
-            const data = {
-                keyword: this.keywordInputValue
-            }
-            request({
-                url: 'http://10.16.104.183:8181/keyword/add',
-                method: 'post',
-                data: data
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.$message.success('添加成功');
-                }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
-                }
-            })
-            this.keyworddialogVisible = false
-            this.keywordInputValue = ''
             this.fetchKeywordData()
-            this.$router.go(0)
         },
-        blurKeyWord() {
-            this.keyworddialogVisible = false
-            this.keywordInputValue = ''
-        },
-
-        showInput() {
-            this.keyworddialogVisible = true;
-        },
-
-        updateFlag(id) {
-            const _this = this
-            const data = {
-                data: id
-            }
-            request({
-                url: 'http://10.16.104.183:8181/tweet/updateFlag/' + id,
-                method: 'post',
-                data: data
-            }).then(function (resp) {
-                if (resp.status == "200") {
-                    _this.$message.success('已读该信息');
+        methods: {
+            fileSuccess() {//上传失败
+                this.importData(this.filename)
+            },
+            fileChange(file) {
+                if (this.filename == '')
+                    this.filename = file.name;
+                // console.log(file.name + "111")
+            },
+            importData(name) {
+                const _this = this
+                axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
+                    if (resp.data.code == "200") {//返回成功
+                        _this.$message({
+                            message: '上传成功',
+                            type: 'success'
+                        });
+                    } else if (resp.data.code == "101") {
+                        _this.$message.error('上传失败');
+                    }
+                })
+            },
+            exportData() {
+                // const _this = this
+                // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
+                //
+                // })
+                export_retailer()
+            },
+            showDialog() {
+                this.dialogVisible = true
+            },
+            cancleAnalysis() {
+                return
+            },
+            currentChange() {
+                // console.log(this.currentPage)
+                this.fetchData()
+            },
+            sizeChange() {
+                // console.log(this.size)
+                this.fetchData()
+            },
+            // find() {
+            //     if (this.search_text == '') {
+            //         this.$message.error('请先输入有效值');
+            //         return;
+            //     }
+            //     const _this = this
+            //     axios.get('http://10.16.104.183:8181/tenantInformation/find/' + this.search_name).then(function (resp) {
+            //         if (resp.data.code == "200") {//返回成功
+            //             // console.log(resp)
+            //             _this.tableData = resp.data.data.content
+            //             _this.total = resp.data.data.length
+            //         } else if (resp.data.code == "101") {
+            //             _this.$message.error('出现错误');
+            //             return false;
+            //         } else {
+            //             console.log("error")
+            //         }
+            //     })
+            // },
+            init_page() {
+                const _this = this
+                const data = {
+                    page: this.currentPage,
+                    size: this.size
                 }
-                else {
-                    _this.$message.error('出错了');
-                    return false;
+                request({
+                    url: '/tweet/listAll',
+                    method: 'post',
+                    data: data
+                }).then(function (resp) {
+                    if (resp.status == "200") {//返回成功
+                        // console.log(resp)
+                        _this.tableData = resp.data.data.records
+                        _this.total = resp.data.data.total
+                    } else if (resp.data.code == "101") {
+                        _this.$message.error('请先登录');
+                        return false;
+                    } else {
+                        console.log("error")
+                    }
+                })
+            },
+
+            fetchData() {
+                // if (this.search_name == '') {
+                //     this.$message.error('请先输入有效值');
+                //     return;
+                // }
+                const _this = this
+                const data = {
+                    page: this.currentPage,
+                    size: this.size,
+                    keyword: this.search_keyword,
                 }
-            })
-            // this.fetchData()
-            this.$router.go(0)
-        },
+                request({
+                    url: '/tweet/findByPage/' + this.currentPage + '/' + this.size,
+                    method: 'post',
+                    data: data
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.tableData = resp.data.data.records
+                        _this.total = resp.data.data.total
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+            },
 
-        handleInputConfirm() {
-            // let keywordInputValue = this.keywordInputValue;
-            // if (keywordInputValue) {
-            //     this.dynamicTags.push(keywordInputValue);
-            // }
-        },
-        companyCut(name) {
-            let company = (name || "").split(',')
-            return company
-        },
+            getDetail(row) {
+                // console.log(row)
+                this.form = row
+                this.detaildialogVisible = true
+
+            },
+            returnMain() {
+                this.detaildialogVisible = false;
+            },
+
+            analysis(id) {
+                const _this = this
+                // console.log(id)
+                const data = {
+                    id: id
+                }
+                request({
+                    url: 'http://10.16.104.183:8181/tweet/analysisByGPT',
+                    method: 'post',
+                    data: data,
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success("该文本的类别属于  " + resp.data.data.category)
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                // location.reload()
+                this.$router.go(0)
+            },
+
+            fetchKeywordData() {
+                const _this = this
+                request({
+                    url: 'http://10.16.104.183:8181/keyword/listAll',
+                    method: 'get',
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.keywordData = resp.data.data
+                        // 因为可能导致 整个分页表是否包含 该关键词发生变化
+                        this.fetchData()
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+            },
+            handleDeleteKeyword(id) {
+                console.log(id);
+                const _this = this
+                request({
+                    url: 'http://10.16.104.183:8181/keyword/delete/' + id,
+                    method: 'get',
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        this.fetchData()
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                // this.fetchKeywordData()
+                this.$router.go(0)
+            },
+            handleAddKeyword() {
+                const _this = this
+                const data = {
+                    keyword: this.keywordInputValue
+                }
+                request({
+                    url: 'http://10.16.104.183:8181/keyword/add',
+                    method: 'post',
+                    data: data
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success('添加成功');
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                this.keyworddialogVisible = false
+                this.keywordInputValue = ''
+                this.fetchKeywordData()
+                this.$router.go(0)
+            },
+            blurKeyWord() {
+                this.keyworddialogVisible = false
+                this.keywordInputValue = ''
+            },
+
+            showInput() {
+                this.keyworddialogVisible = true;
+            },
+
+            updateFlag(id) {
+                const _this = this
+                const data = {
+                    data: id
+                }
+                request({
+                    url: 'http://10.16.104.183:8181/tweet/updateFlag/' + id,
+                    method: 'post',
+                    data: data
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success('已读该信息');
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                // this.fetchData()
+                this.$router.go(0)
+            },
+
+            handleInputConfirm() {
+                // let keywordInputValue = this.keywordInputValue;
+                // if (keywordInputValue) {
+                //     this.dynamicTags.push(keywordInputValue);
+                // }
+            },
+            companyCut(name) {
+                let company = (name || "").split(',')
+                return company
+            },
 
 
-    },
-    components: {
-        Search,
+        },
+        components: {
+            Search,
+        }
     }
-}
 </script>
 
 <style scoped>
-.toolbar {
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-}
+    .toolbar {
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+    }
 
-.el-input-resident {
-    width: 300px;
-    margin-right: 10px;
-}
+    .el-input-resident {
+        width: 300px;
+        margin-right: 10px;
+    }
 
-.margin-topa {
-    margin-top: -15px;
-}
+    .margin-topa {
+        margin-top: -15px;
+    }
 
 
-.el-tag+.el-tag {
-    margin-left: 10px;
-}
+    .el-tag+.el-tag {
+        margin-left: 10px;
+    }
 
-.button-new-tag {
-    margin-left: 10px;
-    height: 32px;
-    line-height: 30px;
-    padding-top: 0;
-    padding-bottom: 0;
-}
+    .button-new-tag {
+        margin-left: 10px;
+        height: 32px;
+        line-height: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 
-.input-new-tag {
-    width: 90px;
-    margin-left: 10px;
-    vertical-align: bottom;
-}
+    .input-new-tag {
+        width: 90px;
+        margin-left: 10px;
+        vertical-align: bottom;
+    }
 
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: lightblue;
-}
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: lightblue;
+    }
 
-.text {
-    font-size: 14px;
-}
+    .text {
+        font-size: 14px;
+    }
 
-.item {
-    margin-bottom: 18px;
-}
+    .item {
+        margin-bottom: 18px;
+    }
 
-.box-card {
-    width: 480px;
-}
+    .box-card {
+        width: 480px;
+    }
 </style>

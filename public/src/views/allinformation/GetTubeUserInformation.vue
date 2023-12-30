@@ -45,6 +45,7 @@
                 <!-- <el-table-column prop="twitterId" label="推特id" align="center" /> -->
                 <el-table-column prop="username" label="用户名" align="center" />
                 <el-table-column prop="channelId" label="频道id" align="center" />
+                <el-table-column prop="resume" label="频道简介" align="center" />
             </el-table>
             <!--          分页-->
             <div style="display: flex;justify-content: flex-end; margin-top: 10px">
@@ -58,7 +59,7 @@
             <el-dialog title="添加用户" width="30%" v-model="dialogVisible"
                 style="display: flex; justify-content: space-around; align-items: center">
                 <div style="height: 20%">
-                    <el-input :placeholder="'请输入用户名'" style="align:center; width: 60%;" @keydown.enter="completeAdd"
+                    <el-input :placeholder="'请输入频道id'" style="align:center; width: 60%;" @keydown.enter="completeAdd"
                         v-model="add_name" @clear="fetchData"></el-input>
                 </div>
                 <div style="margin-top: 60px">
@@ -98,9 +99,10 @@
 
                 tableData: [{
                     id: '1',
-                    twitterId: '121212',
+
                     username: 'username',
-                    name: '姓名'
+                    channelId: 'lsdjvaie123234',
+                    resume: 'sdlvhABV',
                 }],
                 search_name: '', // 搜索用户
                 add_name: '', // 添加用户
@@ -190,7 +192,7 @@
                     size: this.size
                 }
                 request({
-                    url: 'http://10.16.104.183:8181/twitterUser/findByUsername',
+                    url: 'http://10.16.104.183:8181/youtubeUser/findByUsername',
                     method: 'post',
                     data: data,
                 }).then(function (resp) {
@@ -214,7 +216,7 @@
                     "size": this.size
                 }
                 request({
-                    url: '/twitterUser/getUsers',
+                    url: '/youtubeUser/getUsers',
                     method: 'post',
                     data: IPage
                 }).then(function (resp) {
@@ -253,10 +255,10 @@
                 const _this = this
                 // console.log(this.add_name)
                 const data = {
-                    username: this.add_name
+                    channelId: this.add_name
                 }
                 request({
-                    url: 'http://10.16.104.183:8181/twitterUser/addUser',
+                    url: 'http://10.16.104.183:8181/youtubeUser/addUser',
                     method: 'post',
                     data: data
                 }).then(function (resp) {
@@ -285,7 +287,7 @@
                     size: this.size
                 }
                 request({
-                    url: 'http://10.16.104.183:8181/twitterUser/findByPage/' + this.currentPage + '/' + this.size,
+                    url: 'http://10.16.104.183:8181/youtubeUser/findByPage/' + this.currentPage + '/' + this.size,
                     method: 'post',
                     data: data
                 }).then(function (resp) {

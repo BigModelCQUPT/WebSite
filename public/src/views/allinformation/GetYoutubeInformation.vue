@@ -53,7 +53,30 @@
                         </a>
                     </template>
                 </el-table-column>
+                <el-table-column prop="keyword" label="关键词" width="90" align="center">
+                    <template #default="scope">
+                        <div v-for="item in companyCut(scope.row.keyword)" :key='item'>
+                            <!-- <el-tag type="success">{{ item }}</el-tag> -->
+                            {{ item }}
+                        </div>
+                    </template>
+                </el-table-column>
 
+
+                <el-table-column label="钉钉返回" width="60" align="center">
+                    <template #default="scope">
+                        <el-tag v-if="scope.row.needReturn === 0" type="success">否</el-tag>
+                        <el-tag v-else-if="scope.row.needReturn === 1" type=" success">是</el-tag>
+                    </template>
+                </el-table-column>
+
+                <el-table-column label="已读状态" width="90" align="center">
+                    <template #default="scope">
+                        <el-button v-if="scope.row.flag == 0" type="success"
+                            @click="updateFlag(scope.row.id)">未读</el-button>
+                        <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
+                    </template>
+                </el-table-column>
                 <!-- </el-table-column> -->
                 <!-- <el-table-column prop="videoUrl" label="视频链接" width="60" align="center" /> -->
             </el-table>
@@ -84,6 +107,9 @@
                     channelId: 'null',
                     videoUrl: 'null',
                     title: '',
+                    keyword: '彭于晏',
+                    flag: '0',
+                    needReturn: '',
                 }, {
                 }],
                 search_text: '',
@@ -118,6 +144,72 @@
                     }
                 })
             },
+            getDetail(row) {
+                // console.log(row)
+                this.form = row
+                this.detaildialogVisible = true
+
+            },
+            returnMain() {
+                this.detaildialogVisible = false;
+            },
+
+            analysis(id) {
+                const _this = this
+                // console.log(id)
+                const data = {
+                    id: id
+                }
+                request({
+                    url: 'http://10.16.104.183:8181/youtube/analysisByGPT',
+                    method: 'post',
+                    data: data,
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success("该文本的类别属于  " + resp.data.data.category)
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                // location.reload()
+                this.$router.go(0)
+            },
+            updateFlag(id) {
+                const _this = this
+                const data = {
+                    data: id
+                }
+                request({
+                    url: 'http://10.16.104.183:8181/youtube/updateFlag/' + id,
+                    method: 'post',
+                    data: data
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success('已读该信息');
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                // this.fetchData()
+                this.$router.go(0)
+            },
+
+            handleInputConfirm() {
+                // let keywordInputValue = this.keywordInputValue;
+                // if (keywordInputValue) {
+                //     this.dynamicTags.push(keywordInputValue);
+                // }
+            },
+            companyCut(name) {
+                let company = (name || "").split(',')
+                return company
+            },
+
+
             exportData() {
                 // const _this = this
                 // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
