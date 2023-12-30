@@ -1,4 +1,4 @@
-<!--获取租户信息展示-->
+<!--管理员信息展示-->
 <template>
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
         <!--        工具栏-->
@@ -24,20 +24,45 @@
             </div> -->
         </div>
 
+
+        <div style="margin-top: 30px">
+            <el-card class="box-card" style="width: 100%">
+                <template #header>
+                    <div class="card-header">
+                        <span>关键词</span>
+
+                    </div>
+                </template>
+                <el-tag :key="tag" v-for="tag in keywordData" closable :disable-transitions="false"
+                    @close="handleDeleteKeyword(tag.id)" type="danger">
+                    {{ tag.keyword }}
+                </el-tag>
+                <el-input v-if="keyworddialogVisible" ref="InputRef" v-model="keywordInputValue" class="input-new-tag"
+                    size="small" @keyup.enter="handleAddKeyword" @blur="blurKeyWord" type="info" />
+
+                <el-button v-else class="button-new-tag" size="large" @click="showInput">
+                    + 新增关键词
+                </el-button>
+            </el-card>
+        </div>
+
         <!--        数据展示-->
         <div style="margin-top: 15px">
             <!-- <el-table :data="tableData" border style="width: 100%"> -->
-
-
             <el-table :data="tableData" border style="width: 100%">
-
-
-                <el-table-column prop="id" label="id" width="90" align="center" />
+                <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="120" align="center" />
-                <el-table-column prop="user_id" label="用户id" width="90" align="center"></el-table-column>
-                <el-table-column prop="message" label="聊天内容" align="center" />
-                <el-table-column prop="postal_time" label="发送时间" width="90" align="center" />
-                <el-table-column label="查看状态" width="90" align="center">
+                <el-table-column prop="text" label="推文内容" align="center" />
+                <el-table-column label="推文类型" width="60" align="center">
+                    <template #default="tableData">
+                        <el-tag v-if="tableData.row.type === 'replied_to'" type="success">回复</el-tag>
+                        <el-tag v-else-if="tableData.row.type === 'tweet'" type=" success">原创</el-tag>
+                        <el-tag v-else-if="tableData.row.type === 'retweeted'" type=”success”>转发</el-tag>
+                        <el-tag v-else type="info">引用</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyword" label="关键词" width="90" align="center" />
+                <el-table-column label="查看状态" width="60" align="center">
                     <template #default="tableData">
                         <el-tag v-if="tableData.row.flag === 0" type=" success">未读</el-tag>
                         <el-tag v-else type="success">已读</el-tag>
@@ -45,13 +70,14 @@
                 </el-table-column>
 
                 <el-table-column prop="" label="是否返回" width="60" align="center" />
-                <el-table-column fixed="right" label="操作" width="120" align="center">
+                <el-table-column fixed="right" label="操作" width="100" align="center">
                     <template v-slot="tableData">
-                        <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red"
-                            title="确定删除该条信息吗">
-
+                        <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red" title="确定删除该条信息吗">
+                            
                             <el-button @click="classify(scope.row)" type="success" size="small">大模型分析</el-button>
-                        </el-popconfirm>
+                        </el-popconfirm> -->
+
+                        <!-- <el-button  @click="editClick(scope.row)" type="primary" size="small">不使用</el-button> -->
                         <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red"
                             title="确认使用大模型分析该信息吗" @confirm="analysis(tableData.row.id)" @cancel="cancleAnalysis()">
                             <template #reference>
@@ -68,8 +94,6 @@
                     v-model:currentPage="currentPage" v-model:page-size="size" />
             </div>
         </div>
-
-
         <!-- chatgpt 分析结果 弹窗 -->
         <!-- <div>
             <el-dialog title="ChatGPT分析结果" width="30%" v-model="dialogVisible"
@@ -85,94 +109,7 @@
         </div> -->
 
 
-        <!--        添加框  编辑框-->
-        <!-- <div>
-            <el-dialog title="添加租户信息" width="50%" v-model="dialogVisible"
-                style="display: flex; justify-content: space-around; align-items: center">
-                <div style="height: 300px">
-                    <el-steps direction="vertical" :active="activeindex">
-                        <el-step :title="item" v-for="(item, index) in informationItem" :key="index" />
-                    </el-steps>
-                    <el-input :placeholder="'请输入' + informationItem[index]" v-for="(val, key, index) in information"
-                        :key="index" v-show="activeindex == index" style="float: right; width: 400px; margin-top: -150px"
-                        v-model="information[key]" @keydown.enter="nextStep"></el-input>
-                </div>
-                <div style="margin-top: 60px">
-                    <el-button type="primary" @click="preStep">{{ activeindex == 0 ? '取消' : '上一步' }}</el-button>
-                    <el-button type="primary" @click="nextStep">{{ activeindex == 9 ? '完成' : '下一个' }}</el-button>
-                </div>
-            </el-dialog>
-            <el-dialog title="编辑居民信息" width="50%" v-model="editdialogVisible"
-                style="display: flex; justify-content: space-around; align-items: center">
-                <div style="height: 300px">
-                    <el-steps direction="vertical" :active="activeindex">
-                        <el-step :title="item" v-for="(item, index) in informationItem" :key="index" />
-                    </el-steps>
-                    <el-input :placeholder="'请输入' + informationItem[index]" v-for="(val, key, index) in information"
-                        :key="index" v-show="activeindex == index" style="float: right; width: 400px; margin-top: -150px"
-                        v-model="information[key]" @keydown.enter="nextStep"></el-input>
-                </div>
-                <div style="margin-top: 60px">
-                    <el-button type="primary" @click="preStep">{{ activeindex == 0 ? '取消' : '上一步' }}</el-button>
-                    <el-button type="primary" @click="nextStep">{{ activeindex == 9 ? '完成' : '下一个' }}</el-button>
-                </div>
-            </el-dialog>
-            <el-dialog v-model="detaildialogVisible" title="租户信息" width="50%">
-                <el-form :model="form">
-                    <div style="display: inline-flex">
-                        <div>
-                            <el-form-item style="width: 80%">
-                                <label style="font-weight: bolder; font-family: 仿宋">租户姓名</label>
-                                <el-input v-model="form.tenant_name" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">租户电话</label>
-                                <el-input v-model="form.tenant_tele" disabled></el-input>
-                            </el-form-item>
 
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">身份证号码</label>
-                                <el-input v-model="form.tenant_id_no" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">居住人数</label>
-                                <el-input v-model="form.number" disabled></el-input>
-                            </el-form-item>
-                        </div>
-                        <div>
-                            <el-form-item style="width: 80%">
-                                <label style="font-weight: bolder; font-family: 仿宋">社区</label>
-                                <el-input v-model="form.community" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">房屋地址</label>
-                                <el-input v-model="form.house_id" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">房东姓名</label>
-                                <el-input v-model="form.owner_name" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item style="width: 80%" class="margin-topa">
-                                <label style="font-weight: bolder; font-family: 仿宋">房东电话</label>
-                                <el-input v-model="form.owner_tele" disabled></el-input>
-                            </el-form-item>
-
-                        </div>
-                    </div>
-                    <div style="margin-left: 30px">
-                        <el-form-item style="width: 85%" class="margin-topa">
-                            <label style="font-weight: bolder; font-family: 仿宋">备注</label>
-                            <el-input v-model="form.note" disabled></el-input>
-                        </el-form-item>
-                    </div>
-                </el-form>
-                <template #footer>
-                    <span class="dialog-footer">
-                        <el-button round style="margin-top: -30px" @click="returnMain">返回</el-button>
-                    </span>
-                </template>
-            </el-dialog>
-        </div> -->
     </div>
 </template>
 
@@ -191,9 +128,9 @@
                 tableData: [{
                     id: '123',
                     username: 'abcd',
-                    user_id: '1232342',
-                    message: 'alsifgeuf',
-                    postal_time: '1312434',
+                    text: '张三啊',
+                    type: 'null',
+                    keyword: '彭于晏',
                     flag: '0',
                 }, {
                 }],
@@ -261,7 +198,7 @@
             },
             importData(name) {
                 const _this = this
-                axios.post('http://10.16.104.183:8181/telegram/upload/' + name).then(function (resp) {
+                axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
                     if (resp.data.code == "200") {//返回成功
                         _this.$message({
                             message: '上传成功',
@@ -311,7 +248,7 @@
                             this.$message.error('请输入姓名');
                             return
                         }
-                        axios.post('http://10.16.104.183:8181/telegramInformation/add', this.information).then(function (resp) {
+                        axios.post('http://10.16.104.183:8181/tenantInformation/add', this.information).then(function (resp) {
                             // console.log(resp)
                             if (resp.data.code == "200") {//返回成功
                                 _this.$message({
@@ -336,7 +273,7 @@
                             return
                         }
                         // console.log(this.information)
-                        axios.post('http://10.16.104.183:8181/telegramInformation/edit', this.information).then(function (resp) {
+                        axios.post('http://10.16.104.183:8181/tenantInformation/edit', this.information).then(function (resp) {
                             // console.log(resp)
                             if (resp.data.code == "200") {//返回成功
                                 _this.$message({
@@ -398,7 +335,7 @@
                     size: this.size
                 }
                 request({
-                    url: '/telegram/listAll',
+                    url: '/tweet/listAll',
                     method: 'post',
                     data: data
                 }).then(function (resp) {
@@ -427,7 +364,7 @@
                     keyword: this.search_keyword,
                 }
                 request({
-                    url: '/telegram/findByPage/' + this.currentPage + '/' + this.size,
+                    url: '/tweet/findByPage/' + this.currentPage + '/' + this.size,
                     method: 'post',
                     data: data
                 }).then(function (resp) {
@@ -459,7 +396,7 @@
                     id: id
                 }
                 request({
-                    url: 'http://10.16.104.183:8181/telegram/analysisByGPT',
+                    url: 'http://10.16.104.183:8181/tweet/analysisByGPT',
                     method: 'post',
                     data: data,
                 }).then(function (resp) {
@@ -477,7 +414,7 @@
             fetchKeywordData() {
                 const _this = this
                 request({
-                    url: 'http://10.16.104.183:8181/telegram/keyword/listAll',
+                    url: 'http://10.16.104.183:8181/keyword/listAll',
                     method: 'get',
                 }).then(function (resp) {
                     if (resp.status == "200") {
@@ -495,7 +432,7 @@
                 console.log(id);
                 const _this = this
                 request({
-                    url: 'http://10.16.104.183:8181/telegram/keyword/delete/' + id,
+                    url: 'http://10.16.104.183:8181/keyword/delete/' + id,
                     method: 'get',
                 }).then(function (resp) {
                     if (resp.status == "200") {
@@ -518,7 +455,7 @@
                     keyword: this.keywordInputValue
                 }
                 request({
-                    url: 'http://10.16.104.183:8181/telegram/keyword/add',
+                    url: 'http://10.16.104.183:8181/keyword/add',
                     method: 'post',
                     data: data
                 }).then(function (resp) {

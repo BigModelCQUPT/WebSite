@@ -1,4 +1,4 @@
-<!--获取居民信息展示-->
+<!--获取推特用户信息展示-->
 <template>
     <div style="margin-left: 10px; margin-top: 10px;margin-right: 10px">
 

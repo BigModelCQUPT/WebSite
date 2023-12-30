@@ -35,7 +35,7 @@ public class OrderTask {
 //     @Scheduled(cron = "0 0 7 * * ?")
     @Scheduled(cron = "0 0 7 * * ?")
     @Transactional(rollbackFor = Exception.class)
-    public void testHello() throws Exception {
+    public void TwitterHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
         String token = "13893747a348d8fc";
         for (int i = 0; i < list.size(); i++) {
@@ -53,7 +53,6 @@ public class OrderTask {
             Response response = client.newCall(request).execute();
             ResponseBody res = response.body();
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId);
-            // tweetList.forEach(System.out::println);
             tweetService.saveTweet(tweetList);
         }
         this.keywordMatch();
@@ -73,6 +72,7 @@ public class OrderTask {
                 String keyword = keywordList.get(j).getKeyword();
                 if (tweetService.checkKeyword(id, keyword)) {
                     list.add(keyword);
+                    keywordService.updateKeywordNumber(keywordList.get(j));
                 }
             }
             if (list.size() > 0) {
@@ -82,6 +82,8 @@ public class OrderTask {
         }
     }
 
+//    TODO chatgpt 分析
+//    如果没有 keyword 没有匹配 就启用chatgpt
     public void modeling() {
 
     }

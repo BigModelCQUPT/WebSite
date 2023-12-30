@@ -13,4 +13,5 @@ public class Keyword {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String keyword;
+    private Integer number;
 }

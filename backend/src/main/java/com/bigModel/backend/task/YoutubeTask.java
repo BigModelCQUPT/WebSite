@@ -69,6 +69,7 @@ public class YoutubeTask {
                 String keyword = keywordList.get(j).getKeyword();
                 if (youtubeVideoService.checkKeyword(id, keyword)) {
                     list.add(keyword);
+                    keywordService.updateKeywordNumber(keywordList.get(j));
                 }
             }
             if (list.size() > 0) {
@@ -78,6 +79,8 @@ public class YoutubeTask {
         }
     }
 
+
+//    TODO 需要修改 chatgpt的分析
     public void useChatGPT(){
         List<YoutubeVideo> youtubeVideoList = youtubeVideoService.listAllNoReturn();
         for(int i = 0;i < youtubeVideoList.size();i++){

@@ -29,4 +29,12 @@ public class KeywordServiceImpl implements KeywordService {
         List<Keyword> list = keywordMapper.selectList(null);
         return list;
     }
+
+    @Override
+    public void updateKeywordNumber(Keyword keyword) {
+        Integer number = keyword.getNumber();
+        number = number + 1;
+        keyword.setNumber(number);
+        keywordMapper.updateById(keyword);
+    }
 }

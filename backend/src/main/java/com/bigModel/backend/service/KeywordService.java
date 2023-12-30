@@ -10,4 +10,6 @@ public interface KeywordService {
     void addKeyword(Keyword keyword);
     void deleteKeyword(Integer id);
     List<Keyword> listAllKeywords();
+
+    void updateKeywordNumber(Keyword keyword);
 }
