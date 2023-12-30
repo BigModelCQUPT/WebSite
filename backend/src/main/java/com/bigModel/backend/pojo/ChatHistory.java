@@ -16,5 +16,6 @@ public class ChatHistory {
     private String userId;
     private Date postalTime;
     private String message;
-
+    private String groupName;
+    private String groupId;
 }
