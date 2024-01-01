@@ -1,19 +1,27 @@
 package com.bigModel.backend.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.bigModel.backend.advice.result.Result;
+import com.bigModel.backend.listener.UploadDataListener;
 import com.bigModel.backend.pojo.ChatHistory;
 import com.bigModel.backend.service.ChatHistoryService;
+import com.bigModel.backend.utils.ExcelExportUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("telegram")
+@Slf4j
 public class ChatHistoryController {
     @Autowired
     private ChatHistoryService chatHistoryService;
@@ -27,13 +35,22 @@ public class ChatHistoryController {
     }
 
     @GetMapping("export")
-    public String exportHistory(HttpServletResponse httpServletResponse) {
-        // Map<String, List<ChatHistory>> map = chatHistoryService.findAllHistory();
+    public void exportHistory(HttpServletResponse httpServletResponse) throws Exception {
+        List<ChatHistory> list = chatHistoryService.listAllGroupId();
+        Map<String, List<ChatHistory>> map = new HashMap<>();
+        for (int i = 0; i < list.size(); i ++) {
+            String groupId = list.get(i).getGroupId();
+            List<ChatHistory> chatHistories = chatHistoryService.listHistoryByGroupId(groupId);
+            map.put(groupId, chatHistories);
+        }
         httpServletResponse.setContentType("application/vnd.ms-excel");
-        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + "电报聊天记录.xlsx");
-        //EasyExcel.write(httpServletResponse.getOutputStream())
-        //        .head(getHeader());
-        // toExcel.writeExcel(httpServletResponse, map);
-        return "导出成功";
+        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + "text.xlsx");
+        ExcelExportUtil.writeExcel(httpServletResponse, map);
     }
+
+    @PostMapping("upload")
+    public void upload( MultipartFile file) throws IOException {
+        EasyExcel.read(file.getInputStream(), ChatHistory.class, new UploadDataListener(chatHistoryService)).sheet().doRead();
+    }
+
 }
