@@ -417,7 +417,10 @@
                 this.$router.go(0)
             },
 
-
+            companyCut(name) {
+                let company = (name || "").split(',')
+                return company
+            },
         },
         components: {
             Search, FolderAdd, Upload,
