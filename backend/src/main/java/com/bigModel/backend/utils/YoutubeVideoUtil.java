@@ -68,7 +68,7 @@ public class YoutubeVideoUtil {
                     String cover = new JSONObject(new JSONObject(new JSONObject(json.getString("snippet")).getString("thumbnails")).getString("default")).getString("url");
                     String title = new JSONObject(json.getString("snippet")).getString("title");
                     String username = userList.get(j).getUsername();
-                    YoutubeVideo youtubeVideo = new YoutubeVideo(null, cover, username, userList.get(j).getChannelId(), videoId, title, null, 0, null);
+                    YoutubeVideo youtubeVideo = new YoutubeVideo(null, cover, username, userList.get(j).getChannelId(), videoId, title, null, 0, null, 0);
                     list.add(youtubeVideo);
                 // }
                 // if (searchResultList != null) {

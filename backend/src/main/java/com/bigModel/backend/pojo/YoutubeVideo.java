@@ -22,4 +22,5 @@ public class YoutubeVideo {
     private String summary;
     private Integer needReturn;
     private String keyword;
+    private Integer flag;
 }

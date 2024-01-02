@@ -72,7 +72,7 @@ public class RegisterSerivceImpl implements RegisterService {
         String photo = "https://cdn.acwing.com/media/user/profile/photo/143072_lg_aee4744060.jpg";
 
 //        id 是自增
-        User user = new User(null,username,encoded_password,photo, null);
+        User user = new User(null,username,encoded_password,photo, null, null);
         userMapper.insert(user);
 
         map.put("error_message", "success");

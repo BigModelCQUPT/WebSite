@@ -40,4 +40,7 @@ public class ChatHistory {
     @ColumnWidth(10)
     @ExcelProperty("群组id")
     private String groupId;
+    private Integer needReturn;
+    private Integer flag;
+    private String keyword;
 }

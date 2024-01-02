@@ -33,7 +33,7 @@ public class YoutubeTask {
     @Autowired
     private KeywordService keywordService;
 
-    @Scheduled(cron = "0 0 7 * * ?")
+    @Scheduled(cron = "0 15 10 ? * 6L ")
     @Transactional
     public void VideoSummary() throws Exception{
 

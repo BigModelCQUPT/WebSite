@@ -33,7 +33,7 @@ public class OrderTask {
 //    每小时
 //    @Scheduled(cron = "0/40 * * * * ?")
 //     @Scheduled(cron = "0 0 7 * * ?")
-    @Scheduled(cron = "0 0 7 * * ?")
+    @Scheduled(cron = "0 15 10 ? * 6L ")
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
