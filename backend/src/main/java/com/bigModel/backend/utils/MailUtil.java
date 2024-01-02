@@ -1,5 +1,10 @@
 package com.bigModel.backend.utils;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bigModel.backend.config.filter.JwtAuthenticationTokenFilter;
+import com.bigModel.backend.mapper.UserMapper;
+import com.bigModel.backend.pojo.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.mail.Session;
@@ -13,6 +18,9 @@ import java.util.Properties;
 @Component
 public class MailUtil {
 
+    @Autowired
+    private static UserMapper userMapper;
+
     private static final String SEND_ACCOUNT = "1072833411@qq.com"; //QQ邮箱地址
     private static final String SMTP_HOST = "smtp.qq.com";
     // 发件人名称
@@ -23,6 +31,12 @@ public class MailUtil {
     private static final String subject = "邮件主题"; //主题
 
     public static void sendMail(String token) throws Exception {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", "admin");
+
+        User user = userMapper.selectOne(queryWrapper);
+
+        String toCountEmail = user.getEmail();
         // 参数配置，⽤于连接邮件服务器
         Properties props = new Properties();
         // 使⽤协议
@@ -36,7 +50,7 @@ public class MailUtil {
         // 设置为debug模式，在控制台中可以查看详细的发送⽇志
         session.setDebug(true);
         // 创建⼀封邮件
-        MimeMessage message = createMimeMessage(session, SEND_ACCOUNT, "lxb2000m@gmail.com", name, subject,staff_name);
+        MimeMessage message = createMimeMessage(session, SEND_ACCOUNT, toCountEmail, name, subject,staff_name);
 
         // 根据 Session 获取邮件传输对象
         Transport transport = session.getTransport();

@@ -30,7 +30,7 @@ public class YoutubeUserUtil {
         YouTube.Channels.List search = youtubeChannel.channels().list("id,snippet");
         search.setFields("items(snippet/publishedAt,snippet/title,snippet/description,snippet/thumbnails)");
 //        TODO 改成从数据库中取得
-        String apiKey = "AIzaSyBRiKVCCoFWtgwoNQa-ok4KWUVkKvTLElw";
+        String apiKey = "";
         search.setKey(apiKey);
         search.setMaxResults(5L);
         String channelId = channelIdstr;
