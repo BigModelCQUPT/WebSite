@@ -6,4 +6,6 @@ public interface TokenService {
     void addYoutubetoken(String youtubetoken);
 
     void addTwittertoken(String twittertoken);
+
+    void addUserEmail(String email);
 }

@@ -19,4 +19,7 @@ public class User {
     private String photo;
     private String phone;
     private String email;
+    private String mailToken;
+    private String twitterToken;
+    private String youtubeToken;
 }
