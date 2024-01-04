@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -61,6 +63,16 @@ public class TweetController {
     @PostMapping("/tweet/updateFlag/{id}")
     public Result updateFlag(@PathVariable("id") int id) {
         tweetService.updateFlag(id);
+        return Result.success("修改成功");
+    }
+
+    @PostMapping("/tweet/readTweet")
+    public Result readTweet(@RequestBody List<Tweet> data){
+//        List<Tweet> needReadList = castList(data.get("needReadList"), Tweet.class);
+        for (Tweet tweet : data) {
+            Integer id = tweet.getId();
+            tweetService.updateFlag(id);
+        }
         return Result.success("修改成功");
     }
 }
