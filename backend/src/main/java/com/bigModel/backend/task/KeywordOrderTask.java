@@ -20,8 +20,8 @@ public class KeywordOrderTask {
     @Autowired
     private KeywordTrendMapper keywordTrendMapper;
 
-    @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
-    // @Scheduled(cron = "0 0 0 * * ?") // 定时 0 点
+    // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
+    @Scheduled(cron = "0 0 0 * * ?") // 定时 0 点
     public void updateKeywordCnt() {
         List<KeywordTrend> list = keywordService.listAllKeywordWithDate();
         for (KeywordTrend keywordTrend: list) {
