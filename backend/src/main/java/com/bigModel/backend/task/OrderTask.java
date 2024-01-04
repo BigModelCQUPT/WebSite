@@ -29,11 +29,8 @@ public class OrderTask {
     @Autowired
     private KeywordService keywordService;
 
-    //    测试定时任务
-//    每小时
-//    @Scheduled(cron = "0/40 * * * * ?")
-//     @Scheduled(cron = "0 0 7 * * ?")
-    @Scheduled(cron = "0 15 10 ? * 6L ")
+    // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
+    // @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
@@ -53,18 +50,14 @@ public class OrderTask {
             Response response = client.newCall(request).execute();
             ResponseBody res = response.body();
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId);
+            this.keywordMatch(tweetList);
             tweetService.saveTweet(tweetList);
         }
-        this.keywordMatch();
         this.modeling();
     }
 
-    public void keywordMatch() {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String date = df.format(now);
+    public void keywordMatch(List<Tweet> tweetList) {
         List<Keyword> keywordList = keywordService.listAllKeywords();
-        List<Tweet> tweetList = tweetService.getTweetByDate(date);
         for (int i = 0; i < tweetList.size(); i ++) {
             List<String> list = new ArrayList<>();
             int id = tweetList.get(i).getId();
@@ -82,7 +75,7 @@ public class OrderTask {
         }
     }
 
-//    TODO chatgpt 分析
+   // TODO chatgpt 分析
 //    如果没有 keyword 没有匹配 就启用chatgpt
     public void modeling() {
 
