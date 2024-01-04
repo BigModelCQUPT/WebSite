@@ -61,4 +61,12 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
     public void saveHistories(List<ChatHistory> chatHistories) {
         this.saveBatch(chatHistories);
     }
+
+    @Override
+    public void updateFlag(Integer id) {
+        ChatHistory chatHistory = new ChatHistory();
+        chatHistory.setId(id);
+        chatHistory.setFlag(1);
+        chatHistoryMapper.updateById(chatHistory);
+    }
 }

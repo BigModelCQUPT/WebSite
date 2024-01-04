@@ -12,4 +12,6 @@ public interface ChatHistoryService extends IService<ChatHistory> {
     List<ChatHistory> listHistoryByGroupId(String groupId);
     List<ChatHistory> listAllGroupId();
     void saveHistories(List<ChatHistory> chatHistories);
+
+    void updateFlag(Integer id);
 }

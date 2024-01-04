@@ -22,6 +22,5 @@ public class KeywordOrderTask {
     public void updateKeywordCnt() {
         // Date
         List<KeywordTrend> list = keywordService.listAllKeywordWithDate();
-        System.out.println(list.get(0).getNowDate());
     }
 }

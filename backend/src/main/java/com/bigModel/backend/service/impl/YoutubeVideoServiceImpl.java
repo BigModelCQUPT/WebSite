@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bigModel.backend.mapper.YoutubeVideoMapper;
 import com.bigModel.backend.pojo.Tweet;
+import com.bigModel.backend.pojo.YoutubeUser;
 import com.bigModel.backend.pojo.YoutubeVideo;
 import com.bigModel.backend.service.YoutubeVideoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +68,13 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
         queryWrapper.eq("need_return", 0);
         List<YoutubeVideo> youtubeVideoList = youtubeVideoMapper.selectList(queryWrapper);
         return youtubeVideoList;
+    }
+
+    @Override
+    public void updateFlag(Integer id) {
+        YoutubeVideo youtubeVideo = new YoutubeVideo();
+        youtubeVideo.setId(id);
+        youtubeVideo.setFlag(1);
+        youtubeVideoMapper.updateById(youtubeVideo);
     }
 }

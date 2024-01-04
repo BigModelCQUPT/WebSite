@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.bigModel.backend.advice.result.Result;
 import com.bigModel.backend.listener.UploadDataListener;
 import com.bigModel.backend.pojo.ChatHistory;
+import com.bigModel.backend.pojo.YoutubeVideo;
 import com.bigModel.backend.service.ChatHistoryService;
 import com.bigModel.backend.utils.ExcelExportUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,16 @@ public class ChatHistoryController {
     @PostMapping("upload")
     public void upload( MultipartFile file) throws IOException {
         EasyExcel.read(file.getInputStream(), ChatHistory.class, new UploadDataListener(chatHistoryService)).sheet().doRead();
+    }
+
+    @PostMapping("/readTweet")
+    public Result readTweet(@RequestBody List<ChatHistory> data){
+//        List<Tweet> needReadList = castList(data.get("needReadList"), Tweet.class);
+        for (ChatHistory chatHistory : data) {
+            Integer id = chatHistory.getId();
+            chatHistoryService.updateFlag(id);
+        }
+        return Result.success("修改成功");
     }
 
 }
