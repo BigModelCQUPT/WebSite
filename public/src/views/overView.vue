@@ -45,8 +45,8 @@
             </el-col>
             <el-col :span="12">
                 <el-card shadow="hover" style="height: 320px" class="chart-card2">
-                    <h3 style="margin-top: 0px">词云统计</h3>
-                    <div ref="mychart2" style="height: 300px; width: 100%; margin-top: -35px"></div>
+                    <h3 style="margin-top: 0px ">词云统计</h3>
+                    <div ref="getWordCloudChart" style="height: 300px; width: 100%; margin-top: -35px"></div>
 
                 </el-card>
 
@@ -60,15 +60,15 @@
         <el-row :gutter="20">
             <el-col :span="12">
                 <el-card shadow="hover" style="height: 360px">
-                    <h3 style="margin-top: 0px">热门话题趋势统计</h3>
-                    <!-- <span>热门话题趋势统计</span> -->
-                    <div ref="mychart1" style="height: 280px; width:100%; margin-top: 0px">
+                    <!-- <h3 style="margin-top: 0px">热门话题趋势统计</h3> -->
+                    <h3 style="margin-top: 0px color=#505050 ">热门话题趋势统计</h3>
+                    <div ref="getTrendChart" style="height: 280px; width:90%; margin-top: -20px">
                     </div>
                 </el-card>
             </el-col>
             <el-col :span="12">
                 <el-card shadow="hover" style="height: 360px">
-                    <h3 style="margin-top: 0px">活跃账户</h3>
+                    <h3 style="margin-top: 0px color #505050">活跃账户</h3>
                     <div ref="getActivateUserChart" style="height: 300px;  margin-top: -40px;margin-left: -55px"></div>
                 </el-card>
 
@@ -101,169 +101,69 @@
                 totalTweet: 0,
                 activateUserData: [],
                 topicKeywordData: [],
-                // option2: {
-
-                // },
-                echartsdata: {
-                    series: [{
-                        type: 'wordCloud',
-                        // shape这个属性虽然可配置，但是在词的数量不太多的时候，效果不明显，它会趋向于画一个椭圆
-                        shape: 'circle',
-                        // 这个功能没用过
-                        keepAspect: false,
-                        // maskImage这个是可以自定义背景图片的，词云会按照图片的形状排布，所以有形状限制的时候，最好用背景图来实现，而且，这个背景图一定要放base64的，不然词云画不出来
-                        // maskImage: '',
-                        // 下面就是位置的配置
-                        left: 'center',
-                        top: 'center',
-                        width: '70%',
-                        height: '80%',
-                        right: null,
-                        bottom: null,
-                        // 词的大小，最小12px，最大60px，可以在这个范围调整词的大小
-                        sizeRange: [12, 60],
-                        // 每个词旋转的角度范围
-                        rotationRange: [-90, 90],
-                        rotationStep: 45,
-                        // 词间距，数值越小，间距越小，这里间距太小的话，会出现大词把小词套住的情况，比如一个大的口字，中间会有比较大的空隙，这时候他会把一些很小的字放在口字里面，这样的话，鼠标就无法选中里面的那个小字
-                        gridSize: 8,
-                        // 允许词太大的时候，超出画布的范围
-                        drawOutOfBound: false,
-                        // 布局的时候是否有动画
-                        layoutAnimation: true,
-                        // 这是全局的文字样式，相对应的还可以对每个词设置字体样式
-                        textStyle: {
-                            fontFamily: 'sans-serif',
-                            fontWeight: 'bold',
-                            // 颜色可以用一个函数来返回字符串
-                            color: function () {
-                                // Random color
-                                return 'rgb(' + [
-                                    Math.round(Math.random() * 160),
-                                    Math.round(Math.random() * 160),
-                                    Math.round(Math.random() * 160)
-                                ].join(',') + ')';
-                            }
-                        },
-                        emphasis: {
-                            focus: 'self',
-                            textStyle: {
-                                textShadowBlur: 3,
-                                textShadowColor: '#333'
-                            }
-                        },
-                        // 数据必须是一个数组，数组是对象，对象必须有name和value属性
-                        data: [
-                            {
-                                name: '推特',
-                                value: 200
-                            },
-                            {
-                                name: 'Telegram',
-                                value: 50
-                            },
-                            {
-                                name: '文化大革命',
-                                value: 30
-                            },
-                            {
-                                name: '共产党',
-                                value: 150
-                            },
-                            {
-                                name: '六四事件',
-                                value: 75
-                            },
-                            {
-                                name: '推特',
-                                value: 100
-                            },
-                            {
-                                name: '新疆改造中心',
-                                value: 50
-                            },
-                            {
-                                name: '习近平',
-                                value: 20
-                            },
-                            {
-                                name: '毛泽东',
-                                value: 150
-                            },
-                            {
-                                name: '西藏骚乱',
-                                value: 75
-                            },
-                            {
-                                name: 'chatgpt',
-                                value: 55
-                            },
-                            {
-                                name: 'chatgpt',
-                                value: 75
-                            },
-                            {
-                                name: 'chatgpt',
-                                value: 25
-                            },
-                            {
-                                name: 'Telegram',
-                                value: 30
-                            },
-                            {
-                                name: '文化大革命',
-                                value: 20
-                            },
-                            {
-                                name: '习近平',
-                                value: 150
-                            },
-                            {
-                                name: '法轮功',
-                                value: 75
-                            },
-                        ]
-                    }]
-                },
-                //            charoption : {
-                //             legend: {},
-                //   tooltip: {},
-                //   dataset: {
-                //     source: [
-                //       ['product', '2015', '2016', '2017'],
-                //       ['Matcha Latte', 43.3, 85.8, 93.7],
-                //       ['Milk Tea', 83.1, 73.4, 55.1],
-                //       ['Cheese Cocoa', 86.4, 65.2, 82.5],
-                //       ['Walnut Brownie', 72.4, 53.9, 39.1]
-                //     ]
-                //   },
-                //   xAxis: { type: 'category' },
-                //   yAxis: {},
-                //   // Declare several bar series, each will be mapped
-                //   // to a column of dataset.source by default.
-                //   series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }]
-                // },
-
-                chartoption: {
-
-                    legend: {},
-                    tooltip: {},
-                    dataset: {
-                        dimensions: ['topic', 'topic1', 'topic2', 'topic3'],
-                        source: [
-                            { topic: '1st week', topic1: 43.3, topic2: 85.8, topic3: 93.7 },
-                            { topic: '2nd week', topic1: 83.1, topic2: 73.4, topic3: 55.1 },
-                            { topic: '3rd week', topic1: 86.4, topic2: 65.2, topic3: 82.5 },
-                            { topic: '4th week', topic1: 72.4, topic2: 53.9, topic3: 39.1 }
-                        ]
+                wordCloudData: [],
+                chartoption1: {
+                    title: {
+                        text: ''
                     },
-                    xAxis: { type: 'category' },
-                    yAxis: {},
-                    // Declare several bar series, each will be mapped
-                    // to a column of dataset.source by default.
-                    series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }]
-
-                },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'Email',
+                            type: 'line',
+                            stack: 'Total',
+                            data: [120, 132, 101, 134, 90, 230, 210]
+                        },
+                        {
+                            name: 'Union Ads',
+                            type: 'line',
+                            stack: 'Total',
+                            data: [220, 182, 191, 234, 290, 310, 11]
+                        },
+                        {
+                            name: 'Video Ads',
+                            type: 'line',
+                            stack: 'Total',
+                            data: [150, 232, 201, 154, 190, 330, 410]
+                        },
+                        {
+                            name: 'Direct',
+                            type: 'line',
+                            stack: 'Total',
+                            data: [320, 332, 301, 334, 390, 330, 320]
+                        },
+                        {
+                            name: 'Search Engine',
+                            type: 'line',
+                            stack: 'Total',
+                            data: [820, 932, 901, 934, 1290, 1330, 1320]
+                        }
+                    ]
+                }
 
 
             }
@@ -272,8 +172,6 @@
         created() {
             this.getNumberUser()
             this.getNumberTweet()
-
-            // this.activateUserChart()
         },
         components: {
     /* Fold, Expand,*/  User, ChatDotRound,
@@ -282,18 +180,13 @@
             // let myEcharts = echarts.init(this.$refs.mychart)
             // myEcharts.setOption(this.option)
             // this.initEcharts();
-
-            let myEchart = echarts.init(this.$refs.mychart1)
-            myEchart.setOption(this.chartoption)
-
-            let myEcharts = echarts.init(this.$refs.mychart2)
-            myEcharts.setOption(this.echartsdata)
-
+            // let myEchart = echarts.init(this.$refs.mychart1)
+            // myEchart.setOption(this.chartoption)
             // let myEcharts3 = echarts.init(this.$refs.mychart3)
             // myEcharts3.setOption(this.option2)
-
             this.getActivateUser()
             this.getTopicKeyword()
+            this.KeywordTrend()
         },
 
 
@@ -398,9 +291,15 @@
                     if (resp.status == "200") {
                         for (var i = 0; i < 5; i++) {
                             _this.topicKeywordData[i] = resp.data.data[i]
+
+                        }
+                        for (var j = 0; j < 15; j++) {
+                            _this.wordCloudData[j] = resp.data.data[j]
                         }
                         // _this.tableOption2 = resp.data.data;
                         _this.TopicKeywordChart()
+                        _this.WordCloudChart()
+
                     }
                     else {
                         _this.$message.error('出错了');
@@ -444,7 +343,103 @@
                     ]
                 }
                 this.userChart.setOption(optionTopicKeyword)
-            }
+            },
+
+
+            WordCloudChart() {
+                // const _this = this
+                this.wordCloudChart = echarts.init(this.$refs.getWordCloudChart)
+
+                const echartsData = {
+                    series: [{
+                        type: 'wordCloud',
+                        // shape这个属性虽然可配置，但是在词的数量不太多的时候，效果不明显，它会趋向于画一个椭圆
+                        shape: 'circle',
+                        // 这个功能没用过
+                        keepAspect: false,
+                        // maskImage这个是可以自定义背景图片的，词云会按照图片的形状排布，所以有形状限制的时候，最好用背景图来实现，而且，这个背景图一定要放base64的，不然词云画不出来
+                        // maskImage: '',
+                        // 下面就是位置的配置
+                        left: 'center',
+                        top: 'center',
+                        width: '70%',
+                        height: '80%',
+                        right: null,
+                        bottom: null,
+                        // 词的大小，最小12px，最大60px，可以在这个范围调整词的大小
+                        sizeRange: [12, 60],
+                        // 每个词旋转的角度范围
+                        rotationRange: [-90, 90],
+                        rotationStep: 45,
+                        // 词间距，数值越小，间距越小，这里间距太小的话，会出现大词把小词套住的情况，比如一个大的口字，中间会有比较大的空隙，这时候他会把一些很小的字放在口字里面，这样的话，鼠标就无法选中里面的那个小字
+                        gridSize: 8,
+                        // 允许词太大的时候，超出画布的范围
+                        drawOutOfBound: false,
+                        // 布局的时候是否有动画
+                        layoutAnimation: true,
+                        // 这是全局的文字样式，相对应的还可以对每个词设置字体样式
+                        textStyle: {
+                            fontFamily: 'sans-serif',
+                            fontWeight: 'bold',
+                            // 颜色可以用一个函数来返回字符串
+                            color: function () {
+                                // Random color
+                                return 'rgb(' + [
+                                    Math.round(Math.random() * 160),
+                                    Math.round(Math.random() * 160),
+                                    Math.round(Math.random() * 160)
+                                ].join(',') + ')';
+                            }
+                        },
+                        emphasis: {
+                            focus: 'self',
+                            textStyle: {
+                                textShadowBlur: 3,
+                                textShadowColor: '#333'
+                            }
+                        },
+                        // 数据必须是一个数组，数组是对象，对象必须有name和value属性
+                        data: this.wordCloudData,
+                    }]
+                }
+                this.wordCloudChart.setOption(echartsData)
+            },
+
+            TrendChart() {
+                // const _this = this
+                this.trendChart = echarts.init(this.$refs.getTrendChart)
+
+                this.trendChart.setOption(this.chartoption1)
+            },
+
+            KeywordTrend() {
+                const _this = this
+                request({
+                    url: '/keyword/trend',
+                    method: 'get',
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.chartoption1.legend.data = resp.data.data.keywords
+                        _this.chartoption1.xAxis.data = resp.data.data.trend.nowDate
+                        for (var i = 0; i < _this.chartoption1.legend.data.length; i++) {
+                            var trend = resp.data.data.trend[_this.chartoption1.legend.data[i]]
+                            // console.log(trend)
+                            _this.chartoption1.series[i].name = _this.chartoption1.legend.data[i]
+                            for (var j = 0; j < trend.length; j++) {
+                                _this.chartoption1.series[i].data[6 - j] = trend[j].cnt
+                            }
+                        }
+                        console.log(_this.chartoption1.series[0].data)
+                        console.log(_this.chartoption1.series[1].data)
+                        console.log(_this.chartoption1.series[2].data)
+                        console.log(_this.chartoption1.series[3].data)
+                        console.log(_this.chartoption1.series[4].data)
+                        console.log(resp.data.data.trend)
+                        _this.TrendChart()
+
+                    }
+                })
+            },
 
         },
     }

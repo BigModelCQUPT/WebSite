@@ -3,7 +3,6 @@
     <div class="outside">
         <div class="mod-new-reg-text">
             <h3 class="max-text">大模型分析</h3>
-            <!--            <p class="small-text">让社区工作更简单</p>-->
         </div>
         <div class="mylogin">
             <h4 class="loginTitle">系统登录</h4>

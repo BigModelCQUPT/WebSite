@@ -26,12 +26,26 @@
 
         <!--        数据展示-->
         <div style="margin-top: 15px">
+            <div class="table-alert table-alert-info table-alert-with-icon" align="left">
+                <span class="table-alert-icon">
+                    <i class="el-alert__icon el-icon-info" />
+                </span>
+                <span class="table-alert-message">
+                    已选择 <a style="font-weight: 600">{{ selectUserList.length }}</a> 条信息&nbsp;&nbsp;
+                </span>
+                <el-button @click="handleClearSelection" type="text">清空
+                </el-button>
+                <el-button @click="handleReadTweet" type="text">
+                    已读所选
+                </el-button>
+            </div>
             <!-- <el-table :data="tableData" border style="width: 100%"> -->
 
 
-            <el-table :data="tableData" border style="width: 100%">
+            <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange" ref="table"
+                row-key="id" fit>
 
-
+                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="100" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
@@ -60,13 +74,13 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="已读状态" width="90" align="center">
+                <!-- <el-table-column label="已读状态" width="90" align="center">
                     <template #default="scope">
                         <el-button v-if="scope.row.flag == 0" type="success"
                             @click="updateFlag(scope.row.id)">未读</el-button>
                         <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
                 <!-- <el-table-column prop="category" label="GPT分类类别" width="80" align="center" /> -->
                 <!-- <el-table-column fixed="right" label="操作" width="110" align="center">
                     <template v-slot="tableData"> -->
@@ -141,7 +155,7 @@
                 activeindex: 0,
                 filename: '',
                 detaildialogVisible: false,
-
+                selectUserList: [],
             }
         },
         created() {
@@ -399,6 +413,35 @@
             },
 
 
+
+            // 复选框
+            handleSelectionChange(selection) {
+                this.selectUserList = selection
+            },
+            handleClearSelection() {
+                this.selectUserList = []
+                this.$refs.table.clearSelection()
+            },
+            checkSelectable(row) {
+                return row.flag !== 1 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
+            },
+            handleReadTweet() {
+                const _this = this
+                request({
+                    url: 'http://10.16.104.183:8181/tweet/readTweet',
+                    method: 'post',
+                    data: this.selectUserList
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success('已读成功');
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                // this.$router.go(0)
+            }
         },
         components: {
             Search,

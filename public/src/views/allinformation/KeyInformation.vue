@@ -64,7 +64,7 @@
                         <el-tag v-else-if="scope.row.needReturn === 1" type=" success">是</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="category" label="GPT分类类别" width="80" align="center" />
+                <!-- <el-table-column prop="category" label="GPT分类类别" width="80" align="center" /> -->
             </el-table>
             <div style="display: flex;justify-content: flex-end; margin-top: 10px">
                 <el-pagination background layout="sizes, prev, pager, next, jumper, ->, total, slot" :total="total"

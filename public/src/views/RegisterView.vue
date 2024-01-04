@@ -2,8 +2,7 @@
 <template>
     <div class="zuiwaiceng">
         <div class="mod-new-reg-text">
-            <h3 class="max-text">用技术</h3>
-            <p class="small-text">让CQUPT更牛逼</p>
+            <h3 class="max-text">CQUPT大模型分析</h3>
         </div>
         <div class="mylogin">
             <h3>欢迎注册</h3>
@@ -23,7 +22,7 @@
                     </el-row>
                 </el-form-item>
                 <el-form-item prop="password" style="margin-left: 50px">
-                    <label style="margin-left: -50px; margin-right: 17px">密 &nbsp;&nbsp;码 &nbsp;&nbsp;</label>
+                    <label style="margin-left: -50px; margin-right: 20px">密 &nbsp;&nbsp;码 &nbsp;&nbsp;</label>
                     <el-row>
                         <el-col :span='25'>
                             <el-input class="inps" type="password" placeholder='请设置登录密码'
@@ -37,6 +36,15 @@
                         <el-col :span='25'>
                             <el-input class="inps" type="password" placeholder='请再次输入密码'
                                 v-model="registerForm.confirmedPassword"></el-input>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+                <el-form-item prop="usermail" style="margin-top:10px; margin-left: 50px ">
+                    <label style="margin-left: -50px; margin-right: 28px">邮箱 &nbsp; &nbsp;</label>
+                    <el-row>
+                        <el-col :span='25'>
+                            <el-input class="inps" placeholder='请输入邮箱' v-model="registerForm.usermail">
+                            </el-input>
                         </el-col>
                     </el-row>
                 </el-form-item>
@@ -58,21 +66,53 @@
     export default {
         name: "RegisterView",
         data() {
+
             return {
+
                 registerForm: {
                     username: '',
                     password: '',
                     confirmedPassword: '',
+                    usermail: '',
                 },
                 checked: true,
                 registerRules: {
                     username: [{ required: true, message: "请输入账号", trigger: "blur" }],
                     password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-                    confirmedPassword: [{ required: true, message: "请输入密码", trigger: "blur" }]
-                }
+                    confirmedPassword: [{ required: true, message: "请输入密码", trigger: "blur" }],
+                    usermail: [
+                        {
+                            required: true,
+                            message: "请输入邮箱",
+                            trigger: "blur"
+                        },
+                        {
+                            validator: function (rule, value, callback) {
+                                if (
+                                    // eslint-disable-next-line
+                                    /^\w{1,64}@[a-z0-9\-]{1,256}(\.[a-z]{2,6}){1,2}$/i.test(
+                                        value
+                                    ) == false
+                                ) {
+                                    callback(new Error("邮箱格式错误"));
+                                } else {
+                                    callback();
+                                }
+                            },
+                            trigger: "blur"
+                        }
+                    ]
+
+
+                },
+
             }
         },
+
+
+
         methods: {
+
             submitForm() {
                 const _this = this
                 this.$refs.registerForm.validate((valid) => {
@@ -99,6 +139,7 @@
                         return false;
                     }
                 });
+
             },
             login() {//跳转到登录
                 this.$router.replace('/')

@@ -15,8 +15,13 @@
                 </el-button>
             </div>
             <div>
-                <el-upload style="  display: inline-flex; margin-right: 12px;" :show-file-list="false"
-                    :on-change="fileChange" :on-error="fileSuccess">
+                <!-- <el-upload style="  display: inline-flex; margin-right: 25px;margin-top: -5px;"
+                    action="http://localhost:8181/telegram/upload" :headers="header">
+                    <el-button type="primary">上传数据</el-button>
+                </el-upload> -->
+                <el-upload style="  display: inline-flex; margin-right: 12px;"
+                    action="http://localhost:8181/telegram/upload" :headers="header" :show-file-list="false"
+                    :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
                     <el-button type="success">
                         <el-icon><folder-add /></el-icon>
                         <span style="vertical-align: middle;">导入数据</span>
@@ -28,6 +33,9 @@
                         <upload />
                     </el-icon>
                     <span style="vertical-align: middle;">导出数据</span>
+
+
+
                 </el-button>
             </div>
 
@@ -35,13 +43,26 @@
     </div>
 
     <!--        数据展示-->
+
     <div style="margin-top: 15px">
         <!-- <el-table :data="tableData" border style="width: 100%"> -->
+        <div class="table-alert table-alert-info table-alert-with-icon" align="left" style="margin-left: 10px">
+            <span class="table-alert-icon">
+                <i class="el-alert__icon el-icon-info" />
+            </span>
+            <span class="table-alert-message">
+                已选择 <a style="font-weight: 600">{{ selectUserList.length }}</a> 条信息&nbsp;&nbsp;
+            </span>
+            <el-button @click="handleClearSelection" type="text">清空
+            </el-button>
+            <el-button @click="handleReadTweet" type="text">
+                已读所选
+            </el-button>
+        </div>
+        <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
+            @selection-change="handleSelectionChange" ref="table" row-key="id" fit>
 
-
-        <el-table :data="tableData" border style="width: 100%">
-
-
+            <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
             <el-table-column prop="id" label="序号" width="90" align="center" />
             <el-table-column prop="username" label="用户名" width="120" align="center" />
             <el-table-column prop="userId" label="用户id" width="90" align="center"></el-table-column>
@@ -90,13 +111,13 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="已读状态" width="90" align="center">
+            <!-- <el-table-column label="已读状态" width="90" align="center">
                 <template #default="scope">
                     <el-button v-if="scope.row.flag == 0" type="success"
                         @click="updateFlag(scope.row.id)">未读</el-button>
                     <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
         </el-table>
         <div style="display: flex;justify-content: flex-end; margin-top: 10px">
             <el-pagination background layout="sizes, prev, pager, next, jumper, ->, total, slot" :total="total"
@@ -127,7 +148,7 @@
 <script>
     import axios from 'axios'
     import { Search } from '@element-plus/icons-vue'
-    import { export_retailer } from "@/utils/api";
+    // import { export_retailer } from "@/utils/api";
     import request from '@/utils/http'
     import { FolderAdd, Upload } from '@element-plus/icons-vue'
     export default {
@@ -161,6 +182,7 @@
                 keyworddialogVisible: false,
                 keywordInputValue: '',
                 search_keyword: '',
+                selectUserList: [],
             }
         },
         created() {
@@ -190,11 +212,26 @@
                 })
             },
             exportData() {
-                // const _this = this
-                // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
-                //
-                // })
-                export_retailer()
+                request({
+                    url: '/telegram/export',
+                    method: 'get',
+                    responseType: "blob"
+                }).then(function (res) {
+                    console.log(res)
+                    let data = res.data
+                    let filename = "电报聊天记录.xlsx"
+                    let url = window.URL.createObjectURL(new Blob([data]))
+                    let link = document.createElement('a')
+                    link.style.display = 'none'
+                    link.href = url
+                    link.setAttribute('download', filename)
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link) // 下载完成移除元素
+                    window.URL.revokeObjectURL(url) // 释放掉blob对象
+                }).catch((error) => {
+                    console.log(error)
+                })
             },
             showDialog() {
                 this.dialogVisible = true
@@ -401,7 +438,7 @@
                     data: id
                 }
                 request({
-                    url: 'http://10.16.104.183:8181/youtube/updateFlag/' + id,
+                    url: 'http://10.16.104.183:8181/telegram/updateFlag/' + id,
                     method: 'post',
                     data: data
                 }).then(function (resp) {
@@ -414,13 +451,44 @@
                     }
                 })
                 // this.fetchData()
-                this.$router.go(0)
+                // this.$router.go(0)
             },
-
+            // this: header = {
+            //     Authorization: "Bearer " + localStorage.getItem('jwt_token')
+            // },
             companyCut(name) {
                 let company = (name || "").split(',')
                 return company
             },
+
+            // 复选框
+            handleSelectionChange(selection) {
+                this.selectUserList = selection
+            },
+            handleClearSelection() {
+                this.selectUserList = []
+                this.$refs.table.clearSelection()
+            },
+            checkSelectable(row) {
+                return row.flag !== 1 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
+            },
+            handleReadTelegram() {
+                const _this = this
+                request({
+                    url: 'http://10.16.104.183:8181/telegram/readtelegram',
+                    method: 'post',
+                    data: this.selectUserList
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success('已读成功');
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                // this.$router.go(0)
+            }
         },
         components: {
             Search, FolderAdd, Upload,
