@@ -3,10 +3,12 @@ package com.bigModel.backend.task;
 import com.bigModel.backend.pojo.Keyword;
 import com.bigModel.backend.pojo.Tweet;
 import com.bigModel.backend.pojo.TwitterUser;
+import com.bigModel.backend.pojo.YoutubeVideo;
 import com.bigModel.backend.service.KeywordService;
 import com.bigModel.backend.service.TweetService;
 import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
 import com.bigModel.backend.utils.ParseJSONUtil;
+import com.bigModel.backend.utils.chatGPT;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -33,29 +35,29 @@ public class OrderTask {
 //    每小时
 //    @Scheduled(cron = "0/40 * * * * ?")
 //     @Scheduled(cron = "0 0 7 * * ?")
-    @Scheduled(cron = "0 15 10 ? * 6L ")
+    @Scheduled(cron = "0/40 * * * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {
-        List<TwitterUser> list = infoService.listAll();
-        String token = "13893747a348d8fc";
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println(i);
-            String twitterId = list.get(i).getTwitterId();
-            String username = list.get(i).getUsername();
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                    .build();
-            Request request = new Request.Builder()
-                    .url("http://106.227.5.196:13422/twitter/user_timeline_byid?token=" + token + "&userId=" + twitterId+ "&max_id=")
-                    .method("GET", null)
-                    .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
-                    .addHeader("Content-Type", "application/json")
-                    .build();
-            Response response = client.newCall(request).execute();
-            ResponseBody res = response.body();
-            List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId);
-            tweetService.saveTweet(tweetList);
-        }
-        this.keywordMatch();
+//        List<TwitterUser> list = infoService.listAll();
+//        String token = "13893747a348d8fc";
+//        for (int i = 0; i < list.size(); i++) {
+//            System.out.println(i);
+//            String twitterId = list.get(i).getTwitterId();
+//            String username = list.get(i).getUsername();
+//            OkHttpClient client = new OkHttpClient().newBuilder()
+//                    .build();
+//            Request request = new Request.Builder()
+//                    .url("http://106.227.5.196:13422/twitter/user_timeline_byid?token=" + token + "&userId=" + twitterId+ "&max_id=")
+//                    .method("GET", null)
+//                    .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
+//                    .addHeader("Content-Type", "application/json")
+//                    .build();
+//            Response response = client.newCall(request).execute();
+//            ResponseBody res = response.body();
+//            List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId);
+//            tweetService.saveTweet(tweetList);
+//        }
+//        this.keywordMatch();
         this.modeling();
     }
 
@@ -82,9 +84,20 @@ public class OrderTask {
         }
     }
 
-//    TODO chatgpt 分析
+//    TODO chatgpt 分析  问题 如果文本有换行 就会报错
 //    如果没有 keyword 没有匹配 就启用chatgpt
     public void modeling() {
-
+        List<Tweet> tweetList = tweetService.listAllNoReturn();
+        for(int i = 0;i < tweetList.size();i++){
+            int id = tweetList.get(i).getId();
+            String content = tweetList.get(i).getText();
+            System.out.println(content);
+            HashMap<String, String> answerHash = chatGPT.getAnswer(content);
+            System.out.println("回答" +  answerHash);
+            String needReturn = answerHash.get("answer");
+            if(needReturn.equals("是") || needReturn.equals("是。")){
+                tweetService.updateReturn(id);
+            }
+        }
     }
 }
