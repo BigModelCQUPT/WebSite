@@ -26,12 +26,12 @@ public class TokenServiceImpl implements TokenService {
         QueryWrapper<Tokens> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", userId);
         Tokens dbToken = tokenMapper.selectOne(queryWrapper);
-        if(dbToken == null){
+        if (dbToken == null) {
             Tokens tokens = new Tokens();
             tokens.setUserId(userId);
             tokens.setMailToken(mailtoken);
             tokenMapper.insert(tokens);
-        }else{
+        } else {
             dbToken.setMailToken(mailtoken);
             tokenMapper.updateById(dbToken);
         }
@@ -44,12 +44,12 @@ public class TokenServiceImpl implements TokenService {
         QueryWrapper<Tokens> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", userId);
         Tokens dbToken = tokenMapper.selectOne(queryWrapper);
-        if(dbToken == null){
+        if (dbToken == null) {
             Tokens tokens = new Tokens();
             tokens.setUserId(userId);
             tokens.setMailToken(youtubetoken);
             tokenMapper.insert(tokens);
-        }else{
+        } else {
             dbToken.setMailToken(youtubetoken);
             tokenMapper.updateById(dbToken);
         }
@@ -61,12 +61,12 @@ public class TokenServiceImpl implements TokenService {
         QueryWrapper<Tokens> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", userId);
         Tokens dbToken = tokenMapper.selectOne(queryWrapper);
-        if(dbToken == null){
+        if (dbToken == null) {
             Tokens tokens = new Tokens();
             tokens.setUserId(userId);
             tokens.setMailToken(twittertoken);
             tokenMapper.insert(tokens);
-        }else{
+        } else {
             dbToken.setMailToken(twittertoken);
             tokenMapper.updateById(dbToken);
         }
@@ -80,5 +80,24 @@ public class TokenServiceImpl implements TokenService {
         User dbUser = userMapper.selectOne(queryWrapper);
         dbUser.setEmail(email);
         userMapper.updateById(dbUser);
+    }
+
+    /**
+     * 根据数据库列名获取对应token属性置
+     * @param columnName
+     * @return {@link String}
+     */
+    @Override
+    public String getToken(String columnName) {
+        Tokens tokens = tokenMapper.selectById(1);
+        switch (columnName) {
+            case "mailToken":
+                return tokens.getMailToken();
+            case "twitterToken":
+                return tokens.getTwitterToken();
+            case "youtubeToken":
+                return tokens.getYoutubeToken();
+        }
+        return null;
     }
 }

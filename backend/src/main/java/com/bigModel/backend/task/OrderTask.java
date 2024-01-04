@@ -4,8 +4,10 @@ import com.bigModel.backend.pojo.Keyword;
 import com.bigModel.backend.pojo.Tweet;
 import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.KeywordService;
+import com.bigModel.backend.service.TokenService;
 import com.bigModel.backend.service.TweetService;
 import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
+import com.bigModel.backend.utils.MailUtil;
 import com.bigModel.backend.utils.ParseJSONUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,13 +30,16 @@ public class OrderTask {
     private TwitterUserInfoService infoService;
     @Autowired
     private KeywordService keywordService;
+    @Autowired
+    private TokenService tokenService;
 
     // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
     // @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
-        String token = "13893747a348d8fc";
+        // String token = "13893747a348d8fc";
+        String token = tokenService.getToken("twitterToken");
         for (int i = 0; i < list.size(); i++) {
             System.out.println(i);
             String twitterId = list.get(i).getTwitterId();
@@ -56,7 +61,7 @@ public class OrderTask {
         this.modeling();
     }
 
-    public void keywordMatch(List<Tweet> tweetList) {
+    public void keywordMatch(List<Tweet> tweetList) throws Exception {
         List<Keyword> keywordList = keywordService.listAllKeywords();
         for (int i = 0; i < tweetList.size(); i ++) {
             List<String> list = new ArrayList<>();
@@ -71,6 +76,7 @@ public class OrderTask {
             if (list.size() > 0) {
                 tweetService.updateReturn(id);
                 tweetService.saveKeywordList(id, list);
+                MailUtil.sendMail(tokenService.getToken("mailToken"), tweetList.get(i).getTweetid());
             }
         }
     }

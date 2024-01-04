@@ -8,4 +8,6 @@ public interface TokenService {
     void addTwittertoken(String twittertoken);
 
     void addUserEmail(String email);
+
+    String getToken(String columnName);
 }
