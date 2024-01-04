@@ -9,6 +9,7 @@ import com.bigModel.backend.service.TweetService;
 import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
 import com.bigModel.backend.utils.MailUtil;
 import com.bigModel.backend.utils.ParseJSONUtil;
+import com.bigModel.backend.utils.chatGPT;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -56,7 +57,7 @@ public class OrderTask {
             ResponseBody res = response.body();
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId);
             this.keywordMatch(tweetList);
-            tweetService.saveTweet(tweetList);
+//            tweetService.saveTweet(tweetList);
         }
         this.modeling();
     }
@@ -84,6 +85,15 @@ public class OrderTask {
    // TODO chatgpt 分析
 //    如果没有 keyword 没有匹配 就启用chatgpt
     public void modeling() {
-
+        List<Tweet> tweetList = tweetService.listAllNoReturn();
+        for(int i = 0;i < tweetList.size();i++){
+            Integer id = tweetList.get(i).getId();
+            String content = tweetList.get(i).getText();
+            HashMap<String, String> answerHash = chatGPT.getAnswer(content);
+            String needReturn = answerHash.get("answer");
+            if(needReturn.equals("是") || needReturn.equals("是。")){
+                tweetService.updateReturn(id);
+            }
+        }
     }
 }

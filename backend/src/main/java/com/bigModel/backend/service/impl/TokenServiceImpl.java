@@ -24,7 +24,7 @@ public class TokenServiceImpl implements TokenService {
     public void addMailtoken(String mailtoken) {
         Integer userId = JwtAuthenticationTokenFilter.getUserBasic().getUserId();
         QueryWrapper<Tokens> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", userId);
+        queryWrapper.eq("user_id", userId);
         Tokens dbToken = tokenMapper.selectOne(queryWrapper);
         if (dbToken == null) {
             Tokens tokens = new Tokens();
@@ -42,7 +42,7 @@ public class TokenServiceImpl implements TokenService {
     public void addYoutubetoken(String youtubetoken) {
         Integer userId = JwtAuthenticationTokenFilter.getUserBasic().getUserId();
         QueryWrapper<Tokens> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", userId);
+        queryWrapper.eq("user_id", userId);
         Tokens dbToken = tokenMapper.selectOne(queryWrapper);
         if (dbToken == null) {
             Tokens tokens = new Tokens();
@@ -59,7 +59,7 @@ public class TokenServiceImpl implements TokenService {
     public void addTwittertoken(String twittertoken) {
         Integer userId = JwtAuthenticationTokenFilter.getUserBasic().getUserId();
         QueryWrapper<Tokens> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", userId);
+        queryWrapper.eq("user_id", userId);
         Tokens dbToken = tokenMapper.selectOne(queryWrapper);
         if (dbToken == null) {
             Tokens tokens = new Tokens();
