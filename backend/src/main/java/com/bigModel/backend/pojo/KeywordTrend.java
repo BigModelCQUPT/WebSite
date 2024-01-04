@@ -15,6 +15,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("keyword_date")
 public class KeywordTrend {
     @TableId(type = IdType.AUTO)
     private Integer id;
