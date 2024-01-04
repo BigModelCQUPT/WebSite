@@ -48,7 +48,7 @@ public class TweetController {
     @PostMapping("/tweet/analysisByGPT")
     public Result analysisByGPT(@RequestBody Map<String, String> data){
         Integer id = Integer.valueOf(data.get("id"));
-        Map<String, Object> map = tweetService.analysisByGPT(id);
+        Map<String, String> map = tweetService.analysisByGPT(id);
         return Result.success(map);
     }
 

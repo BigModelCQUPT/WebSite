@@ -81,10 +81,10 @@ public class TweetServiceImpl implements TweetService{
 
     @Override
     @Transactional
-    public Map<String, Object> analysisByGPT(Integer id) {
+    public Map<String, String> analysisByGPT(Integer id) {
         Tweet tweet = tweetMapper.selectById(id);
         String content = tweet.getText();
-        Map<String, Object> res = chatGPT.getAnswer(content);
+        Map<String, String> res = chatGPT.getAnswer(content);
 
 //        存入类别
         tweet.setCategory(res.get("category").toString());
@@ -142,5 +142,13 @@ public class TweetServiceImpl implements TweetService{
         Tweet tweet = tweetMapper.selectById(id);
         tweet.setKeyword(join);
         tweetMapper.updateById(tweet);
+    }
+
+    @Override
+    public List<Tweet> listAllNoReturn() {
+        QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("need_return", 0);
+        List<Tweet> tweetList = tweetMapper.selectList(queryWrapper);
+        return tweetList;
     }
 }

@@ -13,7 +13,7 @@ public interface TweetService {
 
     IPage<Tweet> findTweetByKeyword(String keyword, Integer pageNum, Integer size);
 
-    Map<String, Object> analysisByGPT(Integer id);
+    Map<String, String> analysisByGPT(Integer id);
 
     Map<String, Object> getNumberTweet();
 
@@ -25,4 +25,6 @@ public interface TweetService {
     void updateReturn(Integer id);
 
     void saveKeywordList(int id, List<String> list);
+
+    List<Tweet> listAllNoReturn();
 }

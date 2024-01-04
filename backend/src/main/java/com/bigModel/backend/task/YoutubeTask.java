@@ -86,9 +86,10 @@ public class YoutubeTask {
         for(int i = 0;i < youtubeVideoList.size();i++){
             int id = youtubeVideoList.get(i).getId();
             String summary = youtubeVideoList.get(i).getSummary();
-            HashMap<String, Object> answer = chatGPT.getAnswer(summary);
-            String category = answer.get("category").toString();
-            if(!category.equals("无类别") || !category.equals("无法分类")){
+            HashMap<String, String> answer = chatGPT.getAnswer(summary);
+
+            String needReturn = answer.get("answer").toString();
+            if(needReturn.equals("是") || needReturn.equals("是。")){
                 youtubeVideoService.updateReturn(id);
             }
         }

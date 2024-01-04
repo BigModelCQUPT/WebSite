@@ -64,7 +64,7 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
     @Override
     public List<YoutubeVideo> listAllNoReturn() {
         QueryWrapper<YoutubeVideo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("need_return", 1);
+        queryWrapper.eq("need_return", 0);
         List<YoutubeVideo> youtubeVideoList = youtubeVideoMapper.selectList(queryWrapper);
         return youtubeVideoList;
     }
