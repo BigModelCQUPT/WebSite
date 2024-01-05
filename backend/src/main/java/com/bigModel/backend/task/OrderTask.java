@@ -4,9 +4,12 @@ import com.bigModel.backend.pojo.Keyword;
 import com.bigModel.backend.pojo.Tweet;
 import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.KeywordService;
+import com.bigModel.backend.service.TokenService;
 import com.bigModel.backend.service.TweetService;
 import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
+import com.bigModel.backend.utils.MailUtil;
 import com.bigModel.backend.utils.ParseJSONUtil;
+import com.bigModel.backend.utils.chatGPT;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -28,16 +31,16 @@ public class OrderTask {
     private TwitterUserInfoService infoService;
     @Autowired
     private KeywordService keywordService;
+    @Autowired
+    private TokenService tokenService;
 
-    //    测试定时任务
-//    每小时
-//    @Scheduled(cron = "0/40 * * * * ?")
-//     @Scheduled(cron = "0 0 7 * * ?")
-    @Scheduled(cron = "0 0 7 * * ?")
+    // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
+    // @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
-        String token = "13893747a348d8fc";
+        // String token = "13893747a348d8fc";
+        String token = tokenService.getToken("twitterToken");
         for (int i = 0; i < list.size(); i++) {
             System.out.println(i);
             String twitterId = list.get(i).getTwitterId();
@@ -53,18 +56,14 @@ public class OrderTask {
             Response response = client.newCall(request).execute();
             ResponseBody res = response.body();
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId);
-            tweetService.saveTweet(tweetList);
+            this.keywordMatch(tweetList);
+//            tweetService.saveTweet(tweetList);
         }
-        this.keywordMatch();
         this.modeling();
     }
 
-    public void keywordMatch() {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String date = df.format(now);
+    public void keywordMatch(List<Tweet> tweetList) throws Exception {
         List<Keyword> keywordList = keywordService.listAllKeywords();
-        List<Tweet> tweetList = tweetService.getTweetByDate(date);
         for (int i = 0; i < tweetList.size(); i ++) {
             List<String> list = new ArrayList<>();
             int id = tweetList.get(i).getId();
@@ -78,13 +77,23 @@ public class OrderTask {
             if (list.size() > 0) {
                 tweetService.updateReturn(id);
                 tweetService.saveKeywordList(id, list);
+                MailUtil.sendMail(tokenService.getToken("mailToken"), tweetList.get(i).getTweetid());
             }
         }
     }
 
-//    TODO chatgpt 分析
+   // TODO chatgpt 分析
 //    如果没有 keyword 没有匹配 就启用chatgpt
     public void modeling() {
-
+        List<Tweet> tweetList = tweetService.listAllNoReturn();
+        for(int i = 0;i < tweetList.size();i++){
+            Integer id = tweetList.get(i).getId();
+            String content = tweetList.get(i).getText();
+            HashMap<String, String> answerHash = chatGPT.getAnswer(content);
+            String needReturn = answerHash.get("answer");
+            if(needReturn.equals("是") || needReturn.equals("是。")){
+                tweetService.updateReturn(id);
+            }
+        }
     }
 }

@@ -20,4 +20,6 @@ public interface YoutubeVideoService {
     void saveKeywordList(int id, List<String> list);
 
     List<YoutubeVideo> listAllNoReturn();
+
+    void updateFlag(Integer id);
 }

@@ -3,7 +3,9 @@ package com.bigModel.backend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bigModel.backend.config.filter.JwtAuthenticationTokenFilter;
 import com.bigModel.backend.mapper.TokenMapper;
+import com.bigModel.backend.mapper.UserMapper;
 import com.bigModel.backend.pojo.Tokens;
+import com.bigModel.backend.pojo.User;
 import com.bigModel.backend.service.TokenService;
 import org.apache.el.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,57 +17,87 @@ public class TokenServiceImpl implements TokenService {
     @Autowired
     private TokenMapper tokenMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public void addMailtoken(String mailtoken) {
-        Tokens tokens = new Tokens();
         Integer userId = JwtAuthenticationTokenFilter.getUserBasic().getUserId();
         QueryWrapper<Tokens> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
-        Tokens dbtoken = tokenMapper.selectOne(queryWrapper);
-
-        if(dbtoken == null){
+        Tokens dbToken = tokenMapper.selectOne(queryWrapper);
+        if (dbToken == null) {
+            Tokens tokens = new Tokens();
             tokens.setUserId(userId);
             tokens.setMailToken(mailtoken);
             tokenMapper.insert(tokens);
-        }else{
-            dbtoken.setMailToken(mailtoken);
-            tokenMapper.updateById(dbtoken);
+        } else {
+            dbToken.setMailToken(mailtoken);
+            tokenMapper.updateById(dbToken);
         }
+
     }
 
     @Override
     public void addYoutubetoken(String youtubetoken) {
-        Tokens tokens = new Tokens();
         Integer userId = JwtAuthenticationTokenFilter.getUserBasic().getUserId();
         QueryWrapper<Tokens> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
-        Tokens dbtoken = tokenMapper.selectOne(queryWrapper);
-
-        if(dbtoken == null){
+        Tokens dbToken = tokenMapper.selectOne(queryWrapper);
+        if (dbToken == null) {
+            Tokens tokens = new Tokens();
             tokens.setUserId(userId);
-            tokens.setYoutubeToken(youtubetoken);
+            tokens.setMailToken(youtubetoken);
             tokenMapper.insert(tokens);
-        }else{
-            dbtoken.setYoutubeToken(youtubetoken);
-            tokenMapper.updateById(dbtoken);
+        } else {
+            dbToken.setMailToken(youtubetoken);
+            tokenMapper.updateById(dbToken);
         }
     }
 
     @Override
     public void addTwittertoken(String twittertoken) {
-        Tokens tokens = new Tokens();
         Integer userId = JwtAuthenticationTokenFilter.getUserBasic().getUserId();
         QueryWrapper<Tokens> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
-        Tokens dbtoken = tokenMapper.selectOne(queryWrapper);
-
-        if(dbtoken == null){
+        Tokens dbToken = tokenMapper.selectOne(queryWrapper);
+        if (dbToken == null) {
+            Tokens tokens = new Tokens();
             tokens.setUserId(userId);
-            tokens.setTwitterToken(twittertoken);
+            tokens.setMailToken(twittertoken);
             tokenMapper.insert(tokens);
-        }else{
-            dbtoken.setTwitterToken(twittertoken);
-            tokenMapper.updateById(dbtoken);
+        } else {
+            dbToken.setMailToken(twittertoken);
+            tokenMapper.updateById(dbToken);
         }
+    }
+
+    @Override
+    public void addUserEmail(String email) {
+        Integer userId = JwtAuthenticationTokenFilter.getUserBasic().getUserId();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", userId);
+        User dbUser = userMapper.selectOne(queryWrapper);
+        dbUser.setEmail(email);
+        userMapper.updateById(dbUser);
+    }
+
+    /**
+     * 根据数据库列名获取对应token属性置
+     * @param columnName
+     * @return {@link String}
+     */
+    @Override
+    public String getToken(String columnName) {
+        Tokens tokens = tokenMapper.selectById(1);
+        switch (columnName) {
+            case "mailToken":
+                return tokens.getMailToken();
+            case "twitterToken":
+                return tokens.getTwitterToken();
+            case "youtubeToken":
+                return tokens.getYoutubeToken();
+        }
+        return null;
     }
 }

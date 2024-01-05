@@ -39,11 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
 //                这两个链接是公开的 非授权链接
-                .antMatchers("/user/account/login", "/user/account/register").permitAll()
+                .antMatchers("/user/account/login", "/user/account/register", "/keyword/trend").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
 }

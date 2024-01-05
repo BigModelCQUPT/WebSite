@@ -2,11 +2,14 @@ package com.bigModel.backend.utils;
 
 import com.bigModel.backend.pojo.YoutubeUser;
 import com.bigModel.backend.pojo.YoutubeVideo;
+import com.bigModel.backend.service.TokenService;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
+import jdk.nashorn.internal.parser.Token;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import twitter4j.JSONArray;
 import twitter4j.JSONObject;
@@ -17,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class YoutubeVideoUtil {
+
+    @Autowired
+    private static TokenService tokenService;
 
     public static List<YoutubeVideo> getVideo(List<YoutubeUser> userList) throws IOException {
         String host = "127.0.0.1";
@@ -38,7 +44,9 @@ public class YoutubeVideoUtil {
                 // return e.getMessage();
                 System.out.println("出错");
             }
-            String apiKey = "";
+
+            String apiKey = tokenService.getToken("youtubeToken");
+
             search.setKey(apiKey);
             // 接口返回数据模型
             search.setType("video");
@@ -68,7 +76,7 @@ public class YoutubeVideoUtil {
                     String cover = new JSONObject(new JSONObject(new JSONObject(json.getString("snippet")).getString("thumbnails")).getString("default")).getString("url");
                     String title = new JSONObject(json.getString("snippet")).getString("title");
                     String username = userList.get(j).getUsername();
-                    YoutubeVideo youtubeVideo = new YoutubeVideo(null, cover, username, userList.get(j).getChannelId(), videoId, title, null, 0, null);
+                    YoutubeVideo youtubeVideo = new YoutubeVideo(null, cover, username, userList.get(j).getChannelId(), videoId, title, null, 0, null, 0);
                     list.add(youtubeVideo);
                 // }
                 // if (searchResultList != null) {

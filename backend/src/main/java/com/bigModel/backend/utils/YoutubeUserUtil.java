@@ -1,6 +1,11 @@
 package com.bigModel.backend.utils;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bigModel.backend.mapper.TokenMapper;
+import com.bigModel.backend.mapper.UserMapper;
+import com.bigModel.backend.pojo.Tokens;
+import com.bigModel.backend.pojo.User;
 import com.bigModel.backend.pojo.YoutubeUser;
 import com.bigModel.backend.utils.AppUtil;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -9,11 +14,18 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.ChannelListResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.List;
 
 public class YoutubeUserUtil {
+
+    @Autowired
+    private static TokenMapper tokenMapper;
+
+    @Autowired
+    private static UserMapper userMapper;
 
     public static YoutubeUser getChannel(String channelIdstr) throws IOException {
         String host = "127.0.0.1";
@@ -29,8 +41,20 @@ public class YoutubeUserUtil {
         }).setApplicationName("youtube-cmdline-search-sample").build();
         YouTube.Channels.List search = youtubeChannel.channels().list("id,snippet");
         search.setFields("items(snippet/publishedAt,snippet/title,snippet/description,snippet/thumbnails)");
-//        TODO 改成从数据库中取得
-        String apiKey = "AIzaSyBRiKVCCoFWtgwoNQa-ok4KWUVkKvTLElw";
+
+
+        //        改成从数据库中取得
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", "admin");
+        User user = userMapper.selectOne(queryWrapper);
+        Integer userId = user.getId();
+        QueryWrapper<Tokens> queryWrapperToken = new QueryWrapper<>();
+        queryWrapperToken.eq("user_id", userId);
+        Tokens tokens = tokenMapper.selectOne(queryWrapperToken);
+        String apiKey = tokens.getYoutubeToken();
+
+
+
         search.setKey(apiKey);
         search.setMaxResults(5L);
         String channelId = channelIdstr;
