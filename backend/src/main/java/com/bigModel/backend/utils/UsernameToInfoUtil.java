@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import twitter4j.JSONArray;
 import twitter4j.JSONObject;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,10 +28,15 @@ import java.util.regex.Pattern;
 public class UsernameToInfoUtil {
 
     @Autowired
-    private static TokenService tokenService;
-
+    private  TokenService tokenService;
+    private static UsernameToInfoUtil usernameToInfoUtil;
+    @PostConstruct
+    public void init(){
+        usernameToInfoUtil = this;
+        usernameToInfoUtil.tokenService = this.tokenService;
+    }
     public static TwitterUser getInfoByUsername(String username) throws IOException {
-        String token = tokenService.getToken("twitterToken");
+        String token = usernameToInfoUtil.tokenService.getToken("twitterToken");
         // Pattern p = Pattern.compile("[\u4E00-\u9FA5|\\！|\\，|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]");
         // String encode = "";
         // if(p.matcher(username).find()){
