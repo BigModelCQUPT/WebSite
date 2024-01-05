@@ -42,7 +42,7 @@ public class UsernameToInfoUtil {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         Request request = new Request.Builder()
-                .url("http://106.227.5.196:13422/twitter/user_timeline_byname?token=" + "token" + "&screen_name=" + username + "&max_id=")
+                .url("http://106.227.5.196:13422/twitter/user_timeline_byname?token=" + token + "&screen_name=" + username + "&max_id=")
                 .method("GET", null)
                 .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
                 .addHeader("Content-Type", "application/json")
@@ -52,7 +52,7 @@ public class UsernameToInfoUtil {
         String data = res.string();
 
         JSONArray dataList = new JSONArray(new JSONObject(data).getString("data").toString());
-        JSONObject user = new JSONObject(dataList.get(0).toString());
+        JSONObject user = new JSONObject(dataList.get(0).toString()).getJSONObject("user");
         String twitterId = user.getString("id");
         String name = user.getString("name");
         TwitterUser twitterUser = new TwitterUser();
