@@ -61,105 +61,51 @@
 
 <script>
 
-<<<<<<< HEAD
-    // import {postRequest} from "@/utils/api";
-    import axios from 'axios'
-    export default {
-        name: "RegisterView",
-        data() {
-
-            return {
-
-                registerForm: {
-                    username: '',
-                    password: '',
-                    confirmedPassword: '',
-                    usermail: '',
-                },
-                checked: true,
-                registerRules: {
-                    username: [{ required: true, message: "请输入账号", trigger: "blur" }],
-                    password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-                    confirmedPassword: [{ required: true, message: "请输入密码", trigger: "blur" }],
-                    usermail: [
-                        {
-                            required: true,
-                            message: "请输入邮箱",
-                            trigger: "blur"
-                        },
-                        {
-                            validator: function (rule, value, callback) {
-                                if (
-                                    // eslint-disable-next-line
-                                    /^\w{1,64}@[a-z0-9\-]{1,256}(\.[a-z]{2,6}){1,2}$/i.test(
-                                        value
-                                    ) == false
-                                ) {
-                                    callback(new Error("邮箱格式错误"));
-                                } else {
-                                    callback();
-                                }
-                            },
-                            trigger: "blur"
-                        }
-                    ]
-
-
-                },
-
-            }
-        },
-
-
-
-        methods: {
-
-            submitForm() {
-                const _this = this
-                this.$refs.registerForm.validate((valid) => {
-                    if (valid) {
-                        console.log(this.registerForm)
-                        axios.post('http://10.16.104.183:8181/user/account/register', this.registerForm).then(function (resp) {
-                            if (resp.data.data.error_message === "success") {//返回成功
-                                _this.$message({
-                                    message: '注册成功',
-                                    type: 'success'
-                                });
-                                _this.$router.replace('/')
-                            } else if (resp.data.code == "101") {
-                                _this.$message.error('账号已存在');
-                                // return false;
-                            }
-                            else {
-                                const error = resp.data.data.error_message
-                                _this.$message.error(error);
-                            }
-                        })
-                    } else {
-                        this.$message.error('请输入所有字段');
-                        return false;
-                    }
-                });
-
-=======
 // import {postRequest} from "@/utils/api";
 import axios from 'axios'
 export default {
     name: "RegisterView",
     data() {
+
         return {
+
             registerForm: {
                 username: '',
                 password: '',
                 confirmedPassword: '',
->>>>>>> 2ed743a3ea37b898715082e114c5baef3a88dc5d
+                usermail: '',
             },
             checked: true,
             registerRules: {
                 username: [{ required: true, message: "请输入账号", trigger: "blur" }],
                 password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-                confirmedPassword: [{ required: true, message: "请输入密码", trigger: "blur" }]
-            }
+                confirmedPassword: [{ required: true, message: "请输入密码", trigger: "blur" }],
+                usermail: [
+                    {
+                        required: true,
+                        message: "请输入邮箱",
+                        trigger: "blur"
+                    },
+                    {
+                        validator: function (rule, value, callback) {
+                            if (
+                                // eslint-disable-next-line
+                                /^\w{1,64}@[a-z0-9\-]{1,256}(\.[a-z]{2,6}){1,2}$/i.test(
+                                    value
+                                ) == false
+                            ) {
+                                callback(new Error("邮箱格式错误"));
+                            } else {
+                                callback();
+                            }
+                        },
+                        trigger: "blur"
+                    }
+                ]
+
+
+            },
+
         }
     },
     methods: {
