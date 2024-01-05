@@ -24,6 +24,7 @@ public class ParseJSONUtil {
             String type = "tweet";
             Tweet tweet = new Tweet();
             String text = TraditionalToSimplifiedUtil.TraditionalToSimplified(item.getString("full_text"));
+            text = text.replace("\n", "");
             tweet.setText(text);
             if (text.charAt(0) == 'R' && text.charAt(1) == 'T')
                 type = "reposted";

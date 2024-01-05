@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -35,7 +36,7 @@ public class TwitterUserInfoController {
     }
 
     @PostMapping("addUser")
-    public void addUser(@RequestBody Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
+    public void addUser(@RequestBody Map<String, String> data) throws IOException {
         System.out.println(data);
         TwitterUser twitterUser = UsernameToInfoUtil.getInfoByUsername(data.get("username"));
         infoService.addTwitterUser(twitterUser);

@@ -24,7 +24,7 @@ public class DingDingTask {
 
     // @Scheduled(cron = "*/5 * * * * ?")
 //    @Scheduled(cron = "*/20 * * * * ?")
-    @Scheduled(cron = "0 0 12 * * ?")
+    @Scheduled(cron = "0 15 10 ? * 6L ")
     public void DingDingMessage() throws Exception {
         List<Tweet> tweetsList = tweetService.getAllTweet();
         for(int i = 0;i < tweetsList.size();i++){

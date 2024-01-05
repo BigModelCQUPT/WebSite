@@ -1,5 +1,10 @@
 package com.bigModel.backend.utils;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bigModel.backend.config.filter.JwtAuthenticationTokenFilter;
+import com.bigModel.backend.mapper.UserMapper;
+import com.bigModel.backend.pojo.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.mail.Session;
@@ -9,9 +14,12 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
-// TODO 用户信息中添加邮件 从而获取邮件信息
+
 @Component
 public class MailUtil {
+
+    @Autowired
+    private static UserMapper userMapper;
 
     private static final String SEND_ACCOUNT = "1072833411@qq.com"; //QQ邮箱地址
     private static final String SMTP_HOST = "smtp.qq.com";
@@ -20,9 +28,15 @@ public class MailUtil {
     // 收件人姓名
     private static final String name = "接收方"; //你朋友的名字
     // 发送的主题
-    private static final String subject = "邮件主题"; //主题
+    private static final String subject = "通知"; //主题
 
-    public static void sendMail(String token) throws Exception {
+    public static void sendMail(String token, String tweetId) throws Exception {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", "admin");
+
+        User user = userMapper.selectOne(queryWrapper);
+
+        String toCountEmail = user.getEmail();
         // 参数配置，⽤于连接邮件服务器
         Properties props = new Properties();
         // 使⽤协议
@@ -36,7 +50,7 @@ public class MailUtil {
         // 设置为debug模式，在控制台中可以查看详细的发送⽇志
         session.setDebug(true);
         // 创建⼀封邮件
-        MimeMessage message = createMimeMessage(session, SEND_ACCOUNT, "lxb2000m@gmail.com", name, subject,staff_name);
+        MimeMessage message = createMimeMessage(session, SEND_ACCOUNT, toCountEmail, name, subject, null, tweetId);
 
         // 根据 Session 获取邮件传输对象
         Transport transport = session.getTransport();
@@ -48,7 +62,7 @@ public class MailUtil {
         transport.close();
     }
 
-    public static MimeMessage createMimeMessage(Session session, String fromAccount, String toAccount,String name,String subject,String staff_name)
+    public static MimeMessage createMimeMessage(Session session, String fromAccount, String toAccount,String name,String subject,String staff_name, String tweetId)
             throws Exception {
         // 1.创建邮件对象
         MimeMessage message = new MimeMessage(session);
@@ -62,7 +76,7 @@ public class MailUtil {
         message.setSubject(subject,"UTF-8");
 
         // 8.设置邮件正⽂内容，指定格式为HTML格式
-        message.setContent("context", "text/html;charset=UTF-8");
+        message.setContent("发现敏感推文，推文地址为" + "https://twitter.com/realcaixia/status/" + tweetId, "text/html;charset=UTF-8");
         // 9.设置显示发件时间
         message.setSentDate(new Date());
 

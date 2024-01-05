@@ -1,7 +1,9 @@
 package com.bigModel.backend.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.bigModel.backend.advice.result.Result;
 import com.bigModel.backend.mapper.YoutubeVideoMapper;
+import com.bigModel.backend.pojo.Tweet;
 import com.bigModel.backend.pojo.YoutubeUser;
 import com.bigModel.backend.pojo.YoutubeVideo;
 import com.bigModel.backend.service.YoutubeUserService;
@@ -36,5 +38,18 @@ public class YoutubeVideoController {
     public IPage<YoutubeVideo> listAll(@PathVariable(value = "page") Integer page,
                                        @PathVariable(value = "size") Integer size) {
         return youtubeVideoService.listAll(page, size);
+    }
+
+    @PostMapping("/readTweet")
+    public Result readTweet(@RequestBody List<YoutubeVideo> data){
+//        List<Tweet> needReadList = castList(data.get("needReadList"), Tweet.class);
+        for (YoutubeVideo youtubeVideo : data) {
+            Integer id = youtubeVideo.getId();
+            youtubeVideoService.updateFlag(id);
+        }
+        Integer a = 1;
+        Integer b = 1;
+        System.out.println();
+        return Result.success("修改成功");
     }
 }

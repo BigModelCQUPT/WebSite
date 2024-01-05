@@ -36,4 +36,11 @@ public class TokenController {
         tokenService.addTwittertoken(twittertoken);
         return Result.success("添加成功");
     }
+
+    @PostMapping("/useremail")
+    public Result emailCount(@RequestBody Map<String, String> data){
+        String email = data.get("useremail");
+        tokenService.addUserEmail(email);
+        return Result.success("修改成功");
+    }
 }
