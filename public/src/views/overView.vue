@@ -408,7 +408,6 @@
             TrendChart() {
                 // const _this = this
                 this.trendChart = echarts.init(this.$refs.getTrendChart)
-
                 this.trendChart.setOption(this.chartoption1)
             },
 
@@ -420,7 +419,7 @@
                 }).then(function (resp) {
                     if (resp.status == "200") {
                         _this.chartoption1.legend.data = resp.data.data.keywords
-                        _this.chartoption1.xAxis.data = resp.data.data.trend.nowDate
+
                         for (var i = 0; i < _this.chartoption1.legend.data.length; i++) {
                             var trend = resp.data.data.trend[_this.chartoption1.legend.data[i]]
                             // console.log(trend)
