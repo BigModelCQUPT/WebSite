@@ -69,4 +69,11 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         chatHistory.setFlag(1);
         chatHistoryMapper.updateById(chatHistory);
     }
+
+    @Override
+    public List<ChatHistory> listAllMessage() {
+        QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<>();
+        List<ChatHistory> chatHistoryList = chatHistoryMapper.selectList(queryWrapper);
+        return chatHistoryList;
+    }
 }

@@ -60,7 +60,7 @@ public class RegisterSerivceImpl implements RegisterService {
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username",username);
+        queryWrapper.eq("username", username);
 //        查询用户
         List<User> users = userMapper.selectList(queryWrapper);
         if(!users.isEmpty()){
@@ -69,7 +69,7 @@ public class RegisterSerivceImpl implements RegisterService {
         }
 
         String encoded_password = passwordEncoder.encode(password);
-        String photo = "https://cdn.acwing.com/media/user/profile/photo/143072_lg_aee4744060.jpg";
+        String photo = "";
 
 //        id 是自增
         User user = new User(null,username,encoded_password,photo, null, email);

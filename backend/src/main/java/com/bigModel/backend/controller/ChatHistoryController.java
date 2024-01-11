@@ -1,6 +1,7 @@
 package com.bigModel.backend.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.EasyExcelFactory;
 import com.bigModel.backend.advice.result.Result;
 import com.bigModel.backend.listener.UploadDataListener;
 import com.bigModel.backend.pojo.ChatHistory;
@@ -47,6 +48,9 @@ public class ChatHistoryController {
         httpServletResponse.setContentType("application/vnd.ms-excel");
         httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + "text.xlsx");
         ExcelExportUtil.writeExcel(httpServletResponse, map);
+
+//        List<ChatHistory> listMessage = chatHistoryService.listAllMessage();
+//        EasyExcelFactory.write(httpServletResponse.getOutputStream(), ChatHistory.class).sheet("telegram").doWrite(listMessage);
     }
 
     @PostMapping("upload")
