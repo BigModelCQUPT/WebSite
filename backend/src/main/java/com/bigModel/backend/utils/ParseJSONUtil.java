@@ -1,15 +1,35 @@
 package com.bigModel.backend.utils;
 
 
+import com.bigModel.backend.mapper.TweetVideoMapper;
 import com.bigModel.backend.pojo.Tweet;
+import com.bigModel.backend.pojo.TweetImage;
+import com.bigModel.backend.pojo.TweetVideo;
+import com.bigModel.backend.service.TweetImageService;
 import com.bigModel.backend.service.impl.util.TraditionalToSimplifiedUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import twitter4j.JSONArray;
 import twitter4j.JSONObject;
 
-import java.text.SimpleDateFormat;
+import javax.annotation.PostConstruct;
 import java.util.*;
 
+@Component
 public class ParseJSONUtil {
+
+    private static ParseJSONUtil parseJSONUtil;
+    @Autowired
+    private TweetImageService tweetImageService;
+    @Autowired
+    private TweetVideoMapper tweetVideoMapper;
+
+    @PostConstruct
+    public void init() {
+        parseJSONUtil = this;
+        parseJSONUtil.tweetImageService = this.tweetImageService;
+        parseJSONUtil.tweetVideoMapper = this.tweetVideoMapper;
+    }
 
     /**
      * 解析字符串，得到推文以及推文包含的图片
@@ -44,7 +64,43 @@ public class ParseJSONUtil {
             tweet.setUuid(uuid);
             tweet.setNeedReturn(0);
             list.add(tweet);
+            saveTweetImageVideo(item.toString(), tweet.getTweetid());
         }
         return list;
+    }
+
+    public static void saveTweetImageVideo(String json, String tweetId) {
+        try {
+            JSONObject user = new JSONObject(json);
+            JSONObject extended_entities = user.getJSONObject("extended_entities");
+            JSONArray media = extended_entities.getJSONArray("media");
+            for (int i = 0; i < media.length(); i ++) {
+                JSONObject item = media.getJSONObject(i);
+                System.out.println(item.getString("type"));
+                if (item.getString("type").equals("photo")) { // 该推文包含图片
+                    System.out.println(111);
+                    TweetImage tweetImage = new TweetImage();
+                    tweetImage.setUrl(item.getString("media_url_https"));
+                    tweetImage.setTweetid(tweetId);
+                    parseJSONUtil.tweetImageService.add(tweetImage);
+                    // System.out.println(tweetImage);
+                    ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + String.valueOf(i) + ".jpg");
+                } else if (item.getString("type").equals("video")) { // 视频
+                    JSONObject video_info = item.getJSONObject("video_info");
+                    JSONArray variants = video_info.getJSONArray("variants");
+                    String url = variants.getJSONObject(0).getString("url");
+                    TweetVideo tweetVideo = new TweetVideo();
+                    tweetVideo.setTweetId(tweetId);
+                    tweetVideo.setUrl(url);
+                    // System.out.println(tweetVideo);
+                    parseJSONUtil.tweetVideoMapper.insert(tweetVideo);
+                }
+                else {
+                    System.out.println("找不到图片或者视频类别");
+                }
+            }
+        }catch (Exception e) {
+            System.out.println("解析图片或者视频失败");
+        }
     }
 }
