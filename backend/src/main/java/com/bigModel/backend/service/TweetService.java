@@ -1,6 +1,7 @@
 package com.bigModel.backend.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.bigModel.backend.pojo.ChatHistory;
 import com.bigModel.backend.pojo.Tweet;
 
 import java.util.List;
@@ -27,4 +28,8 @@ public interface TweetService {
     void saveKeywordList(int id, List<String> list);
 
     List<Tweet> listAllNoReturn();
+
+    List<Tweet> listNeedExportIds(List<Integer> needExportIds);
+
+    List<Tweet> listAllExportIds();
 }

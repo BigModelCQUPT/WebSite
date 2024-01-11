@@ -3,7 +3,7 @@
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
         <!--        工具栏-->
         <div class="toolbar">
-            <div style=" display: inline-flex;">
+            <div>
                 <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
                     v-model="search_keyword" placeholder="请输入进行搜索...">
                 </el-input>
@@ -14,8 +14,11 @@
                     <span style="vertical-align: middle;"> 搜索 </span>
                 </el-button>
             </div>
-            <div style="display: inline-flex;">
-
+            <div>
+                <!-- <el-upload style="  display: inline-flex; margin-right: 25px;margin-top: -5px;"
+                    action="http://localhost:8181/telegram/upload" :headers="header">
+                    <el-button type="primary">上传数据</el-button>
+                </el-upload> -->
                 <el-upload style="  display: inline-flex; margin-right: 12px;"
                     action="http://localhost:8181/telegram/upload" :headers="header" :show-file-list="false"
                     :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
@@ -24,7 +27,8 @@
                         <span style="vertical-align: middle;">导入数据</span>
                     </el-button>
                 </el-upload>
-                <el-button type="success" @click="exportData" style=" display: inline-flex; margin-left: 12px;">
+                <el-button type="success" @click="exportData"
+                    style=" display: inline-flex; margin-left: 12px;margin-top: -5px;">
                     <el-icon>
                         <upload />
                     </el-icon>
@@ -145,6 +149,7 @@
     import { FolderAdd, Upload } from '@element-plus/icons-vue'
     // import { ro } from 'element-plus/lib/locale'
 
+
     export default {
         name: "GetResidentInformation",
         data() {
@@ -177,6 +182,7 @@
                 keywordInputValue: '',
                 search_keyword: '',
                 selectUserList: [],
+                selectUserIds: '1, 2, 3',
             }
         },
         created() {
@@ -206,10 +212,22 @@
                 })
             },
             exportData() {
+
+                if (this.selectUserList.length > 0) {
+                    let ids = []
+                    for (var i = 0; i < this.selectUserList.length; i++) {
+                        ids[i] = this.selectUserList[i].id
+                    }
+                    this.selectUserIds = ids.join(',')
+                }
+
                 request({
                     url: '/telegram/export',
                     method: 'get',
                     responseType: "blob",
+                    params: {
+                        'ids': this.selectUserIds
+                    }
                 }).then(function (res) {
                     console.log(res)
                     let data = res.data
@@ -227,6 +245,7 @@
                     console.log(error)
                 })
             },
+
             showDialog() {
                 this.dialogVisible = true
             },
@@ -461,6 +480,7 @@
             },
             handleClearSelection() {
                 this.selectUserList = []
+                this.selectUserIds = ''
                 this.$refs.table.clearSelection()
             },
             checkSelectable(row) {

@@ -9,7 +9,10 @@ import com.bigModel.backend.pojo.YoutubeVideo;
 import com.bigModel.backend.service.ChatHistoryService;
 import com.bigModel.backend.utils.ExcelExportUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("telegram")
@@ -37,21 +42,25 @@ public class ChatHistoryController {
     }
 
     @GetMapping("export")
-    public void exportHistory(HttpServletResponse httpServletResponse) throws Exception {
-//        System.out.println(data);
-        List<ChatHistory> list = chatHistoryService.listAllGroupId();
-        Map<String, List<ChatHistory>> map = new HashMap<>();
-        for (int i = 0; i < list.size(); i ++) {
-            String groupId = list.get(i).getGroupId();
-            List<ChatHistory> chatHistories = chatHistoryService.listHistoryByGroupId(groupId);
-            map.put(groupId, chatHistories);
+    public void exportHistory(@RequestParam(required = false) String ids, HttpServletResponse httpServletResponse) throws Exception {
+        if(StringUtils.isNotBlank(ids)){
+            List<Integer> needExportIds = Arrays.stream(ids.split(",")).map(Integer::valueOf).collect(Collectors.toList());
+            List<ChatHistory> listMessage = chatHistoryService.listNeedExportIds(needExportIds);
+            EasyExcelFactory.write(httpServletResponse.getOutputStream(), ChatHistory.class).sheet("telegram").doWrite(listMessage);
         }
-        httpServletResponse.setContentType("application/vnd.ms-excel");
-        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + "text.xlsx");
-        ExcelExportUtil.writeExcel(httpServletResponse, map);
-
-//        List<ChatHistory> listMessage = chatHistoryService.listAllMessage();
-//        EasyExcelFactory.write(httpServletResponse.getOutputStream(), ChatHistory.class).sheet("telegram").doWrite(listMessage);
+        else{
+            List<ChatHistory> list = chatHistoryService.listAllGroupId();
+            Map<String, List<ChatHistory>> map = new HashMap<>();
+            for (int i = 0; i < list.size(); i ++) {
+                String groupId = list.get(i).getGroupId();
+                List<ChatHistory> chatHistories = chatHistoryService.listHistoryByGroupId(groupId);
+                map.put(groupId, chatHistories);
+            }
+            httpServletResponse.setContentType("application/vnd.ms-excel");
+            httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + "text.xlsx");
+            ExcelExportUtil.writeExcel(httpServletResponse, map);
+        }
+//
     }
 
     @PostMapping("upload")

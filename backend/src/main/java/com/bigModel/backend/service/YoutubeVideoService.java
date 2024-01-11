@@ -22,4 +22,8 @@ public interface YoutubeVideoService {
     List<YoutubeVideo> listAllNoReturn();
 
     void updateFlag(Integer id);
+
+    List<YoutubeVideo> listNeedExportIds(List<Integer> needExportIds);
+
+    List<YoutubeVideo> listAllExportIds();
 }

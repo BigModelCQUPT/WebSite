@@ -76,4 +76,12 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         List<ChatHistory> chatHistoryList = chatHistoryMapper.selectList(queryWrapper);
         return chatHistoryList;
     }
+
+    @Override
+    public List<ChatHistory> listNeedExportIds(List<Integer> needExportIds) {
+        QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("id", needExportIds);
+        List<ChatHistory> chatHistoryList = chatHistoryMapper.selectList(queryWrapper);
+        return chatHistoryList;
+    }
 }

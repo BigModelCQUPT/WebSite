@@ -16,4 +16,6 @@ public interface ChatHistoryService extends IService<ChatHistory> {
     void updateFlag(Integer id);
 
     List<ChatHistory> listAllMessage();
+
+    List<ChatHistory> listNeedExportIds(List<Integer> needExportIds);
 }

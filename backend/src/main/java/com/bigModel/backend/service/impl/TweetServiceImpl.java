@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bigModel.backend.mapper.TweetMapper;
+import com.bigModel.backend.pojo.ChatHistory;
 import com.bigModel.backend.pojo.PageQuery;
 import com.bigModel.backend.pojo.Tweet;
 import com.bigModel.backend.pojo.TwitterUser;
@@ -148,6 +149,21 @@ public class TweetServiceImpl implements TweetService{
     public List<Tweet> listAllNoReturn() {
         QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("need_return", 0);
+        List<Tweet> tweetList = tweetMapper.selectList(queryWrapper);
+        return tweetList;
+    }
+
+    @Override
+    public List<Tweet> listNeedExportIds(List<Integer> needExportIds) {
+        QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("id", needExportIds);
+        List<Tweet> tweetList = tweetMapper.selectList(queryWrapper);
+        return tweetList;
+    }
+
+    @Override
+    public List<Tweet> listAllExportIds() {
+        QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
         List<Tweet> tweetList = tweetMapper.selectList(queryWrapper);
         return tweetList;
     }
