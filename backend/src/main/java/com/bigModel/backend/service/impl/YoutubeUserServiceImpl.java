@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bigModel.backend.mapper.YoutubeUserMapper;
 import com.bigModel.backend.mapper.YoutubeVideoMapper;
+import com.bigModel.backend.pojo.ChatHistory;
 import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.pojo.YoutubeUser;
 import com.bigModel.backend.pojo.YoutubeVideo;
@@ -12,7 +13,10 @@ import com.bigModel.backend.service.YoutubeUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class YoutubeUserServiceImpl implements YoutubeUserService {
@@ -45,5 +49,11 @@ public class YoutubeUserServiceImpl implements YoutubeUserService {
     @Override
     public void addYoutubeUser(YoutubeUser youtubeUser) {
         youtubeUserMapper.insert(youtubeUser);
+    }
+
+    @Override
+    public List<Map<String, String>> listAllUser() {
+        List<Map<String, String>> res = new ArrayList<>();
+        return res;
     }
 }

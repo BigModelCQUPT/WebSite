@@ -36,9 +36,9 @@ public class ChatHistoryController {
     @PostMapping("/findByPage/{page}/{size}")
     public Result findTweetByPage(
             @PathVariable(value = "page") Integer page,
-            @PathVariable(value = "size") Integer size) throws UnsupportedEncodingException, URISyntaxException {
-
-        return Result.success(chatHistoryService.findByPage(page, size));
+            @PathVariable(value = "size") Integer size,
+                    @RequestBody List<String> data) throws UnsupportedEncodingException, URISyntaxException {
+        return Result.success(chatHistoryService.findByPage(page, size, data));
     }
 
     @GetMapping("export")
@@ -76,6 +76,12 @@ public class ChatHistoryController {
             chatHistoryService.updateFlag(id);
         }
         return Result.success("修改成功");
+    }
+
+    @GetMapping("/findAllUser")
+    public Result<List<Map<String, String>>> findAllUser() {
+        List<Map<String, String>> telegramUserList = chatHistoryService.listAllUser();
+        return Result.success(telegramUserList);
     }
 
 }

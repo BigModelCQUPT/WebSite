@@ -5,6 +5,7 @@ import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.pojo.YoutubeUser;
 
 import java.util.List;
+import java.util.Map;
 
 public interface YoutubeUserService {
     List<YoutubeUser> listAll();
@@ -14,4 +15,6 @@ public interface YoutubeUserService {
     void deleteYoutubeUserById(String username);
 
     void addYoutubeUser(YoutubeUser youtubeUser);
+
+    List<Map<String, String>> listAllUser();
 }

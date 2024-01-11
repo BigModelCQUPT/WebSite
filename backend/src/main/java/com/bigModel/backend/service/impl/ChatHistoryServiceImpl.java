@@ -5,13 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bigModel.backend.mapper.ChatHistoryMapper;
-import com.bigModel.backend.mapper.UserMapper;
 import com.bigModel.backend.pojo.ChatHistory;
 import com.bigModel.backend.service.ChatHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatHistory> implements ChatHistoryService {
@@ -20,9 +19,12 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
     private ChatHistoryMapper chatHistoryMapper;
 
     @Override
-    public IPage<ChatHistory> findByPage(Integer page, Integer size) {
+    public IPage<ChatHistory> findByPage(Integer page, Integer size, List<String> needName) {
         Page<ChatHistory> pageHelper = new Page<>(page, size);
         QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<>();
+        if(!needName.isEmpty() && needName != null){
+            queryWrapper.in("username", needName);
+        }
         queryWrapper.orderByDesc("id");
         IPage<ChatHistory> pageList = chatHistoryMapper.selectPage(pageHelper, queryWrapper);
         Long count = chatHistoryMapper.selectCount(queryWrapper);
@@ -83,5 +85,20 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         queryWrapper.in("id", needExportIds);
         List<ChatHistory> chatHistoryList = chatHistoryMapper.selectList(queryWrapper);
         return chatHistoryList;
+    }
+
+    @Override
+    public List<Map<String, String>> listAllUser() {
+        List<Map<String, String>> res = new ArrayList<>();
+        QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("nickname", "username").groupBy("nickname","username");
+        List<ChatHistory> chatHistoryList = chatHistoryMapper.selectList(queryWrapper);
+        for(ChatHistory chatHistory : chatHistoryList){
+            Map<String, String> userMap = new HashMap<>();
+            userMap.put("label", chatHistory.getNickname());
+            userMap.put("key", chatHistory.getUsername());
+            res.add(userMap);
+        }
+        return res;
     }
 }
