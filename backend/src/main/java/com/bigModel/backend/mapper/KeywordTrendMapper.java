@@ -16,7 +16,7 @@ public interface KeywordTrendMapper extends BaseMapper<KeywordTrend> {
     List<KeywordTrend> top5KeywordByCnt();
     @Select("SELECT * FROM `keyword_date`\n" +
             "where keyword = #{keyword}\n" +
-            "ORDER BY cnt DESC\n" +
+            "ORDER BY now_date ASC\n" +
             "LIMIT 7")
     List<KeywordTrend> weekTrendByKeyword(String keyword);
 }

@@ -3,7 +3,7 @@
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
         <!--        工具栏-->
         <div class="toolbar">
-            <div>
+            <div style=" display: inline-flex;">
                 <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
                     v-model="search_keyword" placeholder="请输入进行搜索...">
                 </el-input>
@@ -13,6 +13,23 @@
                     </el-icon>
                     <span style="vertical-align: middle;"> 搜索 </span>
                 </el-button>
+            </div>
+            <div align="right">
+                <el-upload style="  display: inline-flex;margin-right:8px;"
+                    action="http://localhost:8181/twitter/upload" :headers="header" :show-file-list="false"
+                    :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
+                    <el-button type="success" style="margin-top:0px;margin-right:10px;">
+                        <el-icon><folder-add /></el-icon>
+                        <span style="vertical-align: middle;">导入数据</span>
+                    </el-button>
+                </el-upload>
+
+                <el-button type="success" @click="exportData"
+                    style=" display: inline-flex;margin-top: -5px;margin-right:5px;">
+                    <el-icon>
+                        <upload />
+                    </el-icon>
+                    <span style="vertical-align: middle;">导出数据</span></el-button>
             </div>
             <!-- <div>
                 <el-button type="primary" @click="showDialog" style="margin-top: 0px">
@@ -42,12 +59,14 @@
             <!-- <el-table :data="tableData" border style="width: 100%"> -->
 
 
-            <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange" ref="table"
-                row-key="id" fit>
+            <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
+                @selection-change="handleSelectionChange" ref="table" row-key="id" fit
+                :row-class-name="tableRowClassName">
 
                 <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="100" align="center" />
+                <el-table-column prop="time" label="发布时间" width="100" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
                 <el-table-column label="推文类型" width="70" align="center">
                     <template #default="tableData">
@@ -106,29 +125,14 @@
                     v-model:currentPage="currentPage" v-model:page-size="size" />
             </div>
         </div>
-
-
-        <!-- chatgpt 分析结果 弹窗 -->
-        <!-- <div>
-            <el-dialog title="ChatGPT分析结果" width="30%" v-model="dialogVisible"
-                style="display: flex; justify-content: space-around; align-items: center">
-                <div style="height: 20%">
-
-                </div>
-                <div style="margin-top: 60px">
-                    <el-button type="primary" @click="completeAdd">确认</el-button>
-                    <el-button type="primary" @click="cancelAdd">取消</el-button>
-                </div>
-            </el-dialog>
-        </div> -->
-
     </div>
 </template>
 
 <script>
     import axios from 'axios'
-    import { Search } from '@element-plus/icons-vue'
-    import { export_retailer } from "@/utils/api";
+    import { Search, FolderAdd, Upload } from '@element-plus/icons-vue'
+    // import { export_retailer } from "@/utils/api";
+    // import { export_retailer } from "@/utils/api";
     import request from '@/utils/http'
 
     export default {
@@ -143,6 +147,7 @@
                     keyword: '彭于晏',
                     flag: '0',
                     needReturn: '',
+                    time: '',
                 }, {
                 }],
                 search_text: '',
@@ -185,11 +190,26 @@
                 })
             },
             exportData() {
-                // const _this = this
-                // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
-                //
-                // })
-                export_retailer()
+                request({
+                    url: '/twitter/export',
+                    method: 'get',
+                    responseType: "blob",
+                }).then(function (res) {
+                    console.log(res)
+                    let data = res.data
+                    let filename = "电报聊天记录.xlsx"
+                    let url = window.URL.createObjectURL(new Blob([data]))
+                    let link = document.createElement('a')
+                    link.style.display = 'none'
+                    link.href = url
+                    link.setAttribute('download', filename)
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link) // 下载完成移除元素
+                    window.URL.revokeObjectURL(url) // 释放掉blob对象
+                }).catch((error) => {
+                    console.log(error)
+                })
             },
             showDialog() {
                 this.dialogVisible = true
@@ -413,6 +433,7 @@
             },
 
 
+
             // 复选框
             handleSelectionChange(selection) {
                 this.selectUserList = selection
@@ -422,7 +443,7 @@
                 this.$refs.table.clearSelection()
             },
             checkSelectable(row) {
-                return row.flag !== 1 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
+                return row.flag === 1 || row.flag === 0 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
             },
             handleReadTweet() {
                 const _this = this
@@ -440,15 +461,26 @@
                     }
                 })
                 this.$router.go(0)
+            },
+
+            // 行数变灰
+            tableRowClassName({ row, rowIndex }) {
+                if (row.flag === 1) {
+                    console.log(row, rowIndex);
+                    return 'warning-row'
+                } else {
+                    return ''
+                }
             }
         },
         components: {
-            Search,
+            Search, FolderAdd, Upload
         }
     }
+
 </script>
 
-<style scoped>
+<style>
     .toolbar {
         text-align: left;
         display: flex;
@@ -500,5 +532,9 @@
 
     .box-card {
         width: 480px;
+    }
+
+    .warning-row {
+        background-color: #dde7ec !important;
     }
 </style>

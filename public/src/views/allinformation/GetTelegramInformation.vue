@@ -3,7 +3,7 @@
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
         <!--        工具栏-->
         <div class="toolbar">
-            <div>
+            <div style=" display: inline-flex;">
                 <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
                     v-model="search_keyword" placeholder="请输入进行搜索...">
                 </el-input>
@@ -34,8 +34,6 @@
                     </el-icon>
                     <span style="vertical-align: middle;">导出数据</span>
 
-
-
                 </el-button>
             </div>
 
@@ -55,14 +53,15 @@
             </span>
             <el-button @click="handleClearSelection" type="text">清空
             </el-button>
-            <el-button @click="handleReadTweet" type="text">
+            <el-button @click="handleReadTelegram" type="text">
                 已读所选
             </el-button>
         </div>
         <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
-            @selection-change="handleSelectionChange" ref="table" row-key="id" fit>
+            @selection-change="handleSelectionChange" ref="table" row-key="id" fit :row-class-name="tableRowClassName">
 
-            <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
+            <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable"
+                :reserve-selection="true" />
             <el-table-column prop="id" label="序号" width="90" align="center" />
             <el-table-column prop="username" label="用户名" width="120" align="center" />
             <el-table-column prop="userId" label="用户id" width="90" align="center"></el-table-column>
@@ -140,9 +139,6 @@
                 </div>
             </el-dialog>
         </div> -->
-
-
-
 </template>
 
 <script>
@@ -151,6 +147,8 @@
     // import { export_retailer } from "@/utils/api";
     import request from '@/utils/http'
     import { FolderAdd, Upload } from '@element-plus/icons-vue'
+    // import { ro } from 'element-plus/lib/locale'
+
     export default {
         name: "GetResidentInformation",
         data() {
@@ -159,12 +157,12 @@
                 keywordData: [],
                 tableData: [{
                     id: '123',
-                    username: 'abcd啊啊啊啊啊',
-                    userId: '1232342',
-                    message: 'alsifgeuf',
-                    postalTime: '1312434',
-                    groupName: 'jsgfcoauebfa',
-                    keyword: '彭于晏',
+                    username: '',
+                    userId: '',
+                    message: '',
+                    postalTime: '',
+                    groupName: '',
+                    keyword: '',
                     needReturn: '',
                     flag: '0',
                 }, {
@@ -215,7 +213,7 @@
                 request({
                     url: '/telegram/export',
                     method: 'get',
-                    responseType: "blob"
+                    responseType: "blob",
                 }).then(function (res) {
                     console.log(res)
                     let data = res.data
@@ -470,12 +468,12 @@
                 this.$refs.table.clearSelection()
             },
             checkSelectable(row) {
-                return row.flag !== 1 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
+                return row.flag === 1 || row.flag == 0
             },
             handleReadTelegram() {
                 const _this = this
                 request({
-                    url: 'http://10.16.104.183:8181/telegram/readtelegram',
+                    url: 'http://10.16.104.183:8181/telegram/readTelegram',
                     method: 'post',
                     data: this.selectUserList
                 }).then(function (resp) {
@@ -487,8 +485,18 @@
                         return false;
                     }
                 })
-                // this.$router.go(0)
-            }
+                this.$router.go(0)
+            },
+
+            // 行数变灰
+            tableRowClassName({ row, rowIndex }) {
+                if (row.flag === 1) {
+                    console.log(row, rowIndex);
+                    return 'warning-row'
+                } else {
+                    return ''
+                }
+            },
         },
         components: {
             Search, FolderAdd, Upload,
@@ -496,7 +504,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .toolbar {
         text-align: left;
         display: flex;
@@ -548,5 +556,9 @@
 
     .box-card {
         width: 480px;
+    }
+
+    .warning-row {
+        background-color: #dde7ec !important;
     }
 </style>

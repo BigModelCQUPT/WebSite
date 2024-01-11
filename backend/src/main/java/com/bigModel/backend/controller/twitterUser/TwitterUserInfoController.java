@@ -36,10 +36,10 @@ public class TwitterUserInfoController {
     }
 
     @PostMapping("addUser")
-    public void addUser(@RequestBody Map<String, String> data) throws IOException {
-        System.out.println(data);
+    public Result addUser(@RequestBody Map<String, String> data) throws IOException {
         TwitterUser twitterUser = UsernameToInfoUtil.getInfoByUsername(data.get("username"));
         infoService.addTwitterUser(twitterUser);
+        return Result.success("添加成功");
     }
 
     @PostMapping("findByUsername")

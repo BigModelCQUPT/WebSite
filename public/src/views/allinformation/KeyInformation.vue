@@ -14,6 +14,24 @@
                     <span style="vertical-align: middle;"> 搜索 </span>
                 </el-button>
             </div>
+            <div align="right">
+                <el-upload style="  display: inline-flex;margin-right:8px;margin-top: -3px"
+                    action="http://localhost:8181/keyword/upload" :headers="header" :show-file-list="false"
+                    :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
+                    <el-button type="success" style="margin-top:13px;margin-right:10px;">
+                        <el-icon><folder-add /></el-icon>
+                        <span style="vertical-align: middle;">导入数据</span>
+                    </el-button>
+                </el-upload>
+
+                <el-button type="success" @click="exportData"
+                    style=" display: inline-flex;margin-top: 0px;margin-right:5px;margin-top: -3px">
+                    <el-icon>
+                        <upload />
+                    </el-icon>
+                    <span style="vertical-align: middle;">导出数据</span></el-button>
+
+            </div>
             <!-- <div>
                 <el-button type="primary" @click="showDialog" style="margin-top: 0px">
                     <el-icon style="vertical-align: middle;">
@@ -27,9 +45,23 @@
         <!--        数据展示-->
         <div style="margin-top: 15px">
             <!-- <el-table :data="tableData" border style="width: 100%"> -->
+            <div class="table-alert table-alert-info table-alert-with-icon" align="left" style="margin-left: 10px">
+                <span class="table-alert-icon">
+                    <i class="el-alert__icon el-icon-info" />
+                </span>
+                <span class="table-alert-message">
+                    已选择 <a style="font-weight: 600">{{ selectUserList.length }}</a> 条信息&nbsp;&nbsp;
+                </span>
+                <el-button @click="handleClearSelection" type="text">清空
+                </el-button>
+                <el-button @click="handleReadTwitter" type="text">
+                    已读所选
+                </el-button>
+            </div>
 
-
-            <el-table :data="tableData" border style="width: 100%" :row-class-name="tableRowClassName">
+            <el-table :data="tableData" border style="width: 100%" :row-class-name="tableRowClassName"
+                @selection-change="handleSelectionChange" ref="table" row-key="id" fit>
+                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="120" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
@@ -50,13 +82,13 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="已读状态" width="90" align="center">
+                <!-- <el-table-column label="已读状态" width="90" align="center">
                     <template #default="scope">
                         <el-button v-if="scope.row.flag == 0" type="success"
                             @click="updateFlag(scope.row.id)">未读</el-button>
                         <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
 
                 <el-table-column label="钉钉返回" width="60" align="center">
                     <template #default="scope">
@@ -97,7 +129,7 @@
 
 <script>
     import axios from 'axios'
-    import { Search } from '@element-plus/icons-vue'
+    import { Search, FolderAdd, Upload } from '@element-plus/icons-vue'
     import { export_retailer } from "@/utils/api";
     import request from '@/utils/http'
 
@@ -125,7 +157,7 @@
                 activeindex: 0,
                 filename: '',
                 detaildialogVisible: false,
-
+                selectUserList: [],
             }
         },
         created() {
@@ -381,20 +413,47 @@
                 let company = (name || "").split(',')
                 return company
             },
-
-            tableRowClassName({ row }) {
-                if (this.$isNotEmpty) {
-                    if (row.needReturn === 1) {
-                        return 'row-row';
+            // 复选框
+            handleSelectionChange(selection) {
+                this.selectUserList = selection
+            },
+            handleClearSelection() {
+                this.selectUserList = []
+                this.$refs.table.clearSelection()
+            },
+            checkSelectable(row) {
+                return row.flag === 1 || row.flag == 0
+            },
+            handleReadTwitter() {
+                const _this = this
+                request({
+                    url: 'http://10.16.104.183:8181/twitter/readTweet',
+                    method: 'post',
+                    data: this.selectUserList
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.$message.success('已读成功');
                     }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+                this.$router.go(0)
+            },
+
+            // 行数变灰
+            tableRowClassName({ row, rowIndex }) {
+                if (row.flag === 1) {
+                    console.log(row, rowIndex);
+                    return 'warning-row'
+                } else {
+                    return ''
                 }
-                return '';
-            }
-
-
+            },
         },
         components: {
-            Search,
+            Search, FolderAdd, Upload
         }
     }
 </script>
@@ -455,5 +514,9 @@
 
     .el-table .row-row {
         background-color: #FFFF00 !important;
+    }
+
+    .warning-row {
+        background-color: #dde7ec !important;
     }
 </style>

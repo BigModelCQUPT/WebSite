@@ -24,11 +24,8 @@ public class KeywordOrderTask {
     @Scheduled(cron = "0 0 0 * * ?") // 定时 0 点
     public void updateKeywordCnt() {
         List<KeywordTrend> list = keywordService.listAllKeywordWithDate();
-<<<<<<< HEAD
-=======
         for (KeywordTrend keywordTrend: list) {
             keywordTrendMapper.insert(keywordTrend);
         }
->>>>>>> c56d894c1b9cd1fca27a7ddc48b31f2a9de17dc7
     }
 }

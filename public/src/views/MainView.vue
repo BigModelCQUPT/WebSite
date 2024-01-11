@@ -3,7 +3,7 @@
     <div class="common-layout" style="min-height:100%">
         <el-header style=" font-size: 12px">
             <div class="toolbar">
-                <h1 style="  padding-top: 9px; font-size: 30px; text-align: left; color:#bfcbd9  ">
+                <h1 style="  padding-top: 9px; font-size: 30px; text-align: left; color:#bfcbd9 ;margin-top: -2px ">
                     CQUPT大模型分析
                 </h1>
                 <el-dropdown class="user">

@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import twitter4j.JSONArray;
 import twitter4j.JSONObject;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,10 +28,15 @@ import java.util.regex.Pattern;
 public class UsernameToInfoUtil {
 
     @Autowired
-    private static TokenService tokenService;
-
+    private  TokenService tokenService;
+    private static UsernameToInfoUtil usernameToInfoUtil;
+    @PostConstruct
+    public void init(){
+        usernameToInfoUtil = this;
+        usernameToInfoUtil.tokenService = this.tokenService;
+    }
     public static TwitterUser getInfoByUsername(String username) throws IOException {
-        String token = tokenService.getToken("twitterToken");
+        String token = usernameToInfoUtil.tokenService.getToken("twitterToken");
         // Pattern p = Pattern.compile("[\u4E00-\u9FA5|\\！|\\，|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]");
         // String encode = "";
         // if(p.matcher(username).find()){
@@ -42,7 +48,7 @@ public class UsernameToInfoUtil {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         Request request = new Request.Builder()
-                .url("http://106.227.5.196:13422/twitter/user_timeline_byname?token=" + "token" + "&screen_name=" + username + "&max_id=")
+                .url("http://106.227.5.196:13422/twitter/user_timeline_byname?token=" + token + "&screen_name=" + username + "&max_id=")
                 .method("GET", null)
                 .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
                 .addHeader("Content-Type", "application/json")
@@ -52,7 +58,7 @@ public class UsernameToInfoUtil {
         String data = res.string();
 
         JSONArray dataList = new JSONArray(new JSONObject(data).getString("data").toString());
-        JSONObject user = new JSONObject(dataList.get(0).toString());
+        JSONObject user = new JSONObject(dataList.get(0).toString()).getJSONObject("user");
         String twitterId = user.getString("id");
         String name = user.getString("name");
         TwitterUser twitterUser = new TwitterUser();

@@ -14,8 +14,24 @@
                     <span style="vertical-align: middle;"> 搜索 </span>
                 </el-button>
             </div>
-            <div>
-                <el-button type="primary" @click="updateYoutube" style="margin-top: 0px">
+            <div align="right">
+                <el-upload style="  display: inline-flex;margin-right:8px;margin-top: -3px"
+                    action="http://localhost:8181/youtube/upload" :headers="header" :show-file-list="false"
+                    :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
+                    <el-button type="success" style="margin-top:13px;margin-right:10px;">
+                        <el-icon><folder-add /></el-icon>
+                        <span style="vertical-align: middle;">导入数据</span>
+                    </el-button>
+                </el-upload>
+
+                <el-button type="success" @click="exportData"
+                    style=" display: inline-flex;margin-top: 0px;margin-right:5px;margin-top: -3px">
+                    <el-icon>
+                        <upload />
+                    </el-icon>
+                    <span style="vertical-align: middle;">导出数据</span></el-button>
+
+                <el-button type="primary" @click="updateYoutube" style="margin-top: -3px">
                     <el-icon style="vertical-align: middle;">
                         <plus />
                     </el-icon>
@@ -37,12 +53,13 @@
                 </span>
                 <el-button @click="handleClearSelection" type="text">清空
                 </el-button>
-                <el-button @click="handleReadTweet" type="text">
+                <el-button @click="handleReadYoutube" type="text">
                     已读所选
                 </el-button>
             </div>
-            <el-table :data="tableData" border style="width: 100% " @selection-change="handleSelectionChange"
-                ref="table" row-key="id" fit>
+            <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
+                @selection-change="handleSelectionChange" ref="table" row-key="id" fit
+                :row-class-name="tableRowClassName">
                 <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
                 <el-table-column prop="id" label="序号" align="center" width="90" />
                 <el-table-column prop="coverUrl" label="视频封面" width="180" align="center">
@@ -105,8 +122,8 @@
 
 <script>
     import axios from 'axios'
-    import { Search, Plus } from '@element-plus/icons-vue'
-    import { export_retailer } from "@/utils/api";
+    import { Search, Plus, FolderAdd, Upload } from '@element-plus/icons-vue'
+    // import { export_retailer } from "@/utils/api";
     import request from '@/utils/http'
 
 
@@ -226,11 +243,26 @@
 
 
             exportData() {
-                // const _this = this
-                // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
-                //
-                // })
-                export_retailer()
+                request({
+                    url: '/youtube/export',
+                    method: 'get',
+                    responseType: "blob",
+                }).then(function (res) {
+                    console.log(res)
+                    let data = res.data
+                    let filename = "油管信息.xlsx"
+                    let url = window.URL.createObjectURL(new Blob([data]))
+                    let link = document.createElement('a')
+                    link.style.display = 'none'
+                    link.href = url
+                    link.setAttribute('download', filename)
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link) // 下载完成移除元素
+                    window.URL.revokeObjectURL(url) // 释放掉blob对象
+                }).catch((error) => {
+                    console.log(error)
+                })
             },
             showDialog() {
                 this.dialogVisible = true
@@ -298,12 +330,12 @@
                 this.$refs.table.clearSelection()
             },
             checkSelectable(row) {
-                return row.flag !== 1 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
+                return row.flag === 1 || row.flag === 0 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
             },
-            handleReadTweet() {
+            handleReadYoutube() {
                 const _this = this
                 request({
-                    url: 'http://10.16.104.183:8181/youtube/readyoutube',
+                    url: 'http://10.16.104.183:8181/youtube/readYoutube',
                     method: 'post',
                     data: this.selectUserList
                 }).then(function (resp) {
@@ -315,12 +347,21 @@
                         return false;
                     }
                 })
-                // this.$router.go(0)
-            }
+                this.$router.go(0)
+            },
 
+            // 行数变灰
+            tableRowClassName({ row, rowIndex }) {
+                if (row.flag === 1) {
+                    console.log(row, rowIndex);
+                    return 'warning-row'
+                } else {
+                    return ''
+                }
+            },
         },
         components: {
-            Search, Plus,
+            Search, Plus, FolderAdd, Upload
         }
     }
 </script>
@@ -377,5 +418,9 @@
 
     .box-card {
         width: 480px;
+    }
+
+    .warning-row {
+        background-color: #dde7ec !important;
     }
 </style>
