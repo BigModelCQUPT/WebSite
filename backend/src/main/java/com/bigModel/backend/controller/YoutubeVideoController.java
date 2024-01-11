@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,8 +42,9 @@ public class YoutubeVideoController {
 
     @PostMapping("/listAll/{page}/{size}")
     public IPage<YoutubeVideo> listAll(@PathVariable(value = "page") Integer page,
-                                       @PathVariable(value = "size") Integer size) {
-        return youtubeVideoService.listAll(page, size);
+                                       @PathVariable(value = "size") Integer size,
+                                       @RequestBody List<String> data) {
+        return youtubeVideoService.listAll(page, size, data);
     }
 
     @PostMapping("/readYoutube")
@@ -65,5 +67,11 @@ public class YoutubeVideoController {
             List<YoutubeVideo> listMessage = youtubeVideoService.listAllExportIds();
             EasyExcelFactory.write(httpServletResponse.getOutputStream(), YoutubeVideo.class).sheet("youtube").doWrite(listMessage);
         }
+    }
+
+    @GetMapping("/findAllUser")
+    public Result<List<Map<String, String>>> findAllUser(){
+        List<Map<String, String>> youtubeUserList = youtubeVideoService.listAllUser();
+        return Result.success(youtubeUserList);
     }
 }

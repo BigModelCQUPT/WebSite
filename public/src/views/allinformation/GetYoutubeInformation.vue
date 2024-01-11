@@ -4,9 +4,10 @@
         <!--        工具栏-->
         <div class="toolbar">
             <div>
-                <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
-                    v-model="search_keyword" placeholder="请输入进行搜索...">
-                </el-input>
+                <el-select v-model="findName" multiple placeholder="请选择">
+                    <el-option v-for="item in tabAllUser" :key="item.key" :label="item.label" :value="item.key">
+                    </el-option>
+                </el-select>
                 <el-button type="primary" @click="fetchData">
                     <el-icon style="vertical-align: middle;">
                         <search />
@@ -15,9 +16,9 @@
                 </el-button>
             </div>
             <div align="right">
-                <el-upload style="  display: inline-flex;margin-right:8px;"
-                    action="http://localhost:8181/youtube/upload" :headers="header" :show-file-list="false"
-                    :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
+                <el-upload style="  display: inline-flex;margin-right:8px;" action="http://localhost:8181/youtube/upload"
+                    :headers="header" :show-file-list="false" :on-change="fileChange" :on-error="fileSuccess"
+                    :on-success="fileSuccess">
                     <el-button type="success" style="margin-top:13px;margin-right:10px;margin-top: 8px">
                         <el-icon><folder-add /></el-icon>
                         <span style="vertical-align: middle;">导入数据</span>
@@ -58,9 +59,9 @@
                 </el-button>
             </div>
             <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
-                @selection-change="handleSelectionChange" ref="table" row-key="id" fit
-                :row-class-name="tableRowClassName">
-                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
+                @selection-change="handleSelectionChange" ref="table" row-key="id" fit :row-class-name="tableRowClassName">
+                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable"
+                    :reserve-selection="true" />
                 <el-table-column prop="id" label="序号" align="center" width="90" />
                 <el-table-column prop="coverUrl" label="视频封面" width="180" align="center">
                     <template #default="scope">
@@ -121,306 +122,337 @@
 </template>
 
 <script>
-    import axios from 'axios'
-    import { Search, Plus, FolderAdd, Upload } from '@element-plus/icons-vue'
-    //  import { export_retailer } from "@/utils/api";
-    import request from '@/utils/http'
+import axios from 'axios'
+import { Search, Plus, FolderAdd, Upload } from '@element-plus/icons-vue'
+//  import { export_retailer } from "@/utils/api";
+import request from '@/utils/http'
 
 
-    export default {
-        name: "GetResidentInformation",
-        data() {
-            return {
-                tableData: [{
-                    id: '123',
-                    coverUrl: 'abcd',
-                    username: '张三啊',
-                    channelId: 'null',
-                    videoUrl: 'null',
-                    title: '',
-                    keyword: '彭于晏',
-                    flag: '0',
-                    needReturn: '',
-                }, {
-                }],
-                search_text: '',
-                total: 0,//总条数
-                currentPage: 1,//第几页
-                size: 10,//每页条数
-                dialogVisible: false,
-                selectUserList: [],
-            }
+export default {
+    name: "GetResidentInformation",
+    data() {
+        return {
+            tableData: [{
+                id: '123',
+                coverUrl: 'abcd',
+                username: '张三啊',
+                channelId: 'null',
+                videoUrl: 'null',
+                title: '',
+                keyword: '彭于晏',
+                flag: '0',
+                needReturn: '',
+            }, {
+            }],
+            search_text: '',
+            total: 0,//总条数
+            currentPage: 1,//第几页
+            size: 10,//每页条数
+            dialogVisible: false,
+            selectUserList: [],
+            selectUserIds: '',
+
+            tabAllUser: [],
+            findName: [],
+        }
+    },
+    created() {
+        this.fetchData()
+        this.getAllUser()
+    },
+    methods: {
+        fileSuccess() {//上传失败
+            this.importData(this.filename)
         },
-        created() {
+        fileChange(file) {
+            if (this.filename == '')
+                this.filename = file.name;
+            // console.log(file.name + "111")
+        },
+        importData(name) {
+            const _this = this
+            axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
+                if (resp.data.code == "200") {//返回成功
+                    _this.$message({
+                        message: '上传成功',
+                        type: 'success'
+                    });
+                } else if (resp.data.code == "101") {
+                    _this.$message.error('上传失败');
+                }
+            })
+        },
+        getDetail(row) {
+            // console.log(row)
+            this.form = row
+            this.detaildialogVisible = true
+
+        },
+        returnMain() {
+            this.detaildialogVisible = false;
+        },
+
+        analysis(id) {
+            const _this = this
+            // console.log(id)
+            const data = {
+                id: id
+            }
+            request({
+                url: 'http://10.16.104.183:8181/youtube/analysisByGPT',
+                method: 'post',
+                data: data,
+            }).then(function (resp) {
+                if (resp.status == "200") {
+                    _this.$message.success("该文本的类别属于  " + resp.data.data.category)
+                }
+                else {
+                    _this.$message.error('出错了');
+                    return false;
+                }
+            })
+            // location.reload()
+            this.$router.go(0)
+        },
+        updateFlag(id) {
+            const _this = this
+            const data = {
+                data: id
+            }
+            request({
+                url: 'http://10.16.104.183:8181/youtube/updateFlag/' + id,
+                method: 'post',
+                data: data
+            }).then(function (resp) {
+                if (resp.status == "200") {
+                    _this.$message.success('已读该信息');
+                }
+                else {
+                    _this.$message.error('出错了');
+                    return false;
+                }
+            })
+            // this.fetchData()
+            this.$router.go(0)
+        },
+
+        handleInputConfirm() {
+            // let keywordInputValue = this.keywordInputValue;
+            // if (keywordInputValue) {
+            //     this.dynamicTags.push(keywordInputValue);
+            // }
+        },
+        companyCut(name) {
+            let company = (name || "").split(',')
+            return company
+        },
+
+
+        exportData() {
+            let ids = []
+            if (this.selectUserList.length > 0) {
+                for (var i = 0; i < this.selectUserList.length; i++) {
+                    ids[i] = this.selectUserList[i].id
+                }
+                this.selectUserIds = ids.join(',')
+            }
+
+            request({
+                url: '/youtube/export',
+                method: 'get',
+                responseType: "blob",
+                params: {
+                    'ids': this.selectUserIds
+                }
+            }).then(function (res) {
+                console.log(res)
+                let data = res.data
+                let filename = "油管信息.xlsx"
+                let url = window.URL.createObjectURL(new Blob([data]))
+                let link = document.createElement('a')
+                link.style.display = 'none'
+                link.href = url
+                link.setAttribute('download', filename)
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link) // 下载完成移除元素
+                window.URL.revokeObjectURL(url) // 释放掉blob对象
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
+        showDialog() {
+            this.dialogVisible = true
+        },
+
+        currentChange() {
+            // console.log(this.currentPage)
             this.fetchData()
         },
-        methods: {
-            fileSuccess() {//上传失败
-                this.importData(this.filename)
-            },
-            fileChange(file) {
-                if (this.filename == '')
-                    this.filename = file.name;
-                // console.log(file.name + "111")
-            },
-            importData(name) {
-                const _this = this
-                axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
-                    if (resp.data.code == "200") {//返回成功
-                        _this.$message({
-                            message: '上传成功',
-                            type: 'success'
-                        });
-                    } else if (resp.data.code == "101") {
-                        _this.$message.error('上传失败');
-                    }
-                })
-            },
-            getDetail(row) {
-                // console.log(row)
-                this.form = row
-                this.detaildialogVisible = true
-
-            },
-            returnMain() {
-                this.detaildialogVisible = false;
-            },
-
-            analysis(id) {
-                const _this = this
-                // console.log(id)
-                const data = {
-                    id: id
-                }
-                request({
-                    url: 'http://10.16.104.183:8181/youtube/analysisByGPT',
-                    method: 'post',
-                    data: data,
-                }).then(function (resp) {
-                    if (resp.status == "200") {
-                        _this.$message.success("该文本的类别属于  " + resp.data.data.category)
-                    }
-                    else {
-                        _this.$message.error('出错了');
-                        return false;
-                    }
-                })
-                // location.reload()
-                this.$router.go(0)
-            },
-            updateFlag(id) {
-                const _this = this
-                const data = {
-                    data: id
-                }
-                request({
-                    url: 'http://10.16.104.183:8181/youtube/updateFlag/' + id,
-                    method: 'post',
-                    data: data
-                }).then(function (resp) {
-                    if (resp.status == "200") {
-                        _this.$message.success('已读该信息');
-                    }
-                    else {
-                        _this.$message.error('出错了');
-                        return false;
-                    }
-                })
-                // this.fetchData()
-                this.$router.go(0)
-            },
-
-            handleInputConfirm() {
-                // let keywordInputValue = this.keywordInputValue;
-                // if (keywordInputValue) {
-                //     this.dynamicTags.push(keywordInputValue);
-                // }
-            },
-            companyCut(name) {
-                let company = (name || "").split(',')
-                return company
-            },
-
-
-            exportData() {
-                request({
-                    url: '/youtube/export',
-                    method: 'get',
-                    responseType: "blob",
-                }).then(function (res) {
-                    console.log(res)
-                    let data = res.data
-                    let filename = "油管信息.xlsx"
-                    let url = window.URL.createObjectURL(new Blob([data]))
-                    let link = document.createElement('a')
-                    link.style.display = 'none'
-                    link.href = url
-                    link.setAttribute('download', filename)
-                    document.body.appendChild(link)
-                    link.click()
-                    document.body.removeChild(link) // 下载完成移除元素
-                    window.URL.revokeObjectURL(url) // 释放掉blob对象
-                }).catch((error) => {
-                    console.log(error)
-                })
-            },
-            showDialog() {
-                this.dialogVisible = true
-            },
-
-            currentChange() {
-                // console.log(this.currentPage)
-                this.fetchData()
-            },
-            sizeChange() {
-                // console.log(this.size)
-                this.fetchData()
-            },
-
-            fetchData() {
-                const _this = this
-                const data = {
-                    page: this.currentPage,
-                    size: this.size,
-                }
-                request({
-                    url: '/youtube/listAll/' + this.currentPage + '/' + this.size,
-                    method: 'post',
-                    data: data
-                }).then(function (resp) {
-                    if (resp.status == "200") {
-                        _this.tableData = resp.data.data.records
-                        _this.total = resp.data.data.total
-                    }
-                    else {
-                        _this.$message.error('出错了');
-                        return false;
-                    }
-                })
-            },
-
-            updateYoutube() {
-                const _this = this
-                const data = {
-                    page: this.currentPage,
-                    size: this.size,
-                }
-                request({
-                    url: '/youtube/update',
-                    method: 'get',
-                    data: data
-                }).then(function (resp) {
-                    if (resp.status == "200") {
-                        _this.$message.success("刷新成功")
-                    }
-                    else {
-                        _this.$message.error('出错了');
-                        return false;
-                    }
-                })
-                this.$router.go(0)
-            },
-
-            // 复选框
-            handleSelectionChange(selection) {
-                this.selectUserList = selection
-            },
-            handleClearSelection() {
-                this.selectUserList = []
-                this.$refs.table.clearSelection()
-            },
-            checkSelectable(row) {
-                return row.flag === 1 || row.flag === 0 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
-            },
-            handleReadYoutube() {
-                const _this = this
-                request({
-                    url: 'http://10.16.104.183:8181/youtube/readYoutube',
-                    method: 'post',
-                    data: this.selectUserList
-                }).then(function (resp) {
-                    if (resp.status == "200") {
-                        _this.$message.success('已读成功');
-                    }
-                    else {
-                        _this.$message.error('出错了');
-                        return false;
-                    }
-                })
-                this.$router.go(0)
-            },
-
-            // 行数变灰
-            tableRowClassName({ row, rowIndex }) {
-                if (row.flag === 1) {
-                    console.log(row, rowIndex);
-                    return 'warning-row'
-                } else {
-                    return ''
-                }
-            },
+        sizeChange() {
+            // console.log(this.size)
+            this.fetchData()
         },
-        components: {
-            Search, Plus, FolderAdd, Upload
+
+        fetchData() {
+            const _this = this
+
+            request({
+                url: '/youtube/listAll/' + this.currentPage + '/' + this.size,
+                method: 'post',
+                data: _this.findName
+            }).then(function (resp) {
+                if (resp.status == "200") {
+                    _this.tableData = resp.data.data.records
+                    _this.total = resp.data.data.total
+                }
+                else {
+                    _this.$message.error('出错了');
+                    return false;
+                }
+            })
+        },
+
+        updateYoutube() {
+            const _this = this
+            const data = {
+                page: this.currentPage,
+                size: this.size,
+            }
+            request({
+                url: '/youtube/update',
+                method: 'get',
+                data: data
+            }).then(function (resp) {
+                if (resp.status == "200") {
+                    _this.$message.success("刷新成功")
+                }
+                else {
+                    _this.$message.error('出错了');
+                    return false;
+                }
+            })
+            this.$router.go(0)
+        },
+
+        // 复选框
+        handleSelectionChange(selection) {
+            this.selectUserList = selection
+        },
+        handleClearSelection() {
+            this.selectUserList = []
+            this.selectUserIds = ''
+            this.$refs.table.clearSelection()
+        },
+        checkSelectable(row) {
+            return row.flag === 1 || row.flag === 0 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
+        },
+        handleReadYoutube() {
+            const _this = this
+            request({
+                url: 'http://10.16.104.183:8181/youtube/readYoutube',
+                method: 'post',
+                data: this.selectUserList
+            }).then(function (resp) {
+                if (resp.status == "200") {
+                    _this.$message.success('已读成功');
+                }
+                else {
+                    _this.$message.error('出错了');
+                    return false;
+                }
+            })
+            this.$router.go(0)
+        },
+
+        // 行数变灰
+        tableRowClassName({ row, rowIndex }) {
+            if (row.flag === 1) {
+                console.log(row, rowIndex);
+                return 'warning-row'
+            } else {
+                return ''
+            }
+        },
+
+        // 获取所有用户
+        getAllUser() {
+            const _this = this
+            request({
+                url: 'http://10.16.104.183:8181/youtube/findAllUser',
+                method: 'get',
+            }).then(function (resp) {
+                if (resp.status == "200") {
+                    _this.tabAllUser = resp.data.data
+                }
+                else {
+                    _this.$message.error('出错了');
+                    return false;
+                }
+            })
         }
+    },
+    components: {
+        Search, Plus, FolderAdd, Upload
     }
+}
 </script>
 
 <style scoped>
-    .toolbar {
-        text-align: left;
-        display: flex;
-        justify-content: space-between;
-    }
+.toolbar {
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+}
 
-    .el-input-resident {
-        width: 300px;
-        margin-right: 10px;
-    }
+.el-input-resident {
+    width: 300px;
+    margin-right: 10px;
+}
 
-    .margin-topa {
-        margin-top: -15px;
-    }
+.margin-topa {
+    margin-top: -15px;
+}
 
 
-    .el-tag+.el-tag {
-        margin-left: 10px;
-    }
+.el-tag+.el-tag {
+    margin-left: 10px;
+}
 
-    .button-new-tag {
-        margin-left: 10px;
-        height: 32px;
-        line-height: 30px;
-        padding-top: 0;
-        padding-bottom: 0;
-    }
+.button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
 
-    .input-new-tag {
-        width: 90px;
-        margin-left: 10px;
-        vertical-align: bottom;
-    }
+.input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+}
 
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: lightblue;
-    }
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: lightblue;
+}
 
-    .text {
-        font-size: 14px;
-    }
+.text {
+    font-size: 14px;
+}
 
-    .item {
-        margin-bottom: 18px;
-    }
+.item {
+    margin-bottom: 18px;
+}
 
-    .box-card {
-        width: 480px;
-    }
+.box-card {
+    width: 480px;
+}
 
-    .warning-row {
-        background-color: #dde7ec !important;
-    }
+.warning-row {
+    background-color: #dde7ec !important;
+}
 </style>

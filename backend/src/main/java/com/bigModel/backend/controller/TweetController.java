@@ -45,10 +45,11 @@ public class TweetController {
     public Result findTweetByPage(
             @PathVariable(value = "page") Integer page,
             @PathVariable(value = "size") Integer size,
-            @RequestBody Map<String, String> data) throws UnsupportedEncodingException, URISyntaxException {
+            @RequestBody Map<String, Object> data) throws UnsupportedEncodingException, URISyntaxException {
 
-        String keyword = data.get("keyword");
-        return Result.success(tweetService.findTweetByKeyword(keyword, page, size));
+        String keyword = data.get("keyword").toString();
+        List<String> needName = (List<String>) data.get("needName");
+        return Result.success(tweetService.findTweetByKeyword(keyword, needName, page, size));
     }
 
     @PostMapping("/tweet/analysisByGPT")
@@ -90,5 +91,11 @@ public class TweetController {
             List<Tweet> listMessage = tweetService.listAllExportIds();
             EasyExcelFactory.write(httpServletResponse.getOutputStream(), Tweet.class).sheet("tweet").doWrite(listMessage);
         }
+    }
+
+    @GetMapping("/tweet/findAllUser")
+    public Result<List<Map<String, String>>> findAllUser(){
+        List<Map<String, String>> tweetUserList = tweetService.listAllUser();
+        return Result.success(tweetUserList);
     }
 }

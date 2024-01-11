@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.bigModel.backend.pojo.YoutubeVideo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface YoutubeVideoService {
     void addVideo(YoutubeVideo youtubeVideo);
-    IPage<YoutubeVideo> listAll(int page, int size);
+    IPage<YoutubeVideo> listAll(int page, int size, List<String> data);
 
     List<YoutubeVideo> listAllVideo();
 
@@ -26,4 +27,6 @@ public interface YoutubeVideoService {
     List<YoutubeVideo> listNeedExportIds(List<Integer> needExportIds);
 
     List<YoutubeVideo> listAllExportIds();
+
+    List<Map<String, String>> listAllUser();
 }

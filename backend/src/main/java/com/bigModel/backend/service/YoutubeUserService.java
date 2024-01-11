@@ -16,5 +16,4 @@ public interface YoutubeUserService {
 
     void addYoutubeUser(YoutubeUser youtubeUser);
 
-    List<Map<String, String>> listAllUser();
 }

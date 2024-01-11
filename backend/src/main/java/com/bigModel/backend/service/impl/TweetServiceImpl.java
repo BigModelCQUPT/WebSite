@@ -4,13 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bigModel.backend.mapper.TweetMapper;
+import com.bigModel.backend.mapper.TwitterUserInfoMapper;
 import com.bigModel.backend.pojo.Tweet;
+import com.bigModel.backend.pojo.TwitterUser;
+import com.bigModel.backend.pojo.YoutubeVideo;
 import com.bigModel.backend.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bigModel.backend.utils.chatGPT;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +24,9 @@ public class TweetServiceImpl implements TweetService{
 
     @Autowired
     private TweetMapper tweetMapper;
+
+    @Autowired
+    private TwitterUserInfoMapper twitterUserInfoMapper;
 
     @Override
     public void saveTweet(List<Tweet> list) {
@@ -59,10 +66,14 @@ public class TweetServiceImpl implements TweetService{
     }
 
     @Override
-    public IPage<Tweet> findTweetByKeyword(String keyword, Integer pageNum, Integer size) {
+    public IPage<Tweet> findTweetByKeyword(String keyword, List<String> needName, Integer pageNum, Integer size) {
         IPage<Tweet> page = new Page<>(pageNum, size);
         QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("text", keyword);
+
+        if(!needName.isEmpty() && needName != null){
+            queryWrapper.in("username", needName);
+        }
         queryWrapper.orderByDesc("id");
         IPage<Tweet> pageList = tweetMapper.selectPage(page, queryWrapper);
         Long count = tweetMapper.selectCount(queryWrapper);
@@ -168,5 +179,20 @@ public class TweetServiceImpl implements TweetService{
         QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
         List<Tweet> tweetList = tweetMapper.selectList(queryWrapper);
         return tweetList;
+    }
+
+    @Override
+    public List<Map<String, String>> listAllUser() {
+        List<Map<String, String>> res = new ArrayList<>();
+        QueryWrapper<TwitterUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("username", "name").groupBy("username", "name");
+        List<TwitterUser> tweetList = twitterUserInfoMapper.selectList(queryWrapper);
+        for(TwitterUser twitterUser : tweetList){
+            Map<String, String> userMap = new HashMap<>();
+            userMap.put("label", twitterUser.getName());
+            userMap.put("key", twitterUser.getUsername());
+            res.add(userMap);
+        }
+        return res;
     }
 }

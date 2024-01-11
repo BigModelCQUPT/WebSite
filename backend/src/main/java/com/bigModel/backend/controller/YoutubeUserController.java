@@ -44,10 +44,4 @@ public class YoutubeUserController {
         YoutubeUser youtubeUser = YoutubeUserUtil.getChannel(data.get("channelId"));
         youtubeUserService.addYoutubeUser(youtubeUser);
     }
-
-    @GetMapping("/findAllUser")
-    public Result<List<Map<String, String>>> findAllUser(){
-        List<Map<String, String>> youtubeUserList = youtubeUserService.listAllUser();
-        return Result.success(youtubeUserList);
-    }
 }

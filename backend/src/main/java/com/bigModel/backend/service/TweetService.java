@@ -1,7 +1,6 @@
 package com.bigModel.backend.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.bigModel.backend.pojo.ChatHistory;
 import com.bigModel.backend.pojo.Tweet;
 
 import java.util.List;
@@ -12,7 +11,7 @@ public interface TweetService {
     IPage<Tweet> getTweets(Integer pageNum, Integer size);
     Map<String, Object> queryTweets(Integer pageNum, String keyword);
 
-    IPage<Tweet> findTweetByKeyword(String keyword, Integer pageNum, Integer size);
+    IPage<Tweet> findTweetByKeyword(String keyword, List<String> needName, Integer pageNum, Integer size);
 
     Map<String, String> analysisByGPT(Integer id);
 
@@ -29,4 +28,6 @@ public interface TweetService {
     List<Tweet> listByUuid(String uuid);
     List<Tweet> listNeedExportIds(List<Integer> needExportIds);
     List<Tweet> listAllExportIds();
+
+    List<Map<String, String>> listAllUser();
 }

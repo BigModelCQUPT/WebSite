@@ -4,14 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bigModel.backend.mapper.YoutubeVideoMapper;
-import com.bigModel.backend.pojo.Tweet;
-import com.bigModel.backend.pojo.YoutubeUser;
+import com.bigModel.backend.pojo.ChatHistory;
 import com.bigModel.backend.pojo.YoutubeVideo;
 import com.bigModel.backend.service.YoutubeVideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class YoutubeVideoServiceImpl implements YoutubeVideoService {
@@ -24,9 +26,14 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
     }
 
     @Override
-    public IPage<YoutubeVideo> listAll(int pageNum, int size) {
+    public IPage<YoutubeVideo> listAll(int pageNum, int size, List<String> needName) {
         IPage<YoutubeVideo> page = new Page<>(pageNum, size);
-        return youtubeVideoMapper.selectPage(page, null);
+        QueryWrapper<YoutubeVideo> queryWrapper = new QueryWrapper<>();
+        if(!needName.isEmpty() && needName != null){
+            queryWrapper.in("username", needName);
+        }
+        queryWrapper.orderByDesc("id");
+        return youtubeVideoMapper.selectPage(page, queryWrapper);
     }
 
 
@@ -91,5 +98,20 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
         QueryWrapper<YoutubeVideo> queryWrapper = new QueryWrapper<>();
         List<YoutubeVideo> youtubeVideoList = youtubeVideoMapper.selectList(queryWrapper);
         return youtubeVideoList;
+    }
+
+    @Override
+    public List<Map<String, String>> listAllUser() {
+        List<Map<String, String>> res = new ArrayList<>();
+        QueryWrapper<YoutubeVideo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("username").groupBy("username");
+        List<YoutubeVideo> chatHistoryList = youtubeVideoMapper.selectList(queryWrapper);
+        for(YoutubeVideo youtubeVideo : chatHistoryList){
+            Map<String, String> userMap = new HashMap<>();
+            userMap.put("label", youtubeVideo.getUsername());
+            userMap.put("key", youtubeVideo.getUsername());
+            res.add(userMap);
+        }
+        return res;
     }
 }

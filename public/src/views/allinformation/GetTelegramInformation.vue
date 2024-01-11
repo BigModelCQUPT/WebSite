@@ -183,7 +183,7 @@ export default {
             keywordInputValue: '',
             search_keyword: '',
             selectUserList: [],
-            selectUserIds: '1, 2, 3',
+            selectUserIds: '',
 
             tabAllUser: [],
             findName: [],
@@ -217,9 +217,8 @@ export default {
             })
         },
         exportData() {
-
+            let ids = []
             if (this.selectUserList.length > 0) {
-                let ids = []
                 for (var i = 0; i < this.selectUserList.length; i++) {
                     ids[i] = this.selectUserList[i].id
                 }
