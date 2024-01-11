@@ -7,14 +7,18 @@ import twitter4j.JSONArray;
 import twitter4j.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public class ParseJSONUtil {
-    public static List<Tweet> parseJSON(String string, String username, String twitterId) {
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+
+    /**
+     * 解析字符串，得到推文以及推文包含的图片
+     * @param string json字符串
+     * @param username 用户名
+     * @param twitterId 用户id
+     * @return {@link List}<{@link Tweet}>
+     */
+    public static List<Tweet> parseJSON(String string, String username, String twitterId, String uuid) {
         JSONObject json = new JSONObject(string);
         String data = json.getString("data");
         JSONArray jsonArray = new JSONArray(data);
@@ -35,13 +39,12 @@ public class ParseJSONUtil {
             tweet.setTweetid(item.getString("id_str"));
             tweet.setUsername(username);
             tweet.setTwitterId(twitterId);
-            tweet.setDate(s.format(c.getTime()));
+            tweet.setUrl("https://twitter.com/" + username + "/status/" + twitterId);
+            tweet.setPublishTime(new Date(item.getString("created_at")));
+            tweet.setUuid(uuid);
+            tweet.setNeedReturn(0);
             list.add(tweet);
         }
         return list;
-    }
-
-    public static void main(String[] args) {
-        parseJSON(null, null, null);
     }
 }

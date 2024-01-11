@@ -1,15 +1,10 @@
 package com.bigModel.backend.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bigModel.backend.mapper.TweetMapper;
-import com.bigModel.backend.pojo.ChatHistory;
-import com.bigModel.backend.pojo.PageQuery;
 import com.bigModel.backend.pojo.Tweet;
-import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -125,8 +120,8 @@ public class TweetServiceImpl implements TweetService{
     }
 
     @Override
-    public boolean checkKeyword(Integer id, String keyword) {
-        return tweetMapper.checkKeyword(id, keyword) == 1;
+    public void checkKeyword(String keyword,String uuid) {
+        tweetMapper.checkKeyword(keyword, uuid);
     }
 
     @Override
@@ -146,14 +141,21 @@ public class TweetServiceImpl implements TweetService{
     }
 
     @Override
-    public List<Tweet> listAllNoReturn() {
+    public List<Tweet> listAllNoReturn(String uuid) {
         QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("need_return", 0);
+        queryWrapper.eq("uuid", uuid);
         List<Tweet> tweetList = tweetMapper.selectList(queryWrapper);
         return tweetList;
     }
 
     @Override
+    public List<Tweet> listByUuid(String uuid) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("uuid", uuid);
+        return tweetMapper.selectList(queryWrapper);
+    }
+
     public List<Tweet> listNeedExportIds(List<Integer> needExportIds) {
         QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("id", needExportIds);
