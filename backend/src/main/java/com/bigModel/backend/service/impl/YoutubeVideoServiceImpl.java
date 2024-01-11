@@ -77,4 +77,19 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
         youtubeVideo.setFlag(1);
         youtubeVideoMapper.updateById(youtubeVideo);
     }
+
+    @Override
+    public List<YoutubeVideo> listNeedExportIds(List<Integer> needExportIds) {
+        QueryWrapper<YoutubeVideo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("id", needExportIds);
+        List<YoutubeVideo> youtubeVideoList = youtubeVideoMapper.selectList(queryWrapper);
+        return youtubeVideoList;
+    }
+
+    @Override
+    public List<YoutubeVideo> listAllExportIds() {
+        QueryWrapper<YoutubeVideo> queryWrapper = new QueryWrapper<>();
+        List<YoutubeVideo> youtubeVideoList = youtubeVideoMapper.selectList(queryWrapper);
+        return youtubeVideoList;
+    }
 }

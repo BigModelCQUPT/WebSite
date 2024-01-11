@@ -149,6 +149,7 @@ import request from '@/utils/http'
 import { FolderAdd, Upload } from '@element-plus/icons-vue'
 // import { ro } from 'element-plus/lib/locale'
 
+
 export default {
     name: "GetResidentInformation",
     data() {
@@ -181,6 +182,7 @@ export default {
             keywordInputValue: '',
             search_keyword: '',
             selectUserList: [],
+            selectUserIds: '1, 2, 3',
         }
     },
     created() {
@@ -210,10 +212,22 @@ export default {
             })
         },
         exportData() {
+
+            if (this.selectUserList.length > 0) {
+                let ids = []
+                for (var i = 0; i < this.selectUserList.length; i++) {
+                    ids[i] = this.selectUserList[i].id
+                }
+                this.selectUserIds = ids.join(',')
+            }
+
             request({
                 url: '/telegram/export',
                 method: 'get',
                 responseType: "blob",
+                params: {
+                    'ids': this.selectUserIds
+                }
             }).then(function (res) {
                 console.log(res)
                 let data = res.data
@@ -231,6 +245,7 @@ export default {
                 console.log(error)
             })
         },
+
         showDialog() {
             this.dialogVisible = true
         },
@@ -465,6 +480,7 @@ export default {
         },
         handleClearSelection() {
             this.selectUserList = []
+            this.selectUserIds = ''
             this.$refs.table.clearSelection()
         },
         checkSelectable(row) {

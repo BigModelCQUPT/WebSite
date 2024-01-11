@@ -1,19 +1,23 @@
 package com.bigModel.backend.controller;
 
+import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.bigModel.backend.advice.ResponseNotIntercept;
 import com.bigModel.backend.advice.result.Result;
+import com.bigModel.backend.pojo.ChatHistory;
 import com.bigModel.backend.pojo.Tweet;
 import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.service.TweetService;
+import com.bigModel.backend.utils.ExcelExportUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -74,5 +78,17 @@ public class TweetController {
             tweetService.updateFlag(id);
         }
         return Result.success("修改成功");
+    }
+
+    @GetMapping("/tweet/export")
+    public void exportHistory(@RequestParam(required = false) String ids, HttpServletResponse httpServletResponse) throws Exception {
+        if (StringUtils.isNotBlank(ids)) {
+            List<Integer> needExportIds = Arrays.stream(ids.split(",")).map(Integer::valueOf).collect(Collectors.toList());
+            List<Tweet> listMessage = tweetService.listNeedExportIds(needExportIds);
+            EasyExcelFactory.write(httpServletResponse.getOutputStream(), Tweet.class).sheet("tweet").doWrite(listMessage);
+        } else {
+            List<Tweet> listMessage = tweetService.listAllExportIds();
+            EasyExcelFactory.write(httpServletResponse.getOutputStream(), Tweet.class).sheet("tweet").doWrite(listMessage);
+        }
     }
 }
