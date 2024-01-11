@@ -22,14 +22,11 @@ public interface TweetService {
 
     void updateFlag(Integer id);
     List<Tweet> getTweetByDate(String date);
-    boolean checkKeyword(Integer id, String keyword);
+    void checkKeyword(String keyword, String uuid);
     void updateReturn(Integer id);
-
     void saveKeywordList(int id, List<String> list);
-
-    List<Tweet> listAllNoReturn();
-
+    List<Tweet> listAllNoReturn(String uuid);
+    List<Tweet> listByUuid(String uuid);
     List<Tweet> listNeedExportIds(List<Integer> needExportIds);
-
     List<Tweet> listAllExportIds();
 }

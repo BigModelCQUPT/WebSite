@@ -8,21 +8,29 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import jdk.nashorn.internal.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import twitter4j.JSONArray;
 import twitter4j.JSONObject;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.lang.management.LockInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class YoutubeVideoUtil {
 
     @Autowired
-    private static TokenService tokenService;
+    private  TokenService tokenService;
+    private static YoutubeVideoUtil youtubeVideoUtil;
+
+    @PostConstruct
+    public void init() {
+        youtubeVideoUtil = this;
+        youtubeVideoUtil.tokenService = this.tokenService;
+    }
 
     public static List<YoutubeVideo> getVideo(List<YoutubeUser> userList) throws IOException {
         String host = "127.0.0.1";
@@ -45,7 +53,7 @@ public class YoutubeVideoUtil {
                 System.out.println("出错");
             }
 
-            String apiKey = tokenService.getToken("youtubeToken");
+            String apiKey = youtubeVideoUtil.tokenService.getToken("youtubeToken");
 
             search.setKey(apiKey);
             // 接口返回数据模型
