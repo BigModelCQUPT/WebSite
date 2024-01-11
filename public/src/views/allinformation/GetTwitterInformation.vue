@@ -62,12 +62,13 @@
                 @selection-change="handleSelectionChange" ref="table" row-key="id" fit
                 :row-class-name="tableRowClassName">
 
-                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
+                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable"
+                    :reserve-selection="true" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="100" align="center" />
                 <el-table-column prop="time" label="发布时间" width="100" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
-                <el-table-column label="推文类型" width="70" align="center">
+                <el-table-column label="推文类型" width="85" align="center">
                     <template #default="tableData">
                         <el-tag v-if="tableData.row.type === 'reply'" type="success">评论</el-tag>
                         <el-tag v-else-if="tableData.row.type === 'tweet'" type=" success">推文</el-tag>
@@ -160,6 +161,7 @@
                 filename: '',
                 detaildialogVisible: false,
                 selectUserList: [],
+                selectUserIds: '1, 2, 3',
             }
         },
         created() {
@@ -189,14 +191,25 @@
                 })
             },
             exportData() {
+                if (this.selectUserList.length > 0) {
+                    let ids = []
+                    for (var i = 0; i < this.selectUserList.length; i++) {
+                        ids[i] = this.selectUserList[i].id
+                    }
+                    this.selectUserIds = ids.join(',')
+                }
+
                 request({
                     url: '/twitter/export',
                     method: 'get',
                     responseType: "blob",
+                    params: {
+                        'ids': this.selectUserIds
+                    }
                 }).then(function (res) {
                     console.log(res)
                     let data = res.data
-                    let filename = "推特聊天记录.xlsx"
+                    let filename = "推特信息.xlsx"
                     let url = window.URL.createObjectURL(new Blob([data]))
                     let link = document.createElement('a')
                     link.style.display = 'none'
@@ -439,6 +452,7 @@
             },
             handleClearSelection() {
                 this.selectUserList = []
+                this.selectUserIds = ''
                 this.$refs.table.clearSelection()
             },
             checkSelectable(row) {

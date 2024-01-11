@@ -3,7 +3,7 @@
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
         <!--        工具栏-->
         <div class="toolbar">
-            <div>
+            <div style="display: inline-flex;">
                 <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
                     v-model="search_keyword" placeholder="请输入进行搜索...">
                 </el-input>
@@ -226,7 +226,8 @@
                     method: 'get',
                     responseType: "blob",
                     params: {
-                        'ids': this.selectUserIds
+                        'ids': this.selectUserIds,
+
                     }
                 }).then(function (res) {
                     console.log(res)

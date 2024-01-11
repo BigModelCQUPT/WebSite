@@ -60,7 +60,8 @@
             <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
                 @selection-change="handleSelectionChange" ref="table" row-key="id" fit
                 :row-class-name="tableRowClassName">
-                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
+                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable"
+                    :reserve-selection="true" />
                 <el-table-column prop="id" label="序号" align="center" width="90" />
                 <el-table-column prop="coverUrl" label="视频封面" width="180" align="center">
                     <template #default="scope">
@@ -141,6 +142,7 @@
                     keyword: '彭于晏',
                     flag: '0',
                     needReturn: '',
+
                 }, {
                 }],
                 search_text: '',
@@ -149,6 +151,7 @@
                 size: 10,//每页条数
                 dialogVisible: false,
                 selectUserList: [],
+                selectUserIds: '1, 2, 3',
             }
         },
         created() {
@@ -243,10 +246,22 @@
 
 
             exportData() {
+
+                if (this.selectUserList.length > 0) {
+                    let ids = []
+                    for (var i = 0; i < this.selectUserList.length; i++) {
+                        ids[i] = this.selectUserList[i].id
+                    }
+                    this.selectUserIds = ids.join(',')
+                }
+
                 request({
                     url: '/youtube/export',
                     method: 'get',
                     responseType: "blob",
+                    params: {
+                        'ids': this.selectUserIds
+                    }
                 }).then(function (res) {
                     console.log(res)
                     let data = res.data
@@ -327,6 +342,7 @@
             },
             handleClearSelection() {
                 this.selectUserList = []
+                this.selectUserIds = ''
                 this.$refs.table.clearSelection()
             },
             checkSelectable(row) {

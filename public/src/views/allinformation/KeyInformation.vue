@@ -61,11 +61,11 @@
 
             <el-table :data="tableData" border style="width: 100%" :row-class-name="tableRowClassName"
                 @selection-change="handleSelectionChange" ref="table" row-key="id" fit>
-                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
+                <el-table-column type=" selection" align="center" width="55" :selectable="checkSelectable" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="120" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
-                <el-table-column label="推文类型" width="70" align="center">
+                <el-table-column label="推文类型" width="85" align="center">
                     <template #default="tableData">
                         <el-tag v-if="tableData.row.type === 'replied_to'" type="success">回复</el-tag>
                         <el-tag v-else-if="tableData.row.type === 'tweet'" type=" success">原创</el-tag>
@@ -239,8 +239,10 @@
                 }).then(function (resp) {
                     if (resp.status == "200") {//返回成功
                         // console.log(resp)
+
                         _this.tableData = resp.data.data.records
                         _this.total = resp.data.data.total
+
                     } else if (resp.data.code == "101") {
                         _this.$message.error('请先登录');
                         return false;
