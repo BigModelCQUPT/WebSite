@@ -14,18 +14,17 @@
                     <span style="vertical-align: middle;"> 搜索 </span>
                 </el-button>
             </div>
-            <div align="right">
+            <div align="right" style=" display: inline-flex;">
                 <el-upload style="  display: inline-flex;margin-right:8px;"
                     action="http://localhost:8181/twitter/upload" :headers="header" :show-file-list="false"
                     :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
-                    <el-button type="success" style="margin-top:0px;margin-right:10px;">
+                    <el-button type="success" style="margin-right:10px;">
                         <el-icon><folder-add /></el-icon>
                         <span style="vertical-align: middle;">导入数据</span>
                     </el-button>
                 </el-upload>
 
-                <el-button type="success" @click="exportData"
-                    style=" display: inline-flex;margin-top: -5px;margin-right:5px;">
+                <el-button type="success" @click="exportData" style=" display: inline-flex;margin-right:5px;">
                     <el-icon>
                         <upload />
                     </el-icon>
@@ -197,7 +196,7 @@
                 }).then(function (res) {
                     console.log(res)
                     let data = res.data
-                    let filename = "电报聊天记录.xlsx"
+                    let filename = "推特聊天记录.xlsx"
                     let url = window.URL.createObjectURL(new Blob([data]))
                     let link = document.createElement('a')
                     link.style.display = 'none'
@@ -529,6 +528,7 @@
     .item {
         margin-bottom: 18px;
     }
+
 
     .box-card {
         width: 480px;

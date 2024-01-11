@@ -15,10 +15,10 @@
                 </el-button>
             </div>
             <div align="right">
-                <el-upload style="  display: inline-flex;margin-right:8px;margin-top: -3px"
+                <el-upload style="  display: inline-flex;margin-right:8px;"
                     action="http://localhost:8181/youtube/upload" :headers="header" :show-file-list="false"
                     :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
-                    <el-button type="success" style="margin-top:13px;margin-right:10px;">
+                    <el-button type="success" style="margin-top:13px;margin-right:10px;margin-top: 8px">
                         <el-icon><folder-add /></el-icon>
                         <span style="vertical-align: middle;">导入数据</span>
                     </el-button>
@@ -123,7 +123,7 @@
 <script>
     import axios from 'axios'
     import { Search, Plus, FolderAdd, Upload } from '@element-plus/icons-vue'
-    // import { export_retailer } from "@/utils/api";
+    //  import { export_retailer } from "@/utils/api";
     import request from '@/utils/http'
 
 

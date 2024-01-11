@@ -1,6 +1,7 @@
 package com.bigModel.backend.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.EasyExcelFactory;
 import com.bigModel.backend.advice.result.Result;
 import com.bigModel.backend.listener.UploadDataListener;
 import com.bigModel.backend.pojo.ChatHistory;
@@ -37,6 +38,7 @@ public class ChatHistoryController {
 
     @GetMapping("export")
     public void exportHistory(HttpServletResponse httpServletResponse) throws Exception {
+//        System.out.println(data);
         List<ChatHistory> list = chatHistoryService.listAllGroupId();
         Map<String, List<ChatHistory>> map = new HashMap<>();
         for (int i = 0; i < list.size(); i ++) {
@@ -47,6 +49,9 @@ public class ChatHistoryController {
         httpServletResponse.setContentType("application/vnd.ms-excel");
         httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + "text.xlsx");
         ExcelExportUtil.writeExcel(httpServletResponse, map);
+
+//        List<ChatHistory> listMessage = chatHistoryService.listAllMessage();
+//        EasyExcelFactory.write(httpServletResponse.getOutputStream(), ChatHistory.class).sheet("telegram").doWrite(listMessage);
     }
 
     @PostMapping("upload")
@@ -54,7 +59,7 @@ public class ChatHistoryController {
         EasyExcel.read(file.getInputStream(), ChatHistory.class, new UploadDataListener(chatHistoryService)).sheet().doRead();
     }
 
-    @PostMapping("/readTweet")
+    @PostMapping("/readTelegram")
     public Result readTweet(@RequestBody List<ChatHistory> data){
 //        List<Tweet> needReadList = castList(data.get("needReadList"), Tweet.class);
         for (ChatHistory chatHistory : data) {

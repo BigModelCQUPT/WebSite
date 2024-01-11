@@ -17,6 +17,7 @@ public class ExcelExportUtil {
     public static void writeExcel(HttpServletResponse httpServletResponse, Map<String, List<ChatHistory>> map) throws Exception {
         ExcelWriter excelWriter = EasyExcel.write(httpServletResponse.getOutputStream()).build();
         int i = 0;
+
         for (String key: map.keySet()) {
             WriteSheet sheet = EasyExcel.writerSheet(i, "sheet" + i).head(ChatHistory.class).build();
             excelWriter.write(map.get(key), sheet);

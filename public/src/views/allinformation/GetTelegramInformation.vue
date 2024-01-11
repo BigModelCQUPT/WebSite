@@ -14,11 +14,8 @@
                     <span style="vertical-align: middle;"> 搜索 </span>
                 </el-button>
             </div>
-            <div>
-                <!-- <el-upload style="  display: inline-flex; margin-right: 25px;margin-top: -5px;"
-                    action="http://localhost:8181/telegram/upload" :headers="header">
-                    <el-button type="primary">上传数据</el-button>
-                </el-upload> -->
+            <div style="display: inline-flex;">
+
                 <el-upload style="  display: inline-flex; margin-right: 12px;"
                     action="http://localhost:8181/telegram/upload" :headers="header" :show-file-list="false"
                     :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
@@ -27,8 +24,7 @@
                         <span style="vertical-align: middle;">导入数据</span>
                     </el-button>
                 </el-upload>
-                <el-button type="success" @click="exportData"
-                    style=" display: inline-flex; margin-left: 12px;margin-top: -5px;">
+                <el-button type="success" @click="exportData" style=" display: inline-flex; margin-left: 12px;">
                     <el-icon>
                         <upload />
                     </el-icon>
