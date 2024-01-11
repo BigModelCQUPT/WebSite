@@ -38,6 +38,7 @@ public class ChatHistoryController {
 
     @GetMapping("export")
     public void exportHistory(HttpServletResponse httpServletResponse) throws Exception {
+//        System.out.println(data);
         List<ChatHistory> list = chatHistoryService.listAllGroupId();
         Map<String, List<ChatHistory>> map = new HashMap<>();
         for (int i = 0; i < list.size(); i ++) {
@@ -58,7 +59,7 @@ public class ChatHistoryController {
         EasyExcel.read(file.getInputStream(), ChatHistory.class, new UploadDataListener(chatHistoryService)).sheet().doRead();
     }
 
-    @PostMapping("/readTweet")
+    @PostMapping("/readTelegram")
     public Result readTweet(@RequestBody List<ChatHistory> data){
 //        List<Tweet> needReadList = castList(data.get("needReadList"), Tweet.class);
         for (ChatHistory chatHistory : data) {

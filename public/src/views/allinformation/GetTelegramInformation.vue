@@ -34,8 +34,6 @@
                     </el-icon>
                     <span style="vertical-align: middle;">导出数据</span>
 
-
-
                 </el-button>
             </div>
 
@@ -55,14 +53,15 @@
             </span>
             <el-button @click="handleClearSelection" type="text">清空
             </el-button>
-            <el-button @click="handleReadTweet" type="text">
+            <el-button @click="handleReadTelegram" type="text">
                 已读所选
             </el-button>
         </div>
         <el-table :data="tableData" border style="width: 98%;margin-left: 15px" @selection-change="handleSelectionChange"
             ref="table" row-key="id" fit :row-class-name="tableRowClassName">
 
-            <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
+            <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable"
+                :reserve-selection="true" />
             <el-table-column prop="id" label="序号" width="90" align="center" />
             <el-table-column prop="username" label="用户名" width="120" align="center" />
             <el-table-column prop="userId" label="用户id" width="90" align="center"></el-table-column>
@@ -158,12 +157,12 @@ export default {
             keywordData: [],
             tableData: [{
                 id: '123',
-                username: 'abcd啊啊啊啊啊',
-                userId: '1232342',
-                message: 'alsifgeuf',
-                postalTime: '1312434',
-                groupName: 'jsgfcoauebfa',
-                keyword: '彭于晏',
+                username: '',
+                userId: '',
+                message: '',
+                postalTime: '',
+                groupName: '',
+                keyword: '',
                 needReturn: '',
                 flag: '0',
             }, {
@@ -214,7 +213,7 @@ export default {
             request({
                 url: '/telegram/export',
                 method: 'get',
-                responseType: "blob"
+                responseType: "blob",
             }).then(function (res) {
                 console.log(res)
                 let data = res.data
@@ -469,12 +468,12 @@ export default {
             this.$refs.table.clearSelection()
         },
         checkSelectable(row) {
-            return row.flag !== 1
+            return row.flag === 1 || row.flag == 0
         },
         handleReadTelegram() {
             const _this = this
             request({
-                url: 'http://10.16.104.183:8181/telegram/readtelegram',
+                url: 'http://10.16.104.183:8181/telegram/readTelegram',
                 method: 'post',
                 data: this.selectUserList
             }).then(function (resp) {
@@ -486,7 +485,7 @@ export default {
                     return false;
                 }
             })
-            // this.$router.go(0)
+            this.$router.go(0)
         },
 
         // 行数变灰
@@ -497,7 +496,7 @@ export default {
             } else {
                 return ''
             }
-        }
+        },
     },
     components: {
         Search, FolderAdd, Upload,
@@ -505,7 +504,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .toolbar {
     text-align: left;
     display: flex;
@@ -560,6 +559,6 @@ export default {
 }
 
 .warning-row {
-    background-color: #f0f9eb !important;
+    background-color: #e8d1d1 !important;
 }
 </style>

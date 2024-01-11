@@ -42,8 +42,8 @@
             <!-- <el-table :data="tableData" border style="width: 100%"> -->
 
 
-            <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange" ref="table"
-                row-key="id" fit>
+            <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
+                @selection-change="handleSelectionChange" ref="table" row-key="id" fit :row-class-name="tableRowClassName">
 
                 <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
@@ -407,7 +407,7 @@ export default {
             this.$refs.table.clearSelection()
         },
         checkSelectable(row) {
-            return row.flag !== 1 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
+            return row.flag === 1 || row.flag === 0 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
         },
         handleReadTweet() {
             const _this = this
@@ -425,6 +425,16 @@ export default {
                 }
             })
             this.$router.go(0)
+        },
+
+        // 行数变灰
+        tableRowClassName({ row, rowIndex }) {
+            if (row.flag === 1) {
+                console.log(row, rowIndex);
+                return 'warning-row'
+            } else {
+                return ''
+            }
         }
     },
     components: {
@@ -434,7 +444,7 @@ export default {
 
 </script>
 
-<style scoped>
+<style>
 .toolbar {
     text-align: left;
     display: flex;
@@ -486,5 +496,9 @@ export default {
 
 .box-card {
     width: 480px;
+}
+
+.warning-row {
+    background-color: #e8d1d1 !important;
 }
 </style>
