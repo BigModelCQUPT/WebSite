@@ -29,4 +29,6 @@ public interface YoutubeVideoService {
     List<YoutubeVideo> listAllExportIds();
 
     List<Map<String, String>> listAllUser();
+
+    boolean alreadyAbsent(YoutubeVideo youtubeVideo);
 }

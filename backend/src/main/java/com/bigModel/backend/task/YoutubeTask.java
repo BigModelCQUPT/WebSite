@@ -14,6 +14,7 @@ import com.bigModel.backend.utils.bibiGPT;
 import com.bigModel.backend.utils.chatGPT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Component
 public class YoutubeTask {
 
     @Autowired
@@ -33,16 +35,17 @@ public class YoutubeTask {
     @Autowired
     private KeywordService keywordService;
 
-    @Scheduled(cron = "0 15 10 ? * 6L ")
-    @Transactional
+    @Scheduled(cron = "0/50 * * * * ?")
+//    @Transactional
     public void VideoSummary() throws Exception{
-
         List<YoutubeUser> userList = youtubeUserService.listAll();
         List<YoutubeVideo> list = YoutubeVideoUtil.getVideo(userList);
         for (int i = 0; i < list.size(); i ++) {
-            youtubeVideoService.addVideo(list.get(i));
+            YoutubeVideo youtubeVideo = list.get(i);
+            if(!youtubeVideoService.alreadyAbsent(youtubeVideo)){
+                youtubeVideoService.addVideo(youtubeVideo);
+            }
         }
-
         List<YoutubeVideo> listAllVideo = youtubeVideoService.listAllVideo();
         for(int i = 0;i < listAllVideo.size();i++){
             YoutubeVideo youtubeVideo = listAllVideo.get(i);
@@ -52,8 +55,8 @@ public class YoutubeTask {
             youtubeVideo.setSummary(summary);
             youtubeVideoService.saveSummary(youtubeVideo);
         }
-        this.keywordMatch();
-        this.useChatGPT();
+//        this.keywordMatch();
+//        this.useChatGPT();
     }
 
     public void keywordMatch() {

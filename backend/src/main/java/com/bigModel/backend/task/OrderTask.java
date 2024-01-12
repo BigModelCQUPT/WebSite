@@ -33,7 +33,7 @@ public class OrderTask {
     @Autowired
     private TokenService tokenService;
 
-    // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
+//     @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
 //     @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {

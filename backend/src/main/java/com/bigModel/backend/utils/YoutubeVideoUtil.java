@@ -14,9 +14,13 @@ import twitter4j.JSONArray;
 import twitter4j.JSONObject;
 
 import javax.annotation.PostConstruct;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.lang.management.LockInfo;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -71,7 +75,6 @@ public class YoutubeVideoUtil {
                 searchResponse = search.execute();
             } catch (IOException e) {
                 // LogUtil.error(e);
-                System.out.println(e);
                 System.out.println("出错了");
             }
             List<SearchResult> searchResultList = searchResponse.getItems();
@@ -80,11 +83,16 @@ public class YoutubeVideoUtil {
                 // for (int k = 0; k < jsonArray.length(); k++) {
                 //     JSONObject json = new JSONObject(jsonArray.getString(k));
                     JSONObject json = new JSONObject(searchResultList.get(i));
+                    System.out.println(json);
                     String videoId = "https://www.youtube.com/watch?v=" + new JSONObject(json.getString("id")).getString("videoId");
                     String cover = new JSONObject(new JSONObject(new JSONObject(json.getString("snippet")).getString("thumbnails")).getString("default")).getString("url");
                     String title = new JSONObject(json.getString("snippet")).getString("title");
                     String username = userList.get(j).getUsername();
-                    YoutubeVideo youtubeVideo = new YoutubeVideo(null, cover, username, userList.get(j).getChannelId(), videoId, title, null, 0, null, 0);
+//                    Date releaseTime = new Date(new JSONObject(new JSONObject(json.getString("snippet")).getString("publishedat")).getString("value"));
+                    // 获取当前日期和时间
+                    LocalDateTime currentTime = LocalDateTime.now();
+
+                    YoutubeVideo youtubeVideo = new YoutubeVideo(null, cover, username, userList.get(j).getChannelId(), videoId, title, null, 0, null, 0, currentTime);
                     list.add(youtubeVideo);
                 // }
                 // if (searchResultList != null) {
