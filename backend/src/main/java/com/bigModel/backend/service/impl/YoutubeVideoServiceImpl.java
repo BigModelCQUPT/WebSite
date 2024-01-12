@@ -114,4 +114,12 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
         }
         return res;
     }
+
+    @Override
+    public boolean alreadyAbsent(YoutubeVideo youtubeVideo) {
+        QueryWrapper<YoutubeVideo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("video_url", youtubeVideo.getVideoUrl());
+        YoutubeVideo selectById = youtubeVideoMapper.selectOne(queryWrapper);
+        return selectById != null;
+    }
 }
