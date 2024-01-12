@@ -15,6 +15,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +57,6 @@ public class OrderTask {
             ResponseBody res = response.body();
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId, uuid);
             tweetService.saveTweet(tweetList);
-            break;
         }
         this.keywordMatch(uuid);
         // this.modeling(uuid);
@@ -94,10 +94,12 @@ public class OrderTask {
 
     public void noticeMail(String uuid) throws Exception {
         List<Tweet> tweetList = tweetService.listByUuid(uuid);
+        List<Tweet> needNotice = new ArrayList<>();
         for (Tweet tweet: tweetList) {
             if (tweet.getNeedReturn() == 1) {
-                MailUtil.sendMail(tokenService.getToken("mailToken"), tweet.getTweetid());
+                needNotice.add(tweet);
             }
         }
+        MailUtil.sendMail(needNotice);
     }
 }

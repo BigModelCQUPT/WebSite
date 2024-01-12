@@ -17,5 +17,5 @@ public class TweetVideo {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String url;
-    private String tweetId;
+    private String tweetid;
 }
