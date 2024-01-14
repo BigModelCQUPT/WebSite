@@ -33,7 +33,7 @@ public class OrderTask {
     @Autowired
     private TokenService tokenService;
 
-//     @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
+    // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
 //     @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {
@@ -41,7 +41,7 @@ public class OrderTask {
         // String token = "13893747a348d8fc";
         String token = tokenService.getToken("twitterToken");
         String uuid = UUID.randomUUID().toString();
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < 1; i++) {
             System.out.println(i);
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
@@ -58,9 +58,9 @@ public class OrderTask {
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId, uuid);
             tweetService.saveTweet(tweetList);
         }
-        this.keywordMatch(uuid);
+        // this.keywordMatch(uuid);
         // this.modeling(uuid);
-        this.noticeMail(uuid);
+        // this.noticeMail(uuid);
     }
 
     public void keywordMatch(String uuid) {
