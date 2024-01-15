@@ -41,13 +41,8 @@ public class OrderTask {
         // String token = "13893747a348d8fc";
         String token = tokenService.getToken("twitterToken");
         String uuid = UUID.randomUUID().toString();
-<<<<<<< HEAD
         for (int i = 0; i < list.size(); i++) {
             System.out.println("查找用户 ：" + list.get(i).getUsername());
-=======
-        for (int i = 0; i < 1; i++) {
-            System.out.println(i);
->>>>>>> 17437a4bc345fc37f5537ed938cb55a4894c1586
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
             OkHttpClient client = new OkHttpClient().newBuilder()
