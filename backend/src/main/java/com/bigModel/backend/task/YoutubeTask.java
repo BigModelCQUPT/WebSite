@@ -35,7 +35,7 @@ public class YoutubeTask {
     @Autowired
     private KeywordService keywordService;
 
-    @Scheduled(cron = "0/50 * * * * ?")
+//    @Scheduled(cron = "0/50 * * * * ?")
 //    @Transactional
     public void VideoSummary() throws Exception{
         List<YoutubeUser> userList = youtubeUserService.listAll();
@@ -51,6 +51,7 @@ public class YoutubeTask {
             YoutubeVideo youtubeVideo = listAllVideo.get(i);
             String url = listAllVideo.get(i).getVideoUrl();
             String summary = bibiGPT.getSummary(url);
+            summary = summary.replaceAll("\\\\n", "\n");
             System.out.println(summary);
             youtubeVideo.setSummary(summary);
             youtubeVideoService.saveSummary(youtubeVideo);

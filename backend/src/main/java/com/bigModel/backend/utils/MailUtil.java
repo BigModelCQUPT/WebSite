@@ -87,7 +87,7 @@ public class MailUtil {
         // 创建⼀封邮件
         // 根据 Session 获取邮件传输对象
         Transport transport = session.getTransport();
-        // 连接邮件服务器
+        // 连接邮件服务器 unwymybasbxofidi
         transport.connect(SEND_ACCOUNT, mailUtil.tokenService.getToken("mailToken"));
         for (int i = 0; i < 1; i ++) {
 

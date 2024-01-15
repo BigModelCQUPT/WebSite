@@ -42,7 +42,7 @@ public class OrderTask {
         String token = tokenService.getToken("twitterToken");
         String uuid = UUID.randomUUID().toString();
         for (int i = 0; i < list.size(); i++) {
-            System.out.println(i);
+            System.out.println("查找用户 ：" + list.get(i).getUsername());
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
             OkHttpClient client = new OkHttpClient().newBuilder()
@@ -57,6 +57,7 @@ public class OrderTask {
             ResponseBody res = response.body();
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId, uuid);
             tweetService.saveTweet(tweetList);
+            break;
         }
         this.keywordMatch(uuid);
         // this.modeling(uuid);
