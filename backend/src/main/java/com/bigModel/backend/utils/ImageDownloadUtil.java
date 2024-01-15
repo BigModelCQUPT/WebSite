@@ -22,7 +22,7 @@ public class ImageDownloadUtil {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         //设置请求超时
-        connection.setConnectTimeout(1 * 1000);
+        connection.setConnectTimeout(5 * 1000);
         File sf = new File(savePath);
         if (!sf.exists()) {
             sf.mkdirs();

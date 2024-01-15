@@ -85,11 +85,18 @@ public class ParseJSONUtil {
                     tweetImage.setTweetid(tweetId);
                     parseJSONUtil.tweetImageService.addTweetImage(tweetImage);
                     // System.out.println(tweetImage);
-                    // ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
+                    ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
                 } else if (item.getString("type").equals("video")) { // 视频
                     JSONObject video_info = item.getJSONObject("video_info");
                     JSONArray variants = video_info.getJSONArray("variants");
                     String url = variants.getJSONObject(0).getString("url");
+                    for (int vi = 1; vi < variants.length(); vi ++) {
+                        String tmpUrl = variants.getJSONObject(i).getString("url");
+                        if (tmpUrl.contains("mp4")) {
+                            url = tmpUrl;
+                            break;
+                        }
+                    }
                     TweetVideo tweetVideo = new TweetVideo();
                     tweetVideo.setTweetid(tweetId);
                     tweetVideo.setUrl(url);
@@ -116,7 +123,7 @@ public class ParseJSONUtil {
                         tweetImage.setTweetid(tweetId);
                         parseJSONUtil.tweetImageService.addTweetImage(tweetImage);
                         // System.out.println(tweetImage);
-                        // ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
+                        ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
                     } else if (item.getString("type").equals("video")) { // 视频
                         JSONObject video_info = item.getJSONObject("video_info");
                         JSONArray variants = video_info.getJSONArray("variants");
