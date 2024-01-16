@@ -83,9 +83,11 @@ public class ParseJSONUtil {
                     TweetImage tweetImage = new TweetImage();
                     tweetImage.setUrl(item.getString("media_url_https"));
                     tweetImage.setTweetid(tweetId);
-                    parseJSONUtil.tweetImageService.addTweetImage(tweetImage);
-                    // System.out.println(tweetImage);
-                    ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
+                    boolean res = parseJSONUtil.tweetImageService.addTweetImage(tweetImage);
+                    if (res) {
+                        // System.out.println(tweetImage);
+                        ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
+                    }
                 } else if (item.getString("type").equals("video")) { // 视频
                     JSONObject video_info = item.getJSONObject("video_info");
                     JSONArray variants = video_info.getJSONArray("variants");
@@ -121,9 +123,11 @@ public class ParseJSONUtil {
                         TweetImage tweetImage = new TweetImage();
                         tweetImage.setUrl(item.getString("media_url_https"));
                         tweetImage.setTweetid(tweetId);
-                        parseJSONUtil.tweetImageService.addTweetImage(tweetImage);
+                        boolean res = parseJSONUtil.tweetImageService.addTweetImage(tweetImage);
                         // System.out.println(tweetImage);
-                        ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
+                        if (res) {
+                            ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
+                        }
                     } else if (item.getString("type").equals("video")) { // 视频
                         JSONObject video_info = item.getJSONObject("video_info");
                         JSONArray variants = video_info.getJSONArray("variants");
