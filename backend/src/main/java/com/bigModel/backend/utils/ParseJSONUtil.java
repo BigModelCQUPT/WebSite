@@ -61,7 +61,7 @@ public class ParseJSONUtil {
             tweet.setTweetid(item.getString("id_str"));
             tweet.setUsername(username);
             tweet.setTwitterId(twitterId);
-            tweet.setUrl("https://twitter.com/" + username + "/status/" + twitterId);
+            tweet.setUrl("https://twitter.com/" + username + "/status/" + tweet.getTweetid());
             tweet.setPublishTime(new Date(item.getString("created_at")));
             tweet.setUuid(uuid);
             tweet.setNeedReturn(0);
