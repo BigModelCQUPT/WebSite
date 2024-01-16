@@ -75,7 +75,7 @@ public class MailUtil {
     // 发送的主题
     private static final String subject = "通知"; //主题
 
-    public static void sendMail(List<Tweet> list) throws Exception {
+    public static void sendMail(List<Tweet> tweetList) throws Exception {
         // QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         // queryWrapper.eq("username", "admin");
 
@@ -101,17 +101,14 @@ public class MailUtil {
         Transport transport = session.getTransport();
         // 连接邮件服务器 unwymybasbxofidi
         transport.connect(SEND_ACCOUNT, mailUtil.tokenService.getToken("mailToken"));
-        for (int i = 0; i < list.size(); i ++) {
-
-            MimeMessage message = createMimeMessage(session, SEND_ACCOUNT, toCountEmail, name, subject, null, list.get(i).getTweetid());
-            // 发送邮件
-            transport.sendMessage(message, message.getAllRecipients());
-        }
+        MimeMessage message = createMimeMessage(session, SEND_ACCOUNT, toCountEmail, name, subject, null, tweetList);
+        // 发送邮件
+        transport.sendMessage(message, message.getAllRecipients());
         // 关闭连接
         transport.close();
     }
 
-    public static MimeMessage createMimeMessage(Session session, String fromAccount, String toAccount,String name,String subject,String staff_name, String tweetId)
+    public static MimeMessage createMimeMessage(Session session, String fromAccount, String toAccount,String name,String subject,String staff_name, List<Tweet> tweetList)
             throws Exception {
         // 1.创建邮件对象
         MimeMessage message = new MimeMessage(session);
@@ -124,13 +121,14 @@ public class MailUtil {
 
         // 邮件内容
         BodyPart textPart = new MimeBodyPart();
-        textPart.setContent("发现敏感推文，推文地址为" + "https://twitter.com/realcaixia/status/" + tweetId, "text/html;charset=UTF-8");
+        // textPart.setContent("发现敏感推文，推文地址为" + "https://twitter.com/realcaixia/status/" + tweetId, "text/html;charset=UTF-8");
+        textPart.setContent("发现敏感推文，具体信息看附件内容。", "text/html;charset=UTF-8");
         multipart.addBodyPart(textPart);
 
         BodyPart file = new MimeBodyPart();
         // DataSource dataSource = new ByteArrayDataSource(mailUtil.getExcel(tweetId), "application/excel");
         file.setFileName(MimeUtility.encodeText("推文信息.xlsx"));
-        saveExcel(tweetId);
+        saveExcel(tweetList);
         DataSource dataSource = new FileDataSource("./excel/fujian.xlsx");
         // file.setDataHandler(new DataHandler(mailUtil.getExcel(tweetId)));
         file.setDataHandler(new DataHandler(dataSource));
@@ -146,57 +144,60 @@ public class MailUtil {
         message.saveChanges();
         return message;
     }
-    public static void saveExcel(String tweetId) throws IOException {
-        MailExcel mailExcel = new MailExcel();
-        Tweet tweet = mailUtil.tweetService.getByTweetId(tweetId);
-        mailExcel.setTweetid(tweetId);
-        mailExcel.setUsername(tweet.getUsername());
-        mailExcel.setText(tweet.getText());
-        mailExcel.setUrl(tweet.getUrl());
-        mailExcel.setPublishTime(tweet.getPublishTime());
-        List<TweetImage> imageList = mailUtil.tweetImageVideoService.listImagesByTweetid(tweetId);
-        List<TweetVideo> videoList = mailUtil.tweetImageVideoService.listVideosByTweetid(tweetId);
-        // mailExcel.setImage(imageList.toString());
-        mailExcel.setVideo(videoList.size() == 1 ? videoList.get(0).toString():null); // 视频只存放链接
+    public static void saveExcel(List<Tweet> tweetList) throws IOException {
         List<MailExcel> list = new ArrayList<>();
-        // 图片列图片数
-        AtomicReference<Integer> maxImageSize = new AtomicReference<>(imageList.size());
-        List<ImageData> imageDataList = new ArrayList<>();
-        int splitWidth = 2;
-        int imageWidth = 80;
-        int sumWidth = maxImageSize.get() * (imageWidth + splitWidth);
         AutoColumnWidthStyleStrategy longWidth = new AutoColumnWidthStyleStrategy();
-        for (int i = 1; i <= imageList.size(); i ++) {
-            String path = "./img/" + tweetId + "_" + (i - 1) + ".jpg";
-            int left = imageWidth * (i - 1) + i * splitWidth;
-            int right = sumWidth - imageWidth - left;
-            ImageData imageData = new ImageData();
-            try {
-                imageData.setImage(FileUtils.readFileToByteArray(new File(path)));
-            }catch (IOException e) {
-                System.out.println("无法将本地图片转为bytearray");
-                e.printStackTrace();
+        Map<String, Integer> zdyColumnWidth = new HashMap<>();
+        //图片列名称，对应导出对象的列名称，图片列长度
+        zdyColumnWidth.put("图片", 60);
+        zdyColumnWidth.put("发布时间", 20);
+        zdyColumnWidth.put("推文内容", 50);
+        zdyColumnWidth.put("推文地址", 45);
+        zdyColumnWidth.put("视频", 45);
+        longWidth.setZdyColumnWidth(zdyColumnWidth);
+        for (int pos = 0; pos < tweetList.size(); pos ++) {
+            String tweetId = tweetList.get(pos).getTweetid();
+            MailExcel mailExcel = new MailExcel();
+            Tweet tweet = mailUtil.tweetService.getByTweetId(tweetId);
+            mailExcel.setTweetid(tweetId);
+            mailExcel.setUsername(tweet.getUsername());
+            mailExcel.setText(tweet.getText());
+            mailExcel.setUrl(tweet.getUrl());
+            mailExcel.setPublishTime(tweet.getPublishTime());
+            List<TweetImage> imageList = mailUtil.tweetImageVideoService.listImagesByTweetid(tweetId);
+            List<TweetVideo> videoList = mailUtil.tweetImageVideoService.listVideosByTweetid(tweetId);
+            // mailExcel.setImage(imageList.toString());
+            mailExcel.setVideo(videoList.size() == 1 ? videoList.get(0).toString() : null); // 视频只存放链接
+            // 图片列图片数
+            AtomicReference<Integer> maxImageSize = new AtomicReference<>(imageList.size());
+            List<ImageData> imageDataList = new ArrayList<>();
+            int splitWidth = 2;
+            int imageWidth = 80;
+            int sumWidth = maxImageSize.get() * (imageWidth + splitWidth);
+            for (int i = 1; i <= imageList.size(); i++) {
+                String path = "./img/" + tweetId + "_" + (i - 1) + ".jpg";
+                int left = imageWidth * (i - 1) + i * splitWidth;
+                int right = sumWidth - imageWidth - left;
+                ImageData imageData = new ImageData();
+                try {
+                    imageData.setImage(FileUtils.readFileToByteArray(new File(path)));
+                } catch (IOException e) {
+                    System.out.println("无法将本地图片转为bytearray");
+                    e.printStackTrace();
+                }
+                imageData.setImageType(ImageData.ImageType.PICTURE_TYPE_JPEG);
+                imageData.setTop(1);
+                imageData.setBottom(1);
+                imageData.setLeft(left);
+                imageData.setRight(right);
+                imageData.setAnchorType(ClientAnchorData.AnchorType.DONT_MOVE_DO_RESIZE);
+                imageDataList.add(imageData);
             }
-            imageData.setImageType(ImageData.ImageType.PICTURE_TYPE_JPEG);
-            imageData.setTop(1);
-            imageData.setBottom(1);
-            imageData.setLeft(left);
-            imageData.setRight(right);
-            imageData.setAnchorType(ClientAnchorData.AnchorType.DONT_MOVE_DO_RESIZE);
-            Map<String, Integer> zdyColumnWidth = new HashMap<>();
-            //图片列名称，对应导出对象的列名称，图片列长度
-            zdyColumnWidth.put("图片", sumWidth / 6);
-            zdyColumnWidth.put("发布时间", 20);
-            zdyColumnWidth.put("推文内容", 50);
-            zdyColumnWidth.put("推文地址", 45);
-            zdyColumnWidth.put("视频", 45);
-            longWidth.setZdyColumnWidth(zdyColumnWidth);
-            imageDataList.add(imageData);
+            WriteCellData<Void> writeCellData = new WriteCellData<>();
+            writeCellData.setImageDataList(imageDataList);
+            mailExcel.setWriteCellData(writeCellData);
+            list.add(mailExcel);
         }
-        WriteCellData<Void> writeCellData = new WriteCellData<>();
-        writeCellData.setImageDataList(imageDataList);
-        mailExcel.setWriteCellData(writeCellData);
-        list.add(mailExcel);
         FileOutputStream fileOutputStream = new FileOutputStream(new File("./excel/fujian.xlsx"));
         ExcelWriter excelWriter  = EasyExcel.write(fileOutputStream).build();
         WriteSheet writeSheet = EasyExcel.writerSheet().head(MailExcel.class).registerWriteHandler(longWidth).build();
