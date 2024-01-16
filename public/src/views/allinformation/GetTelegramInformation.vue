@@ -3,11 +3,12 @@
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
         <!--        工具栏-->
         <div class="toolbar">
-            <div style="display: inline-flex;">
-                <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
-                    v-model="search_keyword" placeholder="请输入进行搜索...">
-                </el-input>
-                <el-button type="primary" @click="fetchData">
+            <div>
+                <el-select v-model="findName" multiple placeholder="请选择">
+                    <el-option v-for="item in tabAllUser" :key="item.key" :label="item.label" :value="item.key">
+                    </el-option>
+                </el-select>
+                <el-button type="primary" @click="fetchData" style="margin-left:10px;">
                     <el-icon style="vertical-align: middle;">
                         <search />
                     </el-icon>
@@ -16,7 +17,7 @@
             </div>
             <div>
                 <!-- <el-upload style="  display: inline-flex; margin-right: 25px;margin-top: -5px;"
-                    action="http://localhost:8181/telegram/upload" :headers="header">
+                    action="http://localhost:8181/telegram/upload" :headers="header"> 
                     <el-button type="primary">上传数据</el-button>
                 </el-upload> -->
                 <el-upload style="  display: inline-flex; margin-right: 12px;"
@@ -60,10 +61,10 @@
         <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
             @selection-change="handleSelectionChange" ref="table" row-key="id" fit :row-class-name="tableRowClassName">
 
-            <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable"
+            <el-table-column type="selection" align="center" width="38" :selectable="checkSelectable"
                 :reserve-selection="true" />
             <el-table-column prop="id" label="序号" width="90" align="center" />
-            <el-table-column prop="username" label="用户名" width="120" align="center" />
+            <el-table-column prop="nickname" label="用户名" width="120" align="center" />
             <el-table-column prop="userId" label="用户id" width="90" align="center"></el-table-column>
             <el-table-column prop="groupName" label="群组名" width="90" align="center"></el-table-column>
             <el-table-column prop="postalTime" label="发送时间" width="180" align="center" />
@@ -159,6 +160,7 @@
                 tableData: [{
                     id: '123',
                     username: '',
+                    nickname: '',
                     userId: '',
                     message: '',
                     postalTime: '',
@@ -166,7 +168,6 @@
                     keyword: '',
                     needReturn: '',
                     flag: '0',
-                }, {
                 }],
                 search_text: '',
                 total: 0,//总条数
@@ -182,12 +183,16 @@
                 keywordInputValue: '',
                 search_keyword: '',
                 selectUserList: [],
-                selectUserIds: '1, 2, 3',
+                selectUserIds: '',
+
+                tabAllUser: [],
+                findName: [],
             }
         },
         created() {
             this.fetchData()
             this.fetchKeywordData()
+            this.getAllUser()
         },
         methods: {
             fileSuccess() {//上传失败
@@ -212,9 +217,8 @@
                 })
             },
             exportData() {
-
+                let ids = []
                 if (this.selectUserList.length > 0) {
-                    let ids = []
                     for (var i = 0; i < this.selectUserList.length; i++) {
                         ids[i] = this.selectUserList[i].id
                     }
@@ -226,8 +230,7 @@
                     method: 'get',
                     responseType: "blob",
                     params: {
-                        'ids': this.selectUserIds,
-
+                        'ids': this.selectUserIds
                     }
                 }).then(function (res) {
                     console.log(res)
@@ -271,25 +274,6 @@
                 // console.log(this.size)
                 this.fetchData()
             },
-            // find() {
-            //     if (this.search_text == '') {
-            //         this.$message.error('请先输入有效值');
-            //         return;
-            //     }
-            //     const _this = this
-            //     axios.get('http://10.16.104.183:8181/tenantInformation/find/' + this.search_name).then(function (resp) {
-            //         if (resp.data.code == "200") {//返回成功
-            //             // console.log(resp)
-            //             _this.tableData = resp.data.data.content
-            //             _this.total = resp.data.data.length
-            //         } else if (resp.data.code == "101") {
-            //             _this.$message.error('出现错误');
-            //             return false;
-            //         } else {
-            //             console.log("error")
-            //         }
-            //     })
-            // },
             init_page() {
                 const _this = this
                 const data = {
@@ -315,18 +299,12 @@
             },
 
             fetchData() {
-                // if (this.search_name == '') {
-                //     this.$message.error('请先输入有效值');
-                //     return;
-                // }
                 const _this = this
-                // const data = {
-                //     page: this.currentPage,
-                //     size: this.size,
-                // }
+
                 request({
                     url: '/telegram/findByPage/' + this.currentPage + '/' + this.size,
                     method: 'post',
+                    data: _this.findName
                 }).then(function (resp) {
                     if (resp.status == "200") {
                         _this.tableData = resp.data.data.records
@@ -514,6 +492,23 @@
                     return ''
                 }
             },
+
+            // 获取所有用户
+            getAllUser() {
+                const _this = this
+                request({
+                    url: 'http://10.16.104.183:8181/telegram/findAllUser',
+                    method: 'get',
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.tabAllUser = resp.data.data
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+            }
         },
         components: {
             Search, FolderAdd, Upload,

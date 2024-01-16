@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
@@ -41,6 +39,7 @@ public class OrderTask {
         List<TwitterUser> list = infoService.listAll();
         // String token = "13893747a348d8fc";
         String token = tokenService.getToken("twitterToken");
+        String uuid = UUID.randomUUID().toString();
         for (int i = 0; i < list.size(); i++) {
             System.out.println(i);
             String twitterId = list.get(i).getTwitterId();
@@ -55,37 +54,33 @@ public class OrderTask {
                     .build();
             Response response = client.newCall(request).execute();
             ResponseBody res = response.body();
-            List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId);
-            this.keywordMatch(tweetList);
-//            tweetService.saveTweet(tweetList);
+            List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId, uuid);
+            tweetService.saveTweet(tweetList);
+            break;
         }
-        this.modeling();
+        this.keywordMatch(uuid);
+        // this.modeling(uuid);
+        this.noticeMail(uuid);
     }
 
-    public void keywordMatch(List<Tweet> tweetList) throws Exception {
+    public void keywordMatch(String uuid) {
+        List<Tweet> tweetList = tweetService.listByUuid(uuid);
         List<Keyword> keywordList = keywordService.listAllKeywords();
         for (int i = 0; i < tweetList.size(); i ++) {
-            List<String> list = new ArrayList<>();
-            int id = tweetList.get(i).getId();
             for (int j = 0; j < keywordList.size(); j ++) {
                 String keyword = keywordList.get(j).getKeyword();
-                if (tweetService.checkKeyword(id, keyword)) {
-                    list.add(keyword);
+                tweetService.checkKeyword(keyword, uuid);
+                if (tweetList.get(i).getText().contains(keyword)) {
                     keywordService.updateKeywordNumber(keywordList.get(j));
                 }
             }
-            if (list.size() > 0) {
-                tweetService.updateReturn(id);
-                tweetService.saveKeywordList(id, list);
-                MailUtil.sendMail(tokenService.getToken("mailToken"), tweetList.get(i).getTweetid());
-            }
         }
     }
 
-   // TODO chatgpt 分析
+    // TODO chatgpt 分析
 //    如果没有 keyword 没有匹配 就启用chatgpt
-    public void modeling() {
-        List<Tweet> tweetList = tweetService.listAllNoReturn();
+    public void modeling(String uuid) {
+        List<Tweet> tweetList = tweetService.listAllNoReturn(uuid);
         for(int i = 0;i < tweetList.size();i++){
             Integer id = tweetList.get(i).getId();
             String content = tweetList.get(i).getText();
@@ -93,6 +88,15 @@ public class OrderTask {
             String needReturn = answerHash.get("answer");
             if(needReturn.equals("是") || needReturn.equals("是。")){
                 tweetService.updateReturn(id);
+            }
+        }
+    }
+
+    public void noticeMail(String uuid) throws Exception {
+        List<Tweet> tweetList = tweetService.listByUuid(uuid);
+        for (Tweet tweet: tweetList) {
+            if (tweet.getNeedReturn() == 1) {
+                MailUtil.sendMail(tokenService.getToken("mailToken"), tweet.getTweetid());
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.bigModel.backend.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.bigModel.backend.advice.result.Result;
 import com.bigModel.backend.pojo.TwitterUser;
 import com.bigModel.backend.pojo.YoutubeUser;
 import com.bigModel.backend.service.YoutubeUserService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 
 @RestController

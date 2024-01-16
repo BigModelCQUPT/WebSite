@@ -4,10 +4,11 @@
         <!--        工具栏-->
         <div class="toolbar">
             <div>
-                <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
-                    v-model="search_keyword" placeholder="请输入进行搜索...">
-                </el-input>
-                <el-button type="primary" @click="fetchData">
+                <el-select v-model="findName" multiple placeholder="请选择">
+                    <el-option v-for="item in tabAllUser" :key="item.key" :label="item.label" :value="item.key">
+                    </el-option>
+                </el-select>
+                <el-button type="primary" @click="fetchData" style="margin-left:10px;">
                     <el-icon style="vertical-align: middle;">
                         <search />
                     </el-icon>
@@ -60,10 +61,11 @@
             <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
                 @selection-change="handleSelectionChange" ref="table" row-key="id" fit
                 :row-class-name="tableRowClassName">
-                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable"
+                <el-table-column type="selection" align="center" width="38" :selectable="checkSelectable"
                     :reserve-selection="true" />
-                <el-table-column prop="id" label="序号" align="center" width="90" />
-                <el-table-column prop="coverUrl" label="视频封面" width="180" align="center">
+                <el-table-column prop="id" label="序号" align="center" width="50" />
+                <el-table-column prop="releaseTime" label="发布时间" width="100" align="center" />
+                <el-table-column prop="coverUrl" label="视频封面" width="150" align="center">
                     <template #default="scope">
                         <el-image :src="scope.row.coverUrl"></el-image>
                         <!-- <div style="text-align: center;width: 100px;">视频标题</div> -->
@@ -77,7 +79,7 @@
                     </el-image>
                 </template> -->
 
-                <el-table-column prop="username" label="发布者" align="center" width="150" />
+                <el-table-column prop="username" label="发布者" align="center" width="120" />
                 <el-table-column prop="title" label="视频标题" align="center">
                     <template #default="scope">
                         <a :href="scope.row.videoUrl" target="_blank" style="text-decoration: none">
@@ -85,7 +87,8 @@
                         </a>
                     </template>
                 </el-table-column>
-                <el-table-column prop="keyword" label="关键词" width="90" align="center">
+                <el-table-column prop="summary" label="摘要" width="200" align="center"></el-table-column>
+                <el-table-column prop="keyword" label="关键词" width="80" align="center">
                     <template #default="scope">
                         <div v-for="item in companyCut(scope.row.keyword)" :key='item'>
                             <!-- <el-tag type="success">{{ item }}</el-tag> -->
@@ -142,7 +145,8 @@
                     keyword: '彭于晏',
                     flag: '0',
                     needReturn: '',
-
+                    releaseTime: '',
+                    summary: '',
                 }, {
                 }],
                 search_text: '',
@@ -151,11 +155,15 @@
                 size: 10,//每页条数
                 dialogVisible: false,
                 selectUserList: [],
-                selectUserIds: '1, 2, 3',
+                selectUserIds: '',
+
+                tabAllUser: [],
+                findName: [],
             }
         },
         created() {
             this.fetchData()
+            this.getAllUser()
         },
         methods: {
             fileSuccess() {//上传失败
@@ -246,9 +254,8 @@
 
 
             exportData() {
-
+                let ids = []
                 if (this.selectUserList.length > 0) {
-                    let ids = []
                     for (var i = 0; i < this.selectUserList.length; i++) {
                         ids[i] = this.selectUserList[i].id
                     }
@@ -294,14 +301,11 @@
 
             fetchData() {
                 const _this = this
-                const data = {
-                    page: this.currentPage,
-                    size: this.size,
-                }
+
                 request({
                     url: '/youtube/listAll/' + this.currentPage + '/' + this.size,
                     method: 'post',
-                    data: data
+                    data: _this.findName
                 }).then(function (resp) {
                     if (resp.status == "200") {
                         _this.tableData = resp.data.data.records
@@ -375,6 +379,23 @@
                     return ''
                 }
             },
+
+            // 获取所有用户
+            getAllUser() {
+                const _this = this
+                request({
+                    url: 'http://10.16.104.183:8181/youtube/findAllUser',
+                    method: 'get',
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.tabAllUser = resp.data.data
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+            }
         },
         components: {
             Search, Plus, FolderAdd, Upload

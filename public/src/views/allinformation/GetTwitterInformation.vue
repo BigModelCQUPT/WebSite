@@ -7,8 +7,18 @@
                 <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
                     v-model="search_keyword" placeholder="请输入进行搜索...">
                 </el-input>
-                <el-button type="primary" @click="fetchData">
-                    <el-icon style="vertical-align: middle;">
+                <el-select v-model="findName" multiple placeholder="请选择用户">
+                    <el-option v-for="item in tabAllUser" :key="item.key" :label="item.label" :value="item.key">
+                        <span style="float: left">{{ item.key }}</span>
+                        <span style="
+                        float: right;
+                        color: var(--el-text-color-secondary);
+                        font-size: 13px;
+                        ">{{ item.label }}</span>
+                    </el-option>
+                </el-select>
+                <el-button type="primary" @click="fetchData" style="margin-left:10px;">
+                    <el-icon style=" vertical-align: middle;">
                         <search />
                     </el-icon>
                     <span style="vertical-align: middle;"> 搜索 </span>
@@ -62,7 +72,7 @@
                 @selection-change="handleSelectionChange" ref="table" row-key="id" fit
                 :row-class-name="tableRowClassName">
 
-                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable"
+                <el-table-column type="selection" align="center" width="38" :selectable="checkSelectable"
                     :reserve-selection="true" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="100" align="center" />
@@ -76,7 +86,7 @@
                     </template>
                 </el-table-column>
                 <!-- <el-table-column prop="keyword" label="关键词" width="90" align="center" /> -->
-                <el-table-column prop="keyword" label="关键词" width="90" align="center">
+                <el-table-column prop="keyword" label="关键词" width="80" align="center">
                     <template #default="scope">
                         <div v-for="item in companyCut(scope.row.keyword)" :key='item'>
                             <!-- <el-tag type="success">{{ item }}</el-tag> -->
@@ -161,12 +171,15 @@
                 filename: '',
                 detaildialogVisible: false,
                 selectUserList: [],
-                selectUserIds: '1, 2, 3',
+                selectUserIds: '',
+
+                tabAllUser: [],
+                findName: [],
             }
         },
         created() {
             this.fetchData()
-            this.fetchKeywordData()
+            this.getAllUser()
         },
         methods: {
             fileSuccess() {//上传失败
@@ -191,8 +204,8 @@
                 })
             },
             exportData() {
+                let ids = []
                 if (this.selectUserList.length > 0) {
-                    let ids = []
                     for (var i = 0; i < this.selectUserList.length; i++) {
                         ids[i] = this.selectUserList[i].id
                     }
@@ -200,7 +213,7 @@
                 }
 
                 request({
-                    url: '/twitter/export',
+                    url: '/tweet/export',
                     method: 'get',
                     responseType: "blob",
                     params: {
@@ -209,7 +222,7 @@
                 }).then(function (res) {
                     console.log(res)
                     let data = res.data
-                    let filename = "推特信息.xlsx"
+                    let filename = "推特聊天记录.xlsx"
                     let url = window.URL.createObjectURL(new Blob([data]))
                     let link = document.createElement('a')
                     link.style.display = 'none'
@@ -237,25 +250,6 @@
                 // console.log(this.size)
                 this.fetchData()
             },
-            // find() {
-            //     if (this.search_text == '') {
-            //         this.$message.error('请先输入有效值');
-            //         return;
-            //     }
-            //     const _this = this
-            //     axios.get('http://10.16.104.183:8181/tenantInformation/find/' + this.search_name).then(function (resp) {
-            //         if (resp.data.code == "200") {//返回成功
-            //             // console.log(resp)
-            //             _this.tableData = resp.data.data.content
-            //             _this.total = resp.data.data.length
-            //         } else if (resp.data.code == "101") {
-            //             _this.$message.error('出现错误');
-            //             return false;
-            //         } else {
-            //             console.log("error")
-            //         }
-            //     })
-            // },
             init_page() {
                 const _this = this
                 const data = {
@@ -287,9 +281,8 @@
                 // }
                 const _this = this
                 const data = {
-                    page: this.currentPage,
-                    size: this.size,
                     keyword: this.search_keyword,
+                    needName: _this.findName
                 }
                 request({
                     url: '/tweet/findByPage/' + this.currentPage + '/' + this.size,
@@ -484,6 +477,23 @@
                 } else {
                     return ''
                 }
+            },
+
+            // 获取所有用户
+            getAllUser() {
+                const _this = this
+                request({
+                    url: 'http://10.16.104.183:8181/tweet/findAllUser',
+                    method: 'get',
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.tabAllUser = resp.data.data
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
             }
         },
         components: {

@@ -3,34 +3,42 @@
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
         <!--        工具栏-->
         <div class="toolbar">
-            <div>
+            <div style=" display: inline-flex;">
                 <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
                     v-model="search_keyword" placeholder="请输入进行搜索...">
                 </el-input>
-                <el-button type="primary" @click="fetchData">
-                    <el-icon style="vertical-align: middle;">
+                <el-select v-model="findName" multiple placeholder="请选择用户">
+                    <el-option v-for="item in tabAllUser" :key="item.key" :label="item.label" :value="item.key">
+                        <span style="float: left">{{ item.key }}</span>
+                        <span style="
+                        float: right;
+                        color: var(--el-text-color-secondary);
+                        font-size: 13px;
+                        ">{{ item.label }}</span>
+                    </el-option>
+                </el-select>
+                <el-button type="primary" @click="fetchData" style="margin-left:10px;">
+                    <el-icon style=" vertical-align: middle;">
                         <search />
                     </el-icon>
                     <span style="vertical-align: middle;"> 搜索 </span>
                 </el-button>
             </div>
-            <div align="right">
-                <el-upload style="  display: inline-flex;margin-right:8px;margin-top: -3px"
-                    action="http://localhost:8181/keyword/upload" :headers="header" :show-file-list="false"
+            <div align="right" style=" display: inline-flex;">
+                <el-upload style="  display: inline-flex;margin-right:8px;"
+                    action="http://localhost:8181/twitter/upload" :headers="header" :show-file-list="false"
                     :on-change="fileChange" :on-error="fileSuccess" :on-success="fileSuccess">
-                    <el-button type="success" style="margin-top:13px;margin-right:10px;">
+                    <el-button type="success" style="margin-right:10px;">
                         <el-icon><folder-add /></el-icon>
                         <span style="vertical-align: middle;">导入数据</span>
                     </el-button>
                 </el-upload>
 
-                <el-button type="success" @click="exportData"
-                    style=" display: inline-flex;margin-top: 0px;margin-right:5px;margin-top: -3px">
+                <el-button type="success" @click="exportData" style=" display: inline-flex;margin-right:5px;">
                     <el-icon>
                         <upload />
                     </el-icon>
                     <span style="vertical-align: middle;">导出数据</span></el-button>
-
             </div>
             <!-- <div>
                 <el-button type="primary" @click="showDialog" style="margin-top: 0px">
@@ -44,8 +52,7 @@
 
         <!--        数据展示-->
         <div style="margin-top: 15px">
-            <!-- <el-table :data="tableData" border style="width: 100%"> -->
-            <div class="table-alert table-alert-info table-alert-with-icon" align="left" style="margin-left: 10px">
+            <div class="table-alert table-alert-info table-alert-with-icon" align="left">
                 <span class="table-alert-icon">
                     <i class="el-alert__icon el-icon-info" />
                 </span>
@@ -54,23 +61,28 @@
                 </span>
                 <el-button @click="handleClearSelection" type="text">清空
                 </el-button>
-                <el-button @click="handleReadTwitter" type="text">
+                <el-button @click="handleReadTweet" type="text">
                     已读所选
                 </el-button>
             </div>
+            <!-- <el-table :data="tableData" border style="width: 100%"> -->
 
-            <el-table :data="tableData" border style="width: 100%" :row-class-name="tableRowClassName"
-                @selection-change="handleSelectionChange" ref="table" row-key="id" fit>
-                <el-table-column type=" selection" align="center" width="55" :selectable="checkSelectable" />
+
+            <el-table :data="tableData" border style="width: 98%;margin-left: 15px"
+                @selection-change="handleSelectionChange" ref="table" row-key="id" fit
+                :row-class-name="tableRowClassName">
+
+                <el-table-column type="selection" align="center" width="55" :selectable="checkSelectable"
+                    :reserve-selection="true" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
-                <el-table-column prop="username" label="用户名" width="120" align="center" />
+                <el-table-column prop="username" label="用户名" width="100" align="center" />
+                <el-table-column prop="time" label="发布时间" width="100" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
                 <el-table-column label="推文类型" width="85" align="center">
                     <template #default="tableData">
-                        <el-tag v-if="tableData.row.type === 'replied_to'" type="success">回复</el-tag>
-                        <el-tag v-else-if="tableData.row.type === 'tweet'" type=" success">原创</el-tag>
-                        <el-tag v-else-if="tableData.row.type === 'retweeted'" type=”success”>转发</el-tag>
-                        <el-tag v-else type="info">引用</el-tag>
+                        <el-tag v-if="tableData.row.type === 'reply'" type="success">评论</el-tag>
+                        <el-tag v-else-if="tableData.row.type === 'tweet'" type=" success">推文</el-tag>
+                        <el-tag v-else-if="tableData.row.type === 'reposted'" type=”success”>转发</el-tag>
                     </template>
                 </el-table-column>
                 <!-- <el-table-column prop="keyword" label="关键词" width="90" align="center" /> -->
@@ -82,6 +94,15 @@
                         </div>
                     </template>
                 </el-table-column>
+
+
+                <!-- <el-table-column label="钉钉返回" width="60" align="center">
+                    <template #default="scope">
+                        <el-tag v-if="scope.row.needReturn === 0" type="success">否</el-tag>
+                        <el-tag v-else-if="scope.row.needReturn === 1" type=" success">是</el-tag>
+                    </template>
+                </el-table-column> -->
+
                 <!-- <el-table-column label="已读状态" width="90" align="center">
                     <template #default="scope">
                         <el-button v-if="scope.row.flag == 0" type="success"
@@ -89,14 +110,24 @@
                         <el-button v-if="scope.row.flag == 1" type="success" plain disabled>已读</el-button>
                     </template>
                 </el-table-column> -->
-
-                <el-table-column label="钉钉返回" width="60" align="center">
-                    <template #default="scope">
-                        <el-tag v-if="scope.row.needReturn === 0" type="success">否</el-tag>
-                        <el-tag v-else-if="scope.row.needReturn === 1" type=" success">是</el-tag>
-                    </template>
-                </el-table-column>
                 <!-- <el-table-column prop="category" label="GPT分类类别" width="80" align="center" /> -->
+                <!-- <el-table-column fixed="right" label="操作" width="110" align="center">
+                    <template v-slot="tableData"> -->
+                <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red" title="确定删除该条信息吗">
+                            
+                            <el-button @click="classify(scope.row)" type="success" size="small">大模型分析</el-button>
+                        </el-popconfirm> -->
+
+                <!-- <el-button  @click="editClick(scope.row)" type="primary" size="small">不使用</el-button> -->
+                <!-- <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon-color="red"
+                            title="确认使用大模型分析该信息吗" @confirm="analysis(tableData.row.id)" @cancel="cancleAnalysis()">
+                            <template #reference>
+                                <el-button type="danger" size="small">大模型分析</el-button>
+                            </template>
+                        </el-popconfirm>
+
+                    </template> -->
+                <!-- </el-table-column> -->
             </el-table>
             <div style="display: flex;justify-content: flex-end; margin-top: 10px">
                 <el-pagination background layout="sizes, prev, pager, next, jumper, ->, total, slot" :total="total"
@@ -104,33 +135,14 @@
                     v-model:currentPage="currentPage" v-model:page-size="size" />
             </div>
         </div>
-
-
-
-
-        <!-- chatgpt 分析结果 弹窗 -->
-        <!-- <div>
-            <el-dialog title="ChatGPT分析结果" width="30%" v-model="dialogVisible"
-                style="display: flex; justify-content: space-around; align-items: center">
-                <div style="height: 20%">
-
-                </div>
-                <div style="margin-top: 60px">
-                    <el-button type="primary" @click="completeAdd">确认</el-button>
-                    <el-button type="primary" @click="cancelAdd">取消</el-button>
-                </div>
-            </el-dialog>
-        </div> -->
-
-
-
     </div>
 </template>
 
 <script>
     import axios from 'axios'
     import { Search, FolderAdd, Upload } from '@element-plus/icons-vue'
-    import { export_retailer } from "@/utils/api";
+    // import { export_retailer } from "@/utils/api";
+    // import { export_retailer } from "@/utils/api";
     import request from '@/utils/http'
 
     export default {
@@ -145,6 +157,7 @@
                     keyword: '彭于晏',
                     flag: '0',
                     needReturn: '',
+                    time: '',
                 }, {
                 }],
                 search_text: '',
@@ -158,11 +171,15 @@
                 filename: '',
                 detaildialogVisible: false,
                 selectUserList: [],
+                selectUserIds: '',
+
+                tabAllUser: [],
+                findName: [],
             }
         },
         created() {
             this.fetchData()
-            this.fetchKeywordData()
+            this.getAllUser()
         },
         methods: {
             fileSuccess() {//上传失败
@@ -187,11 +204,37 @@
                 })
             },
             exportData() {
-                // const _this = this
-                // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
-                //
-                // })
-                export_retailer()
+                let ids = []
+                if (this.selectUserList.length > 0) {
+                    for (var i = 0; i < this.selectUserList.length; i++) {
+                        ids[i] = this.selectUserList[i].id
+                    }
+                    this.selectUserIds = ids.join(',')
+                }
+
+                request({
+                    url: '/tweet/export',
+                    method: 'get',
+                    responseType: "blob",
+                    params: {
+                        'ids': this.selectUserIds
+                    }
+                }).then(function (res) {
+                    console.log(res)
+                    let data = res.data
+                    let filename = "推特聊天记录.xlsx"
+                    let url = window.URL.createObjectURL(new Blob([data]))
+                    let link = document.createElement('a')
+                    link.style.display = 'none'
+                    link.href = url
+                    link.setAttribute('download', filename)
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link) // 下载完成移除元素
+                    window.URL.revokeObjectURL(url) // 释放掉blob对象
+                }).catch((error) => {
+                    console.log(error)
+                })
             },
             showDialog() {
                 this.dialogVisible = true
@@ -207,25 +250,6 @@
                 // console.log(this.size)
                 this.fetchData()
             },
-            // find() {
-            //     if (this.search_text == '') {
-            //         this.$message.error('请先输入有效值');
-            //         return;
-            //     }
-            //     const _this = this
-            //     axios.get('http://10.16.104.183:8181/tenantInformation/find/' + this.search_name).then(function (resp) {
-            //         if (resp.data.code == "200") {//返回成功
-            //             // console.log(resp)
-            //             _this.tableData = resp.data.data.content
-            //             _this.total = resp.data.data.length
-            //         } else if (resp.data.code == "101") {
-            //             _this.$message.error('出现错误');
-            //             return false;
-            //         } else {
-            //             console.log("error")
-            //         }
-            //     })
-            // },
             init_page() {
                 const _this = this
                 const data = {
@@ -239,10 +263,8 @@
                 }).then(function (resp) {
                     if (resp.status == "200") {//返回成功
                         // console.log(resp)
-
                         _this.tableData = resp.data.data.records
                         _this.total = resp.data.data.total
-
                     } else if (resp.data.code == "101") {
                         _this.$message.error('请先登录');
                         return false;
@@ -259,9 +281,8 @@
                 // }
                 const _this = this
                 const data = {
-                    page: this.currentPage,
-                    size: this.size,
                     keyword: this.search_keyword,
+                    needName: _this.findName
                 }
                 request({
                     url: '/tweet/findByPage/' + this.currentPage + '/' + this.size,
@@ -415,21 +436,25 @@
                 let company = (name || "").split(',')
                 return company
             },
+
+
+
             // 复选框
             handleSelectionChange(selection) {
                 this.selectUserList = selection
             },
             handleClearSelection() {
                 this.selectUserList = []
+                this.selectUserIds = ''
                 this.$refs.table.clearSelection()
             },
             checkSelectable(row) {
-                return row.flag === 1 || row.flag == 0
+                return row.flag === 1 || row.flag === 0 // 状态为 2 禁用复选框（返回值为 true 启用，false 禁用）
             },
-            handleReadTwitter() {
+            handleReadTweet() {
                 const _this = this
                 request({
-                    url: 'http://10.16.104.183:8181/twitter/readTweet',
+                    url: 'http://10.16.104.183:8181/tweet/readTweet',
                     method: 'post',
                     data: this.selectUserList
                 }).then(function (resp) {
@@ -453,14 +478,32 @@
                     return ''
                 }
             },
+
+            // 获取所有用户
+            getAllUser() {
+                const _this = this
+                request({
+                    url: 'http://10.16.104.183:8181/tweet/findAllUser',
+                    method: 'get',
+                }).then(function (resp) {
+                    if (resp.status == "200") {
+                        _this.tabAllUser = resp.data.data
+                    }
+                    else {
+                        _this.$message.error('出错了');
+                        return false;
+                    }
+                })
+            }
         },
         components: {
             Search, FolderAdd, Upload
         }
     }
+
 </script>
 
-<style scoped>
+<style>
     .toolbar {
         text-align: left;
         display: flex;
@@ -510,12 +553,9 @@
         margin-bottom: 18px;
     }
 
+
     .box-card {
         width: 480px;
-    }
-
-    .el-table .row-row {
-        background-color: #FFFF00 !important;
     }
 
     .warning-row {
