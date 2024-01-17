@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 导出excel
+ * 导出excel：电报聊天记录
  */
 public class ExcelExportUtil {
 

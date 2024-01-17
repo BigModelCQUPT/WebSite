@@ -195,4 +195,12 @@ public class TweetServiceImpl implements TweetService{
         }
         return res;
     }
+
+    @Override
+    public Tweet getByTweetId(String tweetid) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("tweetid", tweetid);
+        List<Tweet> list =  tweetMapper.selectList(queryWrapper);
+        return list.get(0);
+    }
 }

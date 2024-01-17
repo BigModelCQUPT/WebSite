@@ -76,7 +76,7 @@
                     :reserve-selection="true" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="100" align="center" />
-                <el-table-column prop="time" label="发布时间" width="100" align="center" />
+                <el-table-column prop="publishTime" label="发布时间" width="100" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
                 <el-table-column label="推文类型" width="85" align="center">
                     <template #default="tableData">
@@ -157,7 +157,7 @@
                     keyword: '彭于晏',
                     flag: '0',
                     needReturn: '',
-                    time: '',
+                    publishTime: '',
                 }, {
                 }],
                 search_text: '',

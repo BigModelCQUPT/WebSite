@@ -15,6 +15,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,7 @@ public class OrderTask {
         String token = tokenService.getToken("twitterToken");
         String uuid = UUID.randomUUID().toString();
         for (int i = 0; i < list.size(); i++) {
-            System.out.println(i);
+            System.out.println("查找用户 ：" + list.get(i).getUsername());
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
             OkHttpClient client = new OkHttpClient().newBuilder()
@@ -58,9 +59,9 @@ public class OrderTask {
             tweetService.saveTweet(tweetList);
             break;
         }
-        this.keywordMatch(uuid);
+        // this.keywordMatch(uuid);
         // this.modeling(uuid);
-        this.noticeMail(uuid);
+        // this.noticeMail(uuid);
     }
 
     public void keywordMatch(String uuid) {
@@ -94,10 +95,12 @@ public class OrderTask {
 
     public void noticeMail(String uuid) throws Exception {
         List<Tweet> tweetList = tweetService.listByUuid(uuid);
+        List<Tweet> needNotice = new ArrayList<>();
         for (Tweet tweet: tweetList) {
             if (tweet.getNeedReturn() == 1) {
-                MailUtil.sendMail(tokenService.getToken("mailToken"), tweet.getTweetid());
+                needNotice.add(tweet);
             }
         }
+        MailUtil.sendMail(needNotice);
     }
 }

@@ -45,6 +45,8 @@
                 <el-table-column prop="twitterId" label="推特id" align="center" />
                 <el-table-column prop="username" label="用户名" align="center" />
                 <el-table-column prop="name" label="真实姓名" align="center" />
+                <el-table-column prop="description" label="个人简介" align="center" />
+                <el-table-column prop="followersCount" label="粉丝数" align="center" />
             </el-table>
             <!--          分页-->
             <div style="display: flex;justify-content: flex-end; margin-top: 10px">
@@ -100,7 +102,10 @@
                     id: '1',
                     twitterId: '121212',
                     username: 'username',
-                    name: '姓名'
+                    name: '姓名',
+                    description: '',
+                    followersCount: '',
+
                 }],
                 search_name: '', // 搜索用户
                 add_name: '', // 添加用户

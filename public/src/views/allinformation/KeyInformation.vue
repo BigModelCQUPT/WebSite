@@ -1,4 +1,4 @@
-<!--获取关键信息展示-->
+<!--获取推特信息展示-->
 <template>
     <div style="margin-left: 10px; margin-top: 15px;margin-right: 10px">
         <!--        工具栏-->
@@ -7,7 +7,7 @@
                 <el-input clearable @clear="fetchData" @keydown.enter="fetchData" class="el-input-resident"
                     v-model="search_keyword" placeholder="请输入进行搜索...">
                 </el-input>
-                <el-select v-model="findName" multiple placeholder="请选择用户">
+                <el-select v-model="findName" multiple placeholder="请选择用户名">
                     <el-option v-for="item in tabAllUser" :key="item.key" :label="item.label" :value="item.key">
                         <span style="float: left">{{ item.key }}</span>
                         <span style="
@@ -17,8 +17,8 @@
                         ">{{ item.label }}</span>
                     </el-option>
                 </el-select>
-                <el-button type="primary" @click="fetchData" style="margin-left:10px;">
-                    <el-icon style=" vertical-align: middle;">
+                <el-button type="primary" @click="fetchData">
+                    <el-icon style="vertical-align: middle;">
                         <search />
                     </el-icon>
                     <span style="vertical-align: middle;"> 搜索 </span>
@@ -76,9 +76,9 @@
                     :reserve-selection="true" />
                 <el-table-column prop="id" label="序号" width="90" align="center" />
                 <el-table-column prop="username" label="用户名" width="100" align="center" />
-                <el-table-column prop="time" label="发布时间" width="100" align="center" />
+                <el-table-column prop="publishTime" label="发布时间" width="100" align="center" />
                 <el-table-column prop="text" label="推文内容" align="center" />
-                <el-table-column label="推文类型" width="85" align="center">
+                <el-table-column label="推文类型" width="70" align="center">
                     <template #default="tableData">
                         <el-tag v-if="tableData.row.type === 'reply'" type="success">评论</el-tag>
                         <el-tag v-else-if="tableData.row.type === 'tweet'" type=" success">推文</el-tag>
@@ -157,7 +157,8 @@
                     keyword: '彭于晏',
                     flag: '0',
                     needReturn: '',
-                    time: '',
+                    publishTime: '',
+
                 }, {
                 }],
                 search_text: '',
@@ -263,7 +264,6 @@
                 }).then(function (resp) {
                     if (resp.status == "200") {//返回成功
                         // console.log(resp)
-                        _this.tableData = resp.data.data.records
                         _this.total = resp.data.data.total
                     } else if (resp.data.code == "101") {
                         _this.$message.error('请先登录');

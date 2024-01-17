@@ -30,11 +30,13 @@ public class UsernameToInfoUtil {
     @Autowired
     private  TokenService tokenService;
     private static UsernameToInfoUtil usernameToInfoUtil;
+
     @PostConstruct
     public void init(){
         usernameToInfoUtil = this;
         usernameToInfoUtil.tokenService = this.tokenService;
     }
+
     public static TwitterUser getInfoByUsername(String username) throws IOException {
         String token = usernameToInfoUtil.tokenService.getToken("twitterToken");
         // Pattern p = Pattern.compile("[\u4E00-\u9FA5|\\！|\\，|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]");
@@ -61,10 +63,14 @@ public class UsernameToInfoUtil {
         JSONObject user = new JSONObject(dataList.get(0).toString()).getJSONObject("user");
         String twitterId = user.getString("id");
         String name = user.getString("name");
+        String description = user.getString("description");
+        int followers = Integer.parseInt(user.getString("followers_count"));
         TwitterUser twitterUser = new TwitterUser();
         twitterUser.setName(name);
         twitterUser.setUsername(username);
         twitterUser.setTwitterId(twitterId);
+        twitterUser.setDescription(description);
+        twitterUser.setFollowersCount(followers);
         return twitterUser;
     }
 }

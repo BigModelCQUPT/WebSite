@@ -12,7 +12,7 @@ public class bibiGPT {
         RestTemplate restTemplate = new RestTemplate();
 
         // Set the URL and headers
-        String url = "https://bibigpt.co/api/open/LLZaSC9Vhgaq?url=" + videoUrl;
+        String url = "https://bibigpt.co/api/open/CZ0LzCGBFuDT?url=" + videoUrl;
 
         // Make the HTTP GET request
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);

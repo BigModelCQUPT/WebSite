@@ -28,6 +28,6 @@ public interface TweetService {
     List<Tweet> listByUuid(String uuid);
     List<Tweet> listNeedExportIds(List<Integer> needExportIds);
     List<Tweet> listAllExportIds();
-
     List<Map<String, String>> listAllUser();
+    Tweet getByTweetId(String tweetid);
 }

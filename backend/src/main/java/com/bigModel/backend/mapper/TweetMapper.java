@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface TweetMapper extends BaseMapper<Tweet> {
-    @Insert("insert into tweet(tweetid, text, keyword, username, flag, type, twitter_id, date) SELECT #{tweetid}, #{text}, #{keyword}, #{username}, #{flag}, #{type}, #{twitterId}, #{date} FROM DUAL where not exists(select * from tweet where tweetid=#{tweetid})")
+    @Insert("insert into tweet(tweetid, text, keyword, username, flag, type, twitter_id, need_return, category, url, publish_time, uuid) SELECT #{tweetid}, #{text}, #{keyword}, #{username}, #{flag}, #{type}, #{twitterId}, #{needReturn}, #{category}, #{url}, #{publishTime}, #{uuid} FROM DUAL where not exists(select * from tweet where tweetid=#{tweetid})")
     void saveTweet(Tweet tweet);
 
     @Update("UPDATE tweet\n" +
