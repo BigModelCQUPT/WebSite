@@ -6,8 +6,8 @@ import com.bigModel.backend.pojo.TweetVideo;
 import java.util.List;
 
 public interface TweetImageVideoService {
-    void addTweetImage(TweetImage tweetImage);
-    void addTweetVideo(TweetVideo tweetVideo);
+    boolean addTweetImage(TweetImage tweetImage);
+    boolean addTweetVideo(TweetVideo tweetVideo);
     List<TweetImage> listImagesByTweetid(String tweetid);
     List<TweetVideo> listVideosByTweetid(String tweetid);
 }

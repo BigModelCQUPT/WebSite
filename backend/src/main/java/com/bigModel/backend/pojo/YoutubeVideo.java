@@ -30,4 +30,5 @@ public class YoutubeVideo {
     private Integer flag;
     @DateTimeFormat(pattern = "YYYY-MM-DD HH:MM:SS")
     private LocalDateTime releaseTime;
+    private String feedbackReason;
 }

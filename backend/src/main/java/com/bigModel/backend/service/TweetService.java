@@ -30,4 +30,6 @@ public interface TweetService {
     List<Tweet> listAllExportIds();
     List<Map<String, String>> listAllUser();
     Tweet getByTweetId(String tweetid);
+
+    void updateReason(Integer id, String res);
 }

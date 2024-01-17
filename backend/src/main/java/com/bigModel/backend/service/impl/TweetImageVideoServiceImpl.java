@@ -21,13 +21,21 @@ public class TweetImageVideoServiceImpl implements TweetImageVideoService {
     private TweetVideoMapper tweetVideoMapper;
 
     @Override
-    public void addTweetImage(TweetImage tweetImage) {
-        tweetImageMapper.insert(tweetImage);
+    public boolean addTweetImage(TweetImage tweetImage) {
+        int cnt = tweetImageMapper.insertImage(tweetImage);
+        if (cnt <= 0) {
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public void addTweetVideo(TweetVideo tweetVideo) {
-        tweetVideoMapper.insert(tweetVideo);
+    public boolean addTweetVideo(TweetVideo tweetVideo) {
+        int cnt = tweetVideoMapper.insertVideo(tweetVideo);
+        if (cnt <= 0) {
+            return false;
+        }
+        return true;
     }
 
     @Override
