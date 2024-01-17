@@ -7,7 +7,6 @@ import com.bigModel.backend.mapper.TweetMapper;
 import com.bigModel.backend.mapper.TwitterUserInfoMapper;
 import com.bigModel.backend.pojo.Tweet;
 import com.bigModel.backend.pojo.TwitterUser;
-import com.bigModel.backend.pojo.YoutubeVideo;
 import com.bigModel.backend.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -131,7 +130,7 @@ public class TweetServiceImpl implements TweetService{
     }
 
     @Override
-    public void checkKeyword(String keyword,String uuid) {
+    public void checkKeyword(String keyword, String uuid) {
         tweetMapper.checkKeyword(keyword, uuid);
     }
 
@@ -202,5 +201,13 @@ public class TweetServiceImpl implements TweetService{
         queryWrapper.eq("tweetid", tweetid);
         List<Tweet> list =  tweetMapper.selectList(queryWrapper);
         return list.get(0);
+    }
+
+//    返回原因
+    @Override
+    public void updateReason(Integer id, String res) {
+        Tweet tweet = tweetMapper.selectById(id);
+        tweet.setFeedbackReason(res);
+        tweetMapper.updateById(tweet);
     }
 }

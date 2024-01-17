@@ -28,6 +28,8 @@ public class MailExcel {
     private String username;
     @ExcelProperty("推文地址")
     private String url;
+    @ExcelProperty("反馈原因")
+    private String feedbackReason;
     @ExcelProperty("发布时间")
     @DateTimeFormat(fallbackPatterns = "YYYY-MM-DD HH:MM:SS")
     private Date publishTime;

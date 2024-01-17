@@ -122,4 +122,11 @@ public class YoutubeVideoServiceImpl implements YoutubeVideoService {
         YoutubeVideo selectById = youtubeVideoMapper.selectOne(queryWrapper);
         return selectById != null;
     }
+
+    @Override
+    public void updateReason(int id, String res) {
+        YoutubeVideo youtubeVideo = youtubeVideoMapper.selectById(id);
+        youtubeVideo.setFeedbackReason(res);
+        youtubeVideoMapper.updateById(youtubeVideo);
+    }
 }

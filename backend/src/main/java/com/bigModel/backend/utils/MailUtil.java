@@ -164,6 +164,7 @@ public class MailUtil {
             mailExcel.setText(tweet.getText());
             mailExcel.setUrl(tweet.getUrl());
             mailExcel.setPublishTime(tweet.getPublishTime());
+            mailExcel.setFeedbackReason(tweet.getFeedbackReason());
             List<TweetImage> imageList = mailUtil.tweetImageVideoService.listImagesByTweetid(tweetId);
             List<TweetVideo> videoList = mailUtil.tweetImageVideoService.listVideosByTweetid(tweetId);
             // mailExcel.setImage(imageList.toString());

@@ -31,4 +31,6 @@ public interface YoutubeVideoService {
     List<Map<String, String>> listAllUser();
 
     boolean alreadyAbsent(YoutubeVideo youtubeVideo);
+
+    void updateReason(int id, String res);
 }

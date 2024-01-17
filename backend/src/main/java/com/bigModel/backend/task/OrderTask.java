@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.security.Key;
 import java.util.*;
 
 @Component
@@ -45,8 +47,6 @@ public class OrderTask {
             System.out.println("查找用户 ：" + list.get(i).getUsername());
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
-            twitterId = "873567782134136834";
-            username = "xxxxxxxxxxxxx";
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();
             Request request = new Request.Builder()
@@ -62,7 +62,7 @@ public class OrderTask {
             // break;
         }
         this.keywordMatch(uuid);
-        // this.modeling(uuid);
+        this.modeling(uuid);
         this.noticeMail(uuid);
     }
 
@@ -70,13 +70,24 @@ public class OrderTask {
         List<Tweet> tweetList = tweetService.listByUuid(uuid);
         List<Keyword> keywordList = keywordService.listAllKeywords();
         for (int i = 0; i < tweetList.size(); i ++) {
+            //        触发哪些keyword
+            List<String> reasonKeyword = new ArrayList<>();
             for (int j = 0; j < keywordList.size(); j ++) {
                 String keyword = keywordList.get(j).getKeyword();
-                tweetService.checkKeyword(keyword, uuid);
+//                tweetService.checkKeyword(keyword, uuid);
                 if (tweetList.get(i).getText().contains(keyword)) {
                     keywordService.updateKeywordNumber(keywordList.get(j));
+                    reasonKeyword.add(keyword);
                 }
             }
+            if (reasonKeyword.size() > 0) {
+                tweetService.updateReturn(tweetList.get(i).getId());
+                tweetService.saveKeywordList(tweetList.get(i).getId(), reasonKeyword);
+                String strKeyword = String.join(",", reasonKeyword);
+                String res = "触发关键词 [" + strKeyword + "]";
+                tweetService.updateReason(tweetList.get(i).getId(), res);
+            }
+
         }
     }
 
@@ -91,6 +102,8 @@ public class OrderTask {
             String needReturn = answerHash.get("answer");
             if(needReturn.equals("是") || needReturn.equals("是。")){
                 tweetService.updateReturn(id);
+                String res = "ChatGpt分析返回";
+                tweetService.updateReason(tweetList.get(i).getId(), res);
             }
         }
     }

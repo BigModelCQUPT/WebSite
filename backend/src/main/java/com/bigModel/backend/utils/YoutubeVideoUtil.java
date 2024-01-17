@@ -92,7 +92,7 @@ public class YoutubeVideoUtil {
                     // 获取当前日期和时间
                     LocalDateTime currentTime = LocalDateTime.now();
 
-                    YoutubeVideo youtubeVideo = new YoutubeVideo(null, cover, username, userList.get(j).getChannelId(), videoId, title, null, 0, null, 0, currentTime);
+                    YoutubeVideo youtubeVideo = new YoutubeVideo(null, cover, username, userList.get(j).getChannelId(), videoId, title, null, 0, null, 0, currentTime, null);
                     list.add(youtubeVideo);
                 // }
                 // if (searchResultList != null) {

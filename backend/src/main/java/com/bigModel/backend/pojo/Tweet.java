@@ -39,4 +39,6 @@ public class Tweet {
     @DateTimeFormat(pattern = "YYYY-MM-DD HH:MM:SS")
     private Date publishTime;
     private String uuid;
+    @ExcelProperty("反馈原因")
+    private String feedbackReason;
 }

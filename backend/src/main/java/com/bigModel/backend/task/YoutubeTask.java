@@ -71,7 +71,8 @@ public class YoutubeTask {
             int id = youtubeVideoList.get(i).getId();
             for (int j = 0; j < keywordList.size(); j++) {
                 String keyword = keywordList.get(j).getKeyword();
-                if (youtubeVideoService.checkKeyword(id, keyword)) {
+//                if (youtubeVideoService.checkKeyword(id, keyword)) {
+                if(youtubeVideoList.get(i).getSummary().contains(keyword)){
                     list.add(keyword);
                     keywordService.updateKeywordNumber(keywordList.get(j));
                 }
@@ -79,6 +80,9 @@ public class YoutubeTask {
             if (list.size() > 0) {
                 youtubeVideoService.updateReturn(id);
                 youtubeVideoService.saveKeywordList(id, list);
+                String strKeyword = String.join(",", list);
+                String res = "触发关键词 [" + strKeyword + "]";
+                youtubeVideoService.updateReason(id, res);
             }
         }
     }
@@ -95,6 +99,8 @@ public class YoutubeTask {
             String needReturn = answer.get("answer").toString();
             if(needReturn.equals("是") || needReturn.equals("是。")){
                 youtubeVideoService.updateReturn(id);
+                String res = "ChatGpt 分析返回";
+                youtubeVideoService.updateReason(id, res);
             }
         }
     }
