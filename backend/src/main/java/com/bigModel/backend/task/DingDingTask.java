@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 @Component
 public class DingDingTask {
@@ -30,8 +33,25 @@ public class DingDingTask {
         for(int i = 0;i < tweetsList.size();i++){
             int needReturn = tweetsList.get(i).getNeedReturn();
             if(needReturn == 1){
-                String content = tweetsList.get(i).getText();
-                DingTalkNoticeUtil.sendNotice();
+                class MyMap<K,T> extends HashMap<K,T> {
+                    @Override
+                    public String toString() {
+                        String ans = "";
+                        for (Map.Entry<K,T> entry : entrySet())
+                        {
+                            ans += entry.getKey() + ": " + entry.getValue() + ",\n";
+                        }
+                        return ans;
+                    }
+                }
+                MyMap<String, String> content = new MyMap<>();
+                content.put("风险提醒原因", tweetsList.get(i).getFeedbackReason());
+                content.put("发帖链接", tweetsList.get(i).getUrl());
+                content.put("发帖时间", tweetsList.get(i).getPublishTime().toString());
+                content.put("发帖ID", tweetsList.get(i).getTwitterId());
+                content.put("发帖内容", tweetsList.get(i).getText());
+                content.put("平台", "推特");
+                DingTalkNoticeUtil.sendNotice(content.toString());
                 // sendMail();
 //                sendMessage(content);
             }
