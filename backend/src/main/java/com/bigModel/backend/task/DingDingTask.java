@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,17 +20,22 @@ import java.util.stream.Stream;
 
 @Component
 public class DingDingTask {
+
+    private static DingDingTask dingDingTask;
     @Autowired
     private TweetService tweetService;
-
     @Autowired
     private UserMapper userMapper;
 
-    // @Scheduled(cron = "*/5 * * * * ?")
-//    @Scheduled(cron = "*/20 * * * * ?")
-    @Scheduled(cron = "0 15 10 ? * 6L ")
-    public void DingDingMessage() throws Exception {
-        List<Tweet> tweetsList = tweetService.getAllTweet();
+    @PostConstruct
+    public void init() {
+        dingDingTask = this;
+        dingDingTask.userMapper = this.userMapper;
+        dingDingTask.tweetService = this.tweetService;
+    }
+
+    public static void DingDingMessage() throws Exception {
+        List<Tweet> tweetsList = dingDingTask.tweetService.getAllTweet();
         for(int i = 0;i < tweetsList.size();i++){
             int needReturn = tweetsList.get(i).getNeedReturn();
             if(needReturn == 1){
@@ -52,16 +58,10 @@ public class DingDingTask {
                 content.put("发帖内容", tweetsList.get(i).getText());
                 content.put("平台", "推特");
                 DingTalkNoticeUtil.sendNotice(content.toString());
-                // sendMail();
-//                sendMessage(content);
             }
         }
     }
 
-    // public void sendMail() throws Exception {
-    //     Token token = tokenMapper.selectById(1);
-    //     MailUtil.sendMail(token.getMailToken());
-    // }
 
     public void sendMessage(String content){
         Integer currentUserId = JwtAuthenticationTokenFilter.getUserBasic().getUserId();

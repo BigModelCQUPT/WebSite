@@ -79,7 +79,9 @@ public class DingTalkNoticeUtil {
      }
     public static void sendNotice(String content) throws Exception {
         Long timestamp = System.currentTimeMillis();
-        String secret = "SECfabd23d8aec3a91625889f58f73a0fd3f451796541d19fde6f4dbcd9508eb787";
+        // String secret = "SECfabd23d8aec3a91625889f58f73a0fd3f451796541d19fde6f4dbcd9508eb787"; // 公司
+        String secret = "SEC1cdac38aaa6990e1aaca8f53f08c318f3b9fe7f5ccc5d59737e394120ecfc3a4"; // 公司
+
         String stringToSign = timestamp + "\n" + secret;
         Mac mac = Mac.getInstance("HmacSHA256");
         mac.init(new SecretKeySpec(secret.getBytes("UTF-8"), "HmacSHA256"));
@@ -92,7 +94,8 @@ public class DingTalkNoticeUtil {
         text.setContent(content);
         req.setMsgtype("text");
         req.setText(text);
-        OapiRobotSendResponse response = client.execute(req, "4991e18ad9bea3961fa1c34d7053983c043e85d3be3164920e4ca0a59e9c223a");
+        // OapiRobotSendResponse response = client.execute(req, "4991e18ad9bea3961fa1c34d7053983c043e85d3be3164920e4ca0a59e9c223a"); // 公司
+        OapiRobotSendResponse response = client.execute(req, "65d2e2fa5625554f1e67e9f87270a44a5e602647e6519e81fc52e729923a245a"); // 公司
         System.out.println(response.getBody());
     }
 }

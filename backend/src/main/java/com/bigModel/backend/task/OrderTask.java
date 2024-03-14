@@ -59,11 +59,11 @@ public class OrderTask {
             ResponseBody res = response.body();
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId, uuid);
             tweetService.saveTweet(tweetList);
-            // break;
         }
         this.keywordMatch(uuid);
         this.modeling(uuid);
         this.noticeMail(uuid);
+        DingDingTask.DingDingMessage();
     }
 
     public void keywordMatch(String uuid) {
@@ -87,7 +87,6 @@ public class OrderTask {
                 String res = "触发关键词 [" + strKeyword + "]";
                 tweetService.updateReason(tweetList.get(i).getId(), res);
             }
-
         }
     }
 
