@@ -10,6 +10,7 @@ import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
 import com.bigModel.backend.utils.MailUtil;
 import com.bigModel.backend.utils.ParseJSONUtil;
 import com.bigModel.backend.utils.chatGPT;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Key;
 import java.util.*;
 
+@Slf4j
 @Component
 public class OrderTask {
 
@@ -37,6 +39,7 @@ public class OrderTask {
 
     // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
 //     @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
+    @Scheduled(cron = "0 0 * * * ?") // 整点
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
