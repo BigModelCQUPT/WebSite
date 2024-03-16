@@ -37,6 +37,7 @@ public class YoutubeTask {
 
 //    @Scheduled(cron = "0/50 * * * * ?")
 //    @Transactional
+    @Scheduled(cron = "0 10 * * * ?") // 第10分钟
     public void VideoSummary() throws Exception{
         List<YoutubeUser> userList = youtubeUserService.listAll();
         List<YoutubeVideo> list = YoutubeVideoUtil.getVideo(userList);
