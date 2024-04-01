@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,8 @@ public class DingDingTask {
                 MyMap<String, String> content = new MyMap<>();
                 content.put("风险提醒原因", tweetsList.get(i).getFeedbackReason());
                 content.put("发帖链接", tweetsList.get(i).getUrl());
-                content.put("发帖时间", tweetsList.get(i).getPublishTime().toString());
-                content.put("发帖ID", tweetsList.get(i).getTwitterId());
+                content.put("发帖时间", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tweetsList.get(i).getPublishTime()).toString());
+                content.put("发帖ID", tweetsList.get(i).getUsername());
                 content.put("发帖内容", tweetsList.get(i).getText());
                 content.put("平台", "推特");
                 DingTalkNoticeUtil.sendNotice(content.toString());

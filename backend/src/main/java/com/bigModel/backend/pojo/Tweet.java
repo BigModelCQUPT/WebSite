@@ -4,6 +4,7 @@ import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,7 +37,8 @@ public class Tweet {
     @ExcelIgnore
     private String category;
     private String url;
-    @DateTimeFormat(pattern = "YYYY-MM-DD HH:MM:SS")
+    // @DateTimeFormat(pattern = "YYYY-MM-DD HH:MM:SS")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishTime;
     private String uuid;
     @ExcelProperty("反馈原因")

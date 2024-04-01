@@ -38,7 +38,7 @@ public class OrderTask {
     private TokenService tokenService;
 
     // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
-//     @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
+    // @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
 //     @Scheduled(cron = "0 0 * * * ?") // 整点
 //     @Scheduled(fixedRate = 10000)
     @Transactional(rollbackFor = Exception.class)
@@ -47,7 +47,8 @@ public class OrderTask {
         // String token = "13893747a348d8fc";
         String token = tokenService.getToken("twitterToken");
         String uuid = UUID.randomUUID().toString();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1; i++) { // 把测试用户放在用户第一个 只爬第一个用户的推文
+        // for (int i = 0; i < list.size(); i++) {
             log.info("查找用户 ：" + list.get(i).getUsername());
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();

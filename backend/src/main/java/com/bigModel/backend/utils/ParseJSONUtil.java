@@ -7,16 +7,19 @@ import com.bigModel.backend.pojo.TweetImage;
 import com.bigModel.backend.pojo.TweetVideo;
 import com.bigModel.backend.service.TweetImageVideoService;
 import com.bigModel.backend.service.impl.util.TraditionalToSimplifiedUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import twitter4j.JSONArray;
 import twitter4j.JSONException;
 import twitter4j.JSONObject;
+import twitter4j.Logger;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 @Component
 public class ParseJSONUtil {
 
@@ -41,6 +44,7 @@ public class ParseJSONUtil {
      * @return {@link List}<{@link Tweet}>
      */
     public static List<Tweet> parseJSON(String string, String username, String twitterId, String uuid) throws IOException {
+        // log.info(string);
         JSONObject json = new JSONObject(string);
         String data = json.getString("data");
         JSONArray jsonArray = new JSONArray(data);
@@ -66,7 +70,7 @@ public class ParseJSONUtil {
             tweet.setUuid(uuid);
             tweet.setNeedReturn(0);
             list.add(tweet);
-            saveTweetImageVideo(item.toString(), tweet.getTweetid());
+            // saveTweetImageVideo(item.toString(), tweet.getTweetid());
         }
         return list;
     }
