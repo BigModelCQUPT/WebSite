@@ -39,7 +39,8 @@ public class OrderTask {
 
     // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
 //     @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
-    @Scheduled(cron = "0 0 * * * ?") // 整点
+//     @Scheduled(cron = "0 0 * * * ?") // 整点
+//     @Scheduled(fixedRate = 10000)
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
@@ -47,13 +48,13 @@ public class OrderTask {
         String token = tokenService.getToken("twitterToken");
         String uuid = UUID.randomUUID().toString();
         for (int i = 0; i < 1; i++) {
-            System.out.println("查找用户 ：" + list.get(i).getUsername());
+            log.info("查找用户 ：" + list.get(i).getUsername());
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();
             Request request = new Request.Builder()
-                    .url("http://106.227.5.196:13422/twitter/user_timeline_byid?token=" + token + "&userId=" + twitterId+ "&max_id=")
+                    .url("http://121.199.7.165:13422/twitter/user_timeline_byid?token=" + token + "&userId=" + twitterId+ "&max_id=")
                     .method("GET", null)
                     .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
                     .addHeader("Content-Type", "application/json")
@@ -66,7 +67,7 @@ public class OrderTask {
         this.keywordMatch(uuid);
         this.modeling(uuid);
         this.noticeMail(uuid);
-        DingDingTask.DingDingMessage();
+        DingDingTask.DingDingMessage(uuid);
     }
 
     public void keywordMatch(String uuid) {

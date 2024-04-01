@@ -6,17 +6,14 @@ import com.bigModel.backend.pojo.Tweet;
 import com.bigModel.backend.pojo.User;
 import com.bigModel.backend.service.TweetService;
 import com.bigModel.backend.utils.DingTalkNoticeUtil;
-import com.bigModel.backend.utils.MailUtil;
 import com.bigModel.backend.utils.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @Component
 public class DingDingTask {
@@ -34,8 +31,8 @@ public class DingDingTask {
         dingDingTask.tweetService = this.tweetService;
     }
 
-    public static void DingDingMessage() throws Exception {
-        List<Tweet> tweetsList = dingDingTask.tweetService.getAllTweet();
+    public static void DingDingMessage(String uuid) throws Exception {
+        List<Tweet> tweetsList = dingDingTask.tweetService.getAllTweet(uuid);
         for(int i = 0;i < tweetsList.size();i++){
             int needReturn = tweetsList.get(i).getNeedReturn();
             if(needReturn == 1){

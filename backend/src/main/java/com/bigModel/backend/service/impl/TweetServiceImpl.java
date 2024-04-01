@@ -108,8 +108,10 @@ public class TweetServiceImpl implements TweetService{
     }
 
     @Override
-    public List<Tweet> getAllTweet() {
+    public List<Tweet> getAllTweet(String uuid) {
         QueryWrapper<Tweet> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("need_return", 1);
+        queryWrapper.eq("uuid", uuid);
         List<Tweet> tweetList = tweetMapper.selectList(queryWrapper);
         return tweetList;
     }

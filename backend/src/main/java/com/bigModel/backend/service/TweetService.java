@@ -17,7 +17,7 @@ public interface TweetService {
 
     Map<String, Object> getNumberTweet();
 
-    List<Tweet> getAllTweet();
+    List<Tweet> getAllTweet(String uuid);
 
     void updateFlag(Integer id);
     List<Tweet> getTweetByDate(String date);
