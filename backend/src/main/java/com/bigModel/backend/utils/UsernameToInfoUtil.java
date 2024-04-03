@@ -50,7 +50,7 @@ public class UsernameToInfoUtil {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         Request request = new Request.Builder()
-                .url("http://106.227.5.196:13422/twitter/user_timeline_byname?token=" + token + "&screen_name=" + username + "&max_id=")
+                .url("http://121.199.7.165:13422/twitter/user_timeline_byname?token=" + token + "&screen_name=" + username + "&max_id=")
                 .method("GET", null)
                 .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
                 .addHeader("Content-Type", "application/json")

@@ -66,7 +66,9 @@ public class MailUtil {
         mailUtil.tweetImageVideoService = this.tweetImageVideoService;
     }
 
-    private static final String SEND_ACCOUNT = "lxb2000m@qq.com"; //QQ邮箱地址
+    // private static final String SEND_ACCOUNT = "jiemaokeji@gmail.com"; //发送方地址
+    private static final String SEND_ACCOUNT = "lxb2000m@qq.com"; //发送方地址
+    // private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_HOST = "smtp.qq.com";
     // 发件人名称
     private static final String staff_name = "发送方姓名"; //你的名字
@@ -82,7 +84,9 @@ public class MailUtil {
         // User user = mailUtil.userMapper.selectOne(queryWrapper);
 
         // String toCountEmail = user.getEmail();
-        String toCountEmail = "lxb2000m@gmail.com";
+        // 接收方
+        // String toCountEmail = "lxb2000m@gmail.com";
+        String toCountEmail = "8577618@gmail.com";
 
         // 参数配置，⽤于连接邮件服务器
         Properties props = new Properties();
@@ -92,6 +96,7 @@ public class MailUtil {
         props.setProperty("mail.smtp.host", SMTP_HOST);
         // 需要请求认证
         props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.port", "587");
         // 创建会话对象，⽤于与邮箱服务器交互
         Session session = Session.getInstance(props);
         // 设置为debug模式，在控制台中可以查看详细的发送⽇志

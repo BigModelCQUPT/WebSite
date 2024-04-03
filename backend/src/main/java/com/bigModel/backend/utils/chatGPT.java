@@ -17,7 +17,7 @@ public class chatGPT {
 
     public static HashMap<String, String> getAnswer(String content) {
 
-        final String apiKey = "sk-LvLWgzMybUVMovfA0355Ec8599Fb42A7A9D163D4041fD94c";
+        final String apiKey = "sk-BXsVgXDpYvWRQLBM1b6d88Ac70Cc4eB094289a6f5411A692";
         final String baseUrl = "https://aihubmix.com/v1";
         final String model = "gpt-3.5-turbo";
 

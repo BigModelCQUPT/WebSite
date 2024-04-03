@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -38,9 +39,9 @@ public class OrderTask {
     private TokenService tokenService;
 
     // @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
-    // @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
-//     @Scheduled(cron = "0 0 * * * ?") // 整点
-//     @Scheduled(fixedRate = 10000)
+    @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
+    // @Scheduled(cron = "0 0 * * * ?") // 整点
+    // @Scheduled(cron = "0 */5 * * * ?") // 5分钟一次
     @Transactional(rollbackFor = Exception.class)
     public void TwitterHello() throws Exception {
         List<TwitterUser> list = infoService.listAll();
@@ -53,6 +54,7 @@ public class OrderTask {
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
             OkHttpClient client = new OkHttpClient().newBuilder()
+                    .connectTimeout(10, TimeUnit.SECONDS)
                     .build();
             Request request = new Request.Builder()
                     .url("http://121.199.7.165:13422/twitter/user_timeline_byid?token=" + token + "&userId=" + twitterId+ "&max_id=")
@@ -60,6 +62,7 @@ public class OrderTask {
                     .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
                     .addHeader("Content-Type", "application/json")
                     .build();
+
             Response response = client.newCall(request).execute();
             ResponseBody res = response.body();
             List<Tweet> tweetList = ParseJSONUtil.parseJSON(res.string(), username, twitterId, uuid);
@@ -106,7 +109,7 @@ public class OrderTask {
             String needReturn = answerHash.get("answer");
             if(needReturn.equals("是") || needReturn.equals("是。")){
                 tweetService.updateReturn(id);
-                String res = "ChatGpt分析返回";
+                String res = "AI分析返回";
                 tweetService.updateReason(tweetList.get(i).getId(), res);
             }
         }

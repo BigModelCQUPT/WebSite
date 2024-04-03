@@ -67,8 +67,8 @@ public class DingTalkNoticeUtil {
          OkHttpClient client = new OkHttpClient().newBuilder()
                  .build();
          Request request = new Request.Builder()
-                 .url("https://oapi.dingtalk.com/gettoken?appkey=dingjw2oivs8xtepyvjr&appsecret=3_UZOIFFNKtadcqKJwehmDhUp6iSEOY8vSoj2IIIW17RQf27iSPYwhtPeCRIjTGM")
-                 // .url("https://oapi.dingtalk.com/gettoken?appkey=dingksexqekhvsnkpzky&appsecret=QxsgKcezvtCqCcEytHXl4wL6l0sJ9yY12cZ6Ua9rCpDursrg2bXZjgpfJ220c7v1")
+                 // .url("https://oapi.dingtalk.com/gettoken?appkey=dingjw2oivs8xtepyvjr&appsecret=3_UZOIFFNKtadcqKJwehmDhUp6iSEOY8vSoj2IIIW17RQf27iSPYwhtPeCRIjTGM")
+                 .url("https://oapi.dingtalk.com/gettoken?appkey=dingksexqekhvsnkpzky&appsecret=QxsgKcezvtCqCcEytHXl4wL6l0sJ9yY12cZ6Ua9rCpDursrg2bXZjgpfJ220c7v1")
                  .method("GET", null)
                  .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
                  .build();
@@ -79,8 +79,8 @@ public class DingTalkNoticeUtil {
      }
     public static void sendNotice(String content) throws Exception {
         Long timestamp = System.currentTimeMillis();
-        // String secret = "SECfabd23d8aec3a91625889f58f73a0fd3f451796541d19fde6f4dbcd9508eb787"; // 公司
-        String secret = "SEC1cdac38aaa6990e1aaca8f53f08c318f3b9fe7f5ccc5d59737e394120ecfc3a4"; // 自己
+        String secret = "SECfabd23d8aec3a91625889f58f73a0fd3f451796541d19fde6f4dbcd9508eb787"; // 公司
+        // String secret = "SEC1cdac38aaa6990e1aaca8f53f08c318f3b9fe7f5ccc5d59737e394120ecfc3a4"; // 自己
 
         String stringToSign = timestamp + "\n" + secret;
         Mac mac = Mac.getInstance("HmacSHA256");
@@ -94,8 +94,8 @@ public class DingTalkNoticeUtil {
         text.setContent(content);
         req.setMsgtype("text");
         req.setText(text);
-        // OapiRobotSendResponse response = client.execute(req, "4991e18ad9bea3961fa1c34d7053983c043e85d3be3164920e4ca0a59e9c223a"); // 公司
-        OapiRobotSendResponse response = client.execute(req, "65d2e2fa5625554f1e67e9f87270a44a5e602647e6519e81fc52e729923a245a"); // 自己
+        OapiRobotSendResponse response = client.execute(req, "4991e18ad9bea3961fa1c34d7053983c043e85d3be3164920e4ca0a59e9c223a"); // 公司
+        // OapiRobotSendResponse response = client.execute(req, "65d2e2fa5625554f1e67e9f87270a44a5e602647e6519e81fc52e729923a245a"); // 自己
         System.out.println(response.getBody());
     }
 }
