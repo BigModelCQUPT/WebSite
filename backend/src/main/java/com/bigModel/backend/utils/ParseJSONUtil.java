@@ -70,7 +70,7 @@ public class ParseJSONUtil {
             tweet.setUuid(uuid);
             tweet.setNeedReturn(0);
             list.add(tweet);
-            // saveTweetImageVideo(item.toString(), tweet.getTweetid());
+            saveTweetImageVideo(item.toString(), tweet.getTweetid());
         }
         return list;
     }
@@ -90,7 +90,7 @@ public class ParseJSONUtil {
                     boolean res = parseJSONUtil.tweetImageService.addTweetImage(tweetImage);
                     if (res) {
                         // System.out.println(tweetImage);
-                        ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
+                        ImageDownloadUtil.download(tweetImage.getUrl(), "/usr/java/img/", tweetId + "_" + i + ".jpg");
                     }
                 } else if (item.getString("type").equals("video")) { // 视频
                     JSONObject video_info = item.getJSONObject("video_info");
@@ -130,7 +130,7 @@ public class ParseJSONUtil {
                         boolean res = parseJSONUtil.tweetImageService.addTweetImage(tweetImage);
                         // System.out.println(tweetImage);
                         if (res) {
-                            ImageDownloadUtil.download(tweetImage.getUrl(), "./img", tweetId + "_" + i + ".jpg");
+                            ImageDownloadUtil.download(tweetImage.getUrl(), "/usr/java/img/", tweetId + "_" + i + ".jpg");
                         }
                     } else if (item.getString("type").equals("video")) { // 视频
                         JSONObject video_info = item.getJSONObject("video_info");

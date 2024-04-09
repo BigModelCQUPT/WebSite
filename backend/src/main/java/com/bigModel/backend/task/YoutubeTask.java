@@ -37,7 +37,7 @@ public class YoutubeTask {
 
 //    @Scheduled(cron = "0/50 * * * * ?")
 //    @Transactional
-    @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
+//     @Scheduled(cron = "0 */10 * * * ?") // 定时 10分钟
 //     @Scheduled(cron = "0/5 * * * * ?") // 定时 5秒
     public void VideoSummary() throws Exception{
         List<YoutubeUser> userList = youtubeUserService.listAll();
@@ -101,7 +101,7 @@ public class YoutubeTask {
             String needReturn = answer.get("answer").toString();
             if(needReturn.equals("是") || needReturn.equals("是。")){
                 youtubeVideoService.updateReturn(id);
-                String res = "ChatGpt 分析返回";
+                String res = "AI分析返回";
                 youtubeVideoService.updateReason(id, res);
             }
         }

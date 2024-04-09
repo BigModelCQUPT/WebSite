@@ -22,13 +22,13 @@ public class ImageDownloadUtil {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         //设置请求超时
-        connection.setConnectTimeout(1 * 1000);
+        connection.setConnectTimeout(10 * 1000);
         File sf = new File(savePath);
         if (!sf.exists()) {
             sf.mkdirs();
         }
         InputStream inputStream = connection.getInputStream();
-        FileOutputStream outputStream = new FileOutputStream(sf.getPath() + "\\" + filename);
+        FileOutputStream outputStream = new FileOutputStream(sf.getPath() + "/" + filename);
         byte[] buffer = new byte[1024];
         int bytes;
         while ((bytes = inputStream.read(buffer)) != -1) {

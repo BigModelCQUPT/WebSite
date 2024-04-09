@@ -181,7 +181,7 @@ public class MailUtil {
             int imageWidth = 80;
             int sumWidth = maxImageSize.get() * (imageWidth + splitWidth);
             for (int i = 1; i <= imageList.size(); i++) {
-                String path = "./img/" + tweetId + "_" + (i - 1) + ".jpg";
+                String path = "/usr/java/img/" + tweetId + "_" + (i - 1) + ".jpg";
                 int left = imageWidth * (i - 1) + i * splitWidth;
                 int right = sumWidth - imageWidth - left;
                 ImageData imageData = new ImageData();
@@ -204,7 +204,7 @@ public class MailUtil {
             mailExcel.setWriteCellData(writeCellData);
             list.add(mailExcel);
         }
-        FileOutputStream fileOutputStream = new FileOutputStream(new File("./excel/fujian.xlsx"));
+        FileOutputStream fileOutputStream = new FileOutputStream(new File("/usr/java/excel/fujian.xlsx"));
         ExcelWriter excelWriter  = EasyExcel.write(fileOutputStream).build();
         WriteSheet writeSheet = EasyExcel.writerSheet().head(MailExcel.class).registerWriteHandler(longWidth).build();
         excelWriter.write(list, writeSheet);
