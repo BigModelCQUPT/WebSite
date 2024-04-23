@@ -23,7 +23,7 @@ public interface TweetService {
     List<Tweet> getTweetByDate(String date);
     void checkKeyword(String keyword, String uuid);
     void updateReturn(Integer id);
-    void saveKeywordList(int id, List<String> list);
+    void saveKeywordList(int id, String list);
     List<Tweet> listAllNoReturn(String uuid);
     List<Tweet> listByUuid(String uuid);
     List<Tweet> listNeedExportIds(List<Integer> needExportIds);

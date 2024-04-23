@@ -145,10 +145,9 @@ public class TweetServiceImpl implements TweetService{
     }
 
     @Override
-    public void saveKeywordList(int id, List<String> list) {
-        String join = String.join(",", list);
+    public void saveKeywordList(int id, String list) {
         Tweet tweet = tweetMapper.selectById(id);
-        tweet.setKeyword(join);
+        tweet.setKeyword(list);
         tweetMapper.updateById(tweet);
     }
 

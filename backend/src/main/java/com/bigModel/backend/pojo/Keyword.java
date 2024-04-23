@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Keyword {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String keyword;
+    private String forwardKeyword;
+    private String backwardKeyword;
     private Integer number;
 }

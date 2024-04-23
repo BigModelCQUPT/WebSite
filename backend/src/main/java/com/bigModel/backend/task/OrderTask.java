@@ -80,21 +80,32 @@ public class OrderTask {
         for (int i = 0; i < tweetList.size(); i ++) {
             //        触发哪些keyword
             List<String> reasonKeyword = new ArrayList<>();
+            boolean flag = false;
+            int pos = -1;
             for (int j = 0; j < keywordList.size(); j ++) {
-                String keyword = keywordList.get(j).getKeyword();
-//                tweetService.checkKeyword(keyword, uuid);
-                if (tweetList.get(i).getText().contains(keyword)) {
-                    keywordService.updateKeywordNumber(keywordList.get(j));
-                    reasonKeyword.add(keyword);
+                if (tweetList.get(i).getText().contains(keywordList.get(j).getBackwardKeyword())) {
+                    break;
+                }
+                String[] keyword = keywordList.get(j).getForwardKeyword().split("，");
+                int cnt = 0;
+                for (int k = 0; k < keyword.length; k ++) {
+                    if (tweetList.get(i).getText().contains(keyword[k])) {
+                        cnt++;
+                    }
+                }
+                if (cnt == keyword.length) {
+                    flag = true;
+                    pos = j;
+                    break;
                 }
             }
-            if (reasonKeyword.size() > 0) {
+            if (flag) {
                 tweetService.updateReturn(tweetList.get(i).getId());
-                tweetService.saveKeywordList(tweetList.get(i).getId(), reasonKeyword);
-                String strKeyword = String.join(",", reasonKeyword);
-                String res = "触发关键词 [" + strKeyword + "]";
+                tweetService.saveKeywordList(tweetList.get(i).getId(), keywordList.get(pos).getForwardKeyword());
+                String res = "触发关键词 [" + keywordList.get(pos).getForwardKeyword() + "]";
                 tweetService.updateReason(tweetList.get(i).getId(), res);
             }
+
         }
     }
 

@@ -25,14 +25,13 @@ public class KeywordController {
 
     @GetMapping("/delete/{id}")
     public Result deleteKeyword(@PathVariable(value = "id") Integer id) {
-        System.out.println(id);
         keywordService.deleteKeyword(id);
         return Result.success("success");
     }
 
     @GetMapping("/listAll")
     public List<Keyword> listAll() {
-        System.out.println(JwtAuthenticationTokenFilter.getUserBasic().getUserId());
+        // System.out.println(JwtAuthenticationTokenFilter.getUserBasic().getUserId());
         return keywordService.listAllKeywords();
     }
 }

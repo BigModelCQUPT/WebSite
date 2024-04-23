@@ -32,8 +32,8 @@ public class YoutubeTask {
     @Autowired
     private YoutubeUserService youtubeUserService;
 
-    @Autowired
-    private KeywordService keywordService;
+    // @Autowired
+    // private KeywordService keywordService;
 
 //    @Scheduled(cron = "0/50 * * * * ?")
 //    @Transactional
@@ -62,32 +62,32 @@ public class YoutubeTask {
 //        this.useChatGPT();
     }
 
-    public void keywordMatch() {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String date = df.format(now);
-        List<Keyword> keywordList = keywordService.listAllKeywords();
-        List<YoutubeVideo> youtubeVideoList = youtubeVideoService.listAllVideo();
-        for (int i = 0; i < youtubeVideoList.size(); i++) {
-            List<String> list = new ArrayList<>();
-            int id = youtubeVideoList.get(i).getId();
-            for (int j = 0; j < keywordList.size(); j++) {
-                String keyword = keywordList.get(j).getKeyword();
-//                if (youtubeVideoService.checkKeyword(id, keyword)) {
-                if(youtubeVideoList.get(i).getSummary().contains(keyword)){
-                    list.add(keyword);
-                    keywordService.updateKeywordNumber(keywordList.get(j));
-                }
-            }
-            if (list.size() > 0) {
-                youtubeVideoService.updateReturn(id);
-                youtubeVideoService.saveKeywordList(id, list);
-                String strKeyword = String.join(",", list);
-                String res = "触发关键词 [" + strKeyword + "]";
-                youtubeVideoService.updateReason(id, res);
-            }
-        }
-    }
+//     public void keywordMatch() {
+//         LocalDateTime now = LocalDateTime.now();
+//         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//         String date = df.format(now);
+//         List<Keyword> keywordList = keywordService.listAllKeywords();
+//         List<YoutubeVideo> youtubeVideoList = youtubeVideoService.listAllVideo();
+//         for (int i = 0; i < youtubeVideoList.size(); i++) {
+//             List<String> list = new ArrayList<>();
+//             int id = youtubeVideoList.get(i).getId();
+//             for (int j = 0; j < keywordList.size(); j++) {
+//                 String keyword = keywordList.get(j).getKeyword();
+// //                if (youtubeVideoService.checkKeyword(id, keyword)) {
+//                 if(youtubeVideoList.get(i).getSummary().contains(keyword)){
+//                     list.add(keyword);
+//                     keywordService.updateKeywordNumber(keywordList.get(j));
+//                 }
+//             }
+//             if (list.size() > 0) {
+//                 youtubeVideoService.updateReturn(id);
+//                 youtubeVideoService.saveKeywordList(id, list);
+//                 String strKeyword = String.join(",", list);
+//                 String res = "触发关键词 [" + strKeyword + "]";
+//                 youtubeVideoService.updateReason(id, res);
+//             }
+//         }
+//     }
 
 
 //    TODO 需要修改 chatgpt的分析
