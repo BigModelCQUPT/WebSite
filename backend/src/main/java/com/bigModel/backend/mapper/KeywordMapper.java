@@ -11,10 +11,10 @@ import java.util.List;
 
 @Mapper
 public interface KeywordMapper extends BaseMapper<Keyword> {
-    @Select("SELECT number as value, keyword as name FROM keyword\n" +
+    @Select("SELECT number as value, forward_keyword as name FROM keyword\n" +
             "ORDER BY number DESC")
     List<TopicKeyword> getTopicKeyword();
-    @Select("SELECT  keyword, number as cnt, CURRENT_DATE as nowDate\n" +
+    @Select("SELECT forward_keyword, backward_keyword, number as cnt, CURRENT_DATE as nowDate\n" +
             "from keyword\n")
     List<KeywordTrend> listAllKeyword();
 }
