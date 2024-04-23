@@ -141,7 +141,7 @@ export default {
         },
         importData(name) {
             const _this = this
-            axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
+            axios.post('http://localhost:8181/upload/' + name).then(function (resp) {
                 if (resp.data.code == "200") {//返回成功
                     _this.$message({
                         message: '上传成功',
@@ -154,7 +154,7 @@ export default {
         },
         exportData() {
             // const _this = this
-            // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
+            // axios.get('http://localhost:8181/download/aaa').then(function () {
             //
             // })
             export_retailer()
@@ -192,7 +192,7 @@ export default {
                 size: this.size
             }
             request({
-                url: 'http://10.16.104.183:8181/youtubeUser/findByUsername',
+                url: 'http://localhost:8181/youtubeUser/findByUsername',
                 method: 'post',
                 data: data,
             }).then(function (resp) {
@@ -258,7 +258,7 @@ export default {
                 channelId: this.add_name
             }
             request({
-                url: 'http://10.16.104.183:8181/youtubeUser/addUser',
+                url: 'http://localhost:8181/youtubeUser/addUser',
                 method: 'post',
                 data: data
             }).then(function (resp) {
@@ -287,7 +287,7 @@ export default {
                 size: this.size
             }
             request({
-                url: 'http://10.16.104.183:8181/youtubeUser/findByPage/' + this.currentPage + '/' + this.size,
+                url: 'http://localhost:8181/youtubeUser/findByPage/' + this.currentPage + '/' + this.size,
                 method: 'post',
                 data: data
             }).then(function (resp) {
@@ -318,7 +318,7 @@ export default {
         handleReadTelegram() {
             const _this = this
             request({
-                url: 'http://10.16.104.183:8181/telegram/readtelegram',
+                url: 'http://localhost:8181/telegram/readtelegram',
                 method: 'post',
                 data: this.selectUserList
             }).then(function (resp) {

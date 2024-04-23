@@ -88,241 +88,241 @@
 </template>
 
 <script>
-    import axios from 'axios'
-    import { Search, Plus, FolderAdd, Upload } from '@element-plus/icons-vue'
-    import { export_retailer } from "@/utils/api";
-    import request from '@/utils/http'
+import axios from 'axios'
+import { Search, Plus, FolderAdd, Upload } from '@element-plus/icons-vue'
+import { export_retailer } from "@/utils/api";
+import request from '@/utils/http'
 
-    export default {
-        name: "GetResidentInformation",
-        data() {
-            return {
+export default {
+    name: "GetResidentInformation",
+    data() {
+        return {
 
-                tableData: [{
-                    id: '1',
-                    twitterId: '121212',
-                    username: 'username',
-                    name: '姓名',
-                    description: '',
-                    followersCount: '',
+            tableData: [{
+                id: '1',
+                twitterId: '121212',
+                username: 'username',
+                name: '姓名',
+                description: '',
+                followersCount: '',
 
-                }],
-                search_name: '', // 搜索用户
-                add_name: '', // 添加用户
-                total: 0,//总条数
-                currentPage: 1,//第几页
-                size: 10,//每页条数
-                dialogVisible: false,
-                information: {
-                    id: '',
-                    twitterId: '',
-                    username: '',
-                    name: ''
-                },
-                filename: '',
-                form: {
-                    id: '',
-                    twitterId: '',
-                    username: '',
-                    name: ''
-                },
-                search_flag: false
+            }],
+            search_name: '', // 搜索用户
+            add_name: '', // 添加用户
+            total: 0,//总条数
+            currentPage: 1,//第几页
+            size: 10,//每页条数
+            dialogVisible: false,
+            information: {
+                id: '',
+                twitterId: '',
+                username: '',
+                name: ''
+            },
+            filename: '',
+            form: {
+                id: '',
+                twitterId: '',
+                username: '',
+                name: ''
+            },
+            search_flag: false
+        }
+    },
+    created() {
+        // this.init_page()
+        this.fetchData()
+    },
+    methods: {
+        fileSuccess() {//上传失败
+            this.importData(this.filename)
+        },
+        fileChange(file) {
+            if (this.filename == '')
+                this.filename = file.name;
+            // console.log(file.name + "111")
+        },
+        importData(name) {
+            const _this = this
+            axios.post('http://localhost:8181/upload/' + name).then(function (resp) {
+                if (resp.data.code == "200") {//返回成功
+                    _this.$message({
+                        message: '上传成功',
+                        type: 'success'
+                    });
+                } else if (resp.data.code == "101") {
+                    _this.$message.error('上传失败');
+                }
+            })
+        },
+        exportData() {
+            // const _this = this
+            // axios.get('http://localhost:8181/download/aaa').then(function () {
+            //
+            // })
+            export_retailer()
+        },
+        showDialog() {
+            this.dialogVisible = true
+            this.activeindex = 0
+            this.add_name = ''
+        },
+        currentChange() {
+            // console.log(this.currentPage)
+            if (!this.search_flag) {  // 非搜索
+                this.fetchData()
+            } else {
+                this.fetchData()
             }
         },
-        created() {
-            // this.init_page()
+        sizeChange() {
+            if (!this.search_flag) {  // 非搜索
+                this.fetchData()
+            } else {
+                this.fetchData()
+            }
+        },
+
+        findPeople() {
+            if (this.search_name == '') {
+                this.$message.error('请先输入有效值');
+                return;
+            }
+            const _this = this
+            const data = {
+                username: this.search_name,
+                page: this.currentPage,
+                size: this.size
+            }
+            request({
+                url: 'http://localhost:8181/twitterUser/findByUsername',
+                method: 'post',
+                data: data,
+            }).then(function (resp) {
+                if (resp.data.status == "200") {//返回成功
+                    console.log(resp)
+                    _this.tableData = resp.data.data.records
+                    _this.total = resp.data.data.total
+                    _this.search_flag = true
+                } else {
+                    _this.$message.error('出现错误');
+                    return false;
+                }
+            })
+        },
+
+        init_page() { // 没有搜索的时候
+            const _this = this
+            this.search_flag = false
+            const IPage = {
+                "page": this.currentPage,
+                "size": this.size
+            }
+            request({
+                url: '/twitterUser/getUsers',
+                method: 'post',
+                data: IPage
+            }).then(function (resp) {
+                console.log(resp)
+                if (resp.status == "200") {
+                    console.log(resp)
+                    _this.tableData = resp.data.data.records
+                    _this.total = resp.data.data.total
+                }
+                else {
+                    _this.$message.error('出错了');
+                    return false;
+                }
+            })
+
+        },
+        search_initpage() { // 有搜索的时候
+            if (this.search_name == '') {
+                this.$message.error('请先输入有效值');
+                return;
+            }
             this.fetchData()
         },
-        methods: {
-            fileSuccess() {//上传失败
-                this.importData(this.filename)
-            },
-            fileChange(file) {
-                if (this.filename == '')
-                    this.filename = file.name;
-                // console.log(file.name + "111")
-            },
-            importData(name) {
-                const _this = this
-                axios.post('http://10.16.104.183:8181/upload/' + name).then(function (resp) {
-                    if (resp.data.code == "200") {//返回成功
-                        _this.$message({
-                            message: '上传成功',
-                            type: 'success'
-                        });
-                    } else if (resp.data.code == "101") {
-                        _this.$message.error('上传失败');
-                    }
-                })
-            },
-            exportData() {
-                // const _this = this
-                // axios.get('http://10.16.104.183:8181/download/aaa').then(function () {
-                //
-                // })
-                export_retailer()
-            },
-            showDialog() {
-                this.dialogVisible = true
-                this.activeindex = 0
-                this.add_name = ''
-            },
-            currentChange() {
-                // console.log(this.currentPage)
-                if (!this.search_flag) {  // 非搜索
-                    this.fetchData()
-                } else {
-                    this.fetchData()
-                }
-            },
-            sizeChange() {
-                if (!this.search_flag) {  // 非搜索
-                    this.fetchData()
-                } else {
-                    this.fetchData()
-                }
-            },
-
-            findPeople() {
-                if (this.search_name == '') {
-                    this.$message.error('请先输入有效值');
-                    return;
-                }
-                const _this = this
-                const data = {
-                    username: this.search_name,
-                    page: this.currentPage,
-                    size: this.size
-                }
-                request({
-                    url: 'http://10.16.104.183:8181/twitterUser/findByUsername',
-                    method: 'post',
-                    data: data,
-                }).then(function (resp) {
-                    if (resp.data.status == "200") {//返回成功
-                        console.log(resp)
-                        _this.tableData = resp.data.data.records
-                        _this.total = resp.data.data.total
-                        _this.search_flag = true
-                    } else {
-                        _this.$message.error('出现错误');
-                        return false;
-                    }
-                })
-            },
-
-            init_page() { // 没有搜索的时候
-                const _this = this
-                this.search_flag = false
-                const IPage = {
-                    "page": this.currentPage,
-                    "size": this.size
-                }
-                request({
-                    url: '/twitterUser/getUsers',
-                    method: 'post',
-                    data: IPage
-                }).then(function (resp) {
-                    console.log(resp)
-                    if (resp.status == "200") {
-                        console.log(resp)
-                        _this.tableData = resp.data.data.records
-                        _this.total = resp.data.data.total
-                    }
-                    else {
-                        _this.$message.error('出错了');
-                        return false;
-                    }
-                })
-
-            },
-            search_initpage() { // 有搜索的时候
-                if (this.search_name == '') {
-                    this.$message.error('请先输入有效值');
-                    return;
-                }
-                this.fetchData()
-            },
-            returnMain() {
-            },
-            cancelAdd() {
-                this.dialogVisible = false
-                return
-            },
-            okAdd() {
-                this.dialogVisible = false
-                this.add_name = ''
-                return
-            },
-            completeAdd() {
-                const _this = this
-                // console.log(this.add_name)
-                const data = {
-                    username: this.add_name
-                }
-                request({
-                    url: 'http://10.16.104.183:8181/twitterUser/addUser',
-                    method: 'post',
-                    data: data
-                }).then(function (resp) {
-                    console.log(resp)
-                    if (resp.status == "200") {
-                        _this.$message.success('添加成功');
-                    }
-                    else {
-                        _this.$message.error('出错了');
-                        return false;
-                    }
-                })
-                this.okAdd()
-                this.$router.go(0)
-            },
-
-            fetchData() {
-                // if (this.search_name == '') {
-                //     this.$message.error('请先输入有效值');
-                //     return;
-                // }
-                const _this = this
-                const data = {
-                    username: this.search_name,
-                    page: this.currentPage,
-                    size: this.size
-                }
-                request({
-                    url: 'http://10.16.104.183:8181/twitterUser/findByPage/' + this.currentPage + '/' + this.size,
-                    method: 'post',
-                    data: data
-                }).then(function (resp) {
-                    console.log(resp)
-                    if (resp.status == "200") {
-                        console.log(resp)
-                        _this.tableData = resp.data.data.records
-                        _this.total = resp.data.data.total
-                    }
-                    else {
-                        _this.$message.error('出错了');
-                        return false;
-                    }
-                })
-            },
-
+        returnMain() {
         },
-        components: {
-            Search, Plus, FolderAdd, Upload
-        }
+        cancelAdd() {
+            this.dialogVisible = false
+            return
+        },
+        okAdd() {
+            this.dialogVisible = false
+            this.add_name = ''
+            return
+        },
+        completeAdd() {
+            const _this = this
+            // console.log(this.add_name)
+            const data = {
+                username: this.add_name
+            }
+            request({
+                url: 'http://localhost:8181/twitterUser/addUser',
+                method: 'post',
+                data: data
+            }).then(function (resp) {
+                console.log(resp)
+                if (resp.status == "200") {
+                    _this.$message.success('添加成功');
+                }
+                else {
+                    _this.$message.error('出错了');
+                    return false;
+                }
+            })
+            this.okAdd()
+            this.$router.go(0)
+        },
+
+        fetchData() {
+            // if (this.search_name == '') {
+            //     this.$message.error('请先输入有效值');
+            //     return;
+            // }
+            const _this = this
+            const data = {
+                username: this.search_name,
+                page: this.currentPage,
+                size: this.size
+            }
+            request({
+                url: 'http://localhost:8181/twitterUser/findByPage/' + this.currentPage + '/' + this.size,
+                method: 'post',
+                data: data
+            }).then(function (resp) {
+                console.log(resp)
+                if (resp.status == "200") {
+                    console.log(resp)
+                    _this.tableData = resp.data.data.records
+                    _this.total = resp.data.data.total
+                }
+                else {
+                    _this.$message.error('出错了');
+                    return false;
+                }
+            })
+        },
+
+    },
+    components: {
+        Search, Plus, FolderAdd, Upload
     }
+}
 </script>
 
 <style scoped>
-    .toolbar {
-        text-align: left;
-        display: flex;
-        justify-content: space-between;
-    }
+.toolbar {
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+}
 
-    .el-input-resident {
-        width: 300px;
-        margin-right: 10px;
-    }
+.el-input-resident {
+    width: 300px;
+    margin-right: 10px;
+}
 </style>

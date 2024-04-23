@@ -19,7 +19,8 @@ import java.util.Date;
 public class KeywordTrend {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String keyword;
+    private String forwardKeyword;
+    private String backwardKeyword;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date nowDate;
     private Integer cnt;
