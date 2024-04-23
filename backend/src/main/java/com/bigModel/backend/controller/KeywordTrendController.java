@@ -25,7 +25,7 @@ public class KeywordTrendController {
         Map<String, Object> ansKeywordList = new HashMap<>();
         List<String> keywordList = new ArrayList<>();
         for (KeywordTrend keywordTrend : keywordTrendList) {
-            keywordList.add(keywordTrend.getKeyword());
+            keywordList.add(keywordTrend.getForwardKeyword());
         }
         ansKeywordList.put("keywords", keywordList);
         Map<String, List<KeywordTrend>> keyTrend = new HashMap<>();
