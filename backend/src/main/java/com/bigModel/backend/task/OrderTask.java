@@ -48,8 +48,8 @@ public class OrderTask {
         // String token = "13893747a348d8fc";
         String token = tokenService.getToken("twitterToken");
         String uuid = UUID.randomUUID().toString();
-        for (int i = 0; i < 1; i++) { // 把测试用户放在用户第一个 只爬第一个用户的推文
-        // for (int i = 0; i < list.size(); i++) {
+        // for (int i = 0; i < 5; i++) { // 把测试用户放在用户第一个 只爬第一个用户的推文
+        for (int i = 0; i < list.size(); i++) {
             log.info("查找用户 ：" + list.get(i).getUsername());
             String twitterId = list.get(i).getTwitterId();
             String username = list.get(i).getUsername();
@@ -76,14 +76,15 @@ public class OrderTask {
 
     public void keywordMatch(String uuid) {
         List<Tweet> tweetList = tweetService.listByUuid(uuid);
+        System.out.println(tweetList.size());
         List<Keyword> keywordList = keywordService.listAllKeywords();
+        System.out.println(keywordList.size());
         for (int i = 0; i < tweetList.size(); i ++) {
             //        触发哪些keyword
-            List<String> reasonKeyword = new ArrayList<>();
             boolean flag = false;
             int pos = -1;
             for (int j = 0; j < keywordList.size(); j ++) {
-                if (tweetList.get(i).getText().contains(keywordList.get(j).getBackwardKeyword())) {
+                if (keywordList.get(j).getBackwardKeyword() != null && tweetList.get(i).getText().contains(keywordList.get(j).getBackwardKeyword())) {
                     break;
                 }
                 String[] keyword = keywordList.get(j).getForwardKeyword().split("，");
@@ -105,7 +106,6 @@ public class OrderTask {
                 String res = "触发关键词 [" + keywordList.get(pos).getForwardKeyword() + "]";
                 tweetService.updateReason(tweetList.get(i).getId(), res);
             }
-
         }
     }
 

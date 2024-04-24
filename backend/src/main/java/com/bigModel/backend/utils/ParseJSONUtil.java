@@ -7,6 +7,7 @@ import com.bigModel.backend.pojo.TweetImage;
 import com.bigModel.backend.pojo.TweetVideo;
 import com.bigModel.backend.service.TweetImageVideoService;
 import com.bigModel.backend.service.impl.util.TraditionalToSimplifiedUtil;
+import com.bigModel.backend.service.twitterUser.TwitterUserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,8 @@ public class ParseJSONUtil {
     private TweetImageVideoService tweetImageService;
     @Autowired
     private TweetVideoMapper tweetVideoMapper;
+    @Autowired
+    private TwitterUserInfoService twitterUserInfoService;
 
     @PostConstruct
     public void init() {
@@ -46,7 +49,14 @@ public class ParseJSONUtil {
     public static List<Tweet> parseJSON(String string, String username, String twitterId, String uuid) throws IOException {
         // log.info(string);
         JSONObject json = new JSONObject(string);
-        String data = json.getString("data");
+        String data = null;
+        try {
+            data = json.getString("data");
+        } catch (JSONException e) {
+            log.info("没有此用户:" + twitterId);
+            parseJSONUtil.twitterUserInfoService.deleteTwitterUserByTwitterId(twitterId);
+            return new ArrayList<Tweet>();
+        }
         JSONArray jsonArray = new JSONArray(data);
         List<Tweet> list = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i ++) {
