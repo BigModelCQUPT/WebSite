@@ -44,7 +44,7 @@
                 <el-table-column prop="id" label="id" align="center" />
                 <el-table-column prop="twitterId" label="推特id" align="center" />
                 <el-table-column prop="username" label="用户名" align="center" />
-                <el-table-column prop="name" label="真实姓名" align="center" />
+                <el-table-column prop="name" label="昵称" align="center" />
                 <el-table-column prop="description" label="个人简介" align="center" />
                 <el-table-column prop="followersCount" label="粉丝数" align="center" />
             </el-table>
