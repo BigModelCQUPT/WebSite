@@ -37,12 +37,12 @@ public class YoutubeVideoUtil {
     }
 
     public static List<YoutubeVideo> getVideo(List<YoutubeUser> userList) throws IOException {
-        String host = "127.0.0.1";
-        String port = "7890";
-        System.setProperty("http.proxyHost", host);
-        System.setProperty("http.proxyPort", port);
-        System.setProperty("https.proxyHost", host);
-        System.setProperty("https.proxyPort", port);
+        // String host = "127.0.0.1";
+        // String port = "7890";
+        // System.setProperty("http.proxyHost", host);
+        // System.setProperty("http.proxyPort", port);
+        // System.setProperty("https.proxyHost", host);
+        // System.setProperty("https.proxyPort", port);
         // String[] channelIdList = new String[]{"UCilwQlk62k1z7aUEZPOB6yw", "UCKQVSNdzGBJSXaUmS4TOWww"};
         List<YoutubeVideo> list = new ArrayList<>();
         for (int j = 0; j < userList.size(); j++) {
