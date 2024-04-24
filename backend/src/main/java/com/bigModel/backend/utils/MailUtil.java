@@ -66,10 +66,11 @@ public class MailUtil {
         mailUtil.tweetImageVideoService = this.tweetImageVideoService;
     }
 
-    // private static final String SEND_ACCOUNT = "jiemaokeji@gmail.com"; //发送方地址
-    private static final String SEND_ACCOUNT = "lxb2000m@qq.com"; //发送方地址
-    // private static final String SMTP_HOST = "smtp.gmail.com";
-    private static final String SMTP_HOST = "smtp.qq.com";
+    private static final String SEND_ACCOUNT = "jiemaokeji@gmail.com"; //发送方地址
+    // private static final String SEND_ACCOUNT = "lxb2000m@gmail.com"; //发送方地址
+    // private static final String SEND_ACCOUNT = "lxb2000m@qq.com"; //发送方地址
+    private static final String SMTP_HOST = "smtp.gmail.com";
+    // private static final String SMTP_HOST = "smtp.qq.com";
     // 发件人名称
     private static final String staff_name = "发送方姓名"; //你的名字
     // 收件人姓名
@@ -85,8 +86,8 @@ public class MailUtil {
 
         // String toCountEmail = user.getEmail();
         // 接收方
-        // String toCountEmail = "lxb2000m@gmail.com";
-        String toCountEmail = "8577618@gmail.com";
+        String toCountEmail = "lxb2000m@qq.com";
+        // String toCountEmail = "8577618@gmail.com";
 
         // 参数配置，⽤于连接邮件服务器
         Properties props = new Properties();
@@ -97,6 +98,10 @@ public class MailUtil {
         // 需要请求认证
         props.setProperty("mail.smtp.auth", "true");
         props.setProperty("mail.smtp.port", "587");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.port", "465");
+
         // 创建会话对象，⽤于与邮箱服务器交互
         Session session = Session.getInstance(props);
         // 设置为debug模式，在控制台中可以查看详细的发送⽇志
@@ -213,9 +218,10 @@ public class MailUtil {
         fileOutputStream.close();
         excelWriter.close();
     }
-    // @Scheduled(fixedRate = 1)
+
+
     public void test() throws Exception {
-        sendMail(null);
+        sendMail(new ArrayList<>());
         System.exit(0);
     }
 }
