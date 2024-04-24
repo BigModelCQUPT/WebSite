@@ -291,7 +291,9 @@ export default {
             }).then(function (resp) {
                 if (resp.status == "200") {
                     _this.tableData = resp.data.data.records
-                    _this.total = resp.data.data.total
+
+                    _this.tableData = _this.tableData.filter(item => item.needReturn === 1);
+                    _this.total = _this.tableData.length;
                 }
                 else {
                     _this.$message.error('出错了');
