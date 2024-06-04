@@ -86,8 +86,8 @@ public class MailUtil {
 
         // String toCountEmail = user.getEmail();
         // 接收方
-        String toCountEmail = "lxb2000m@qq.com";
-        // String toCountEmail = "8577618@gmail.com";
+        // String toCountEmail = "lxb2000m@qq.com";
+        String toCountEmail = "8577618@gmail.com";
 
         // 参数配置，⽤于连接邮件服务器
         Properties props = new Properties();
